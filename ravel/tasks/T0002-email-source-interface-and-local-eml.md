@@ -1,7 +1,7 @@
 ---
 id: T0002
 title: Define EmailSource interface and LocalEmlSource
-status: new
+status: done
 dependencies:
   - T0001
 ---
@@ -17,11 +17,15 @@ dependencies:
 - `EmailSource` is defined as a Protocol or ABC in `backend/hedwig/ingest/source.py` (or equivalent).
 - `LocalEmlSource(samples_dir: Path)` iterates `samples/*.eml` and yields parsed `email.message.Message` objects (or a thin wrapper — see Implementation Notes).
 - A unit test reads the committed `samples/*.eml` via `LocalEmlSource` and confirms messages are returned with non-empty `Subject` headers.
-- `uv run pytest` passes; `uv run ruff check` passes.
+- `uv run pytest` passes; `uv run ruff check` passes; `uv run mypy` passes.
 
 # Implementation Notes
 
 - Build-plan reference: `ravel/docs/build-plan.md` Day 1 step 2 (lines 87–91) — `EmailSource` interface with `LocalEmlSource` and `ImapSource`.
+- Added `mypy` (strict) as the project type-checker during this task: declared in the `dev` dependency
+  group with a `[tool.mypy]` config in `backend/pyproject.toml` targeting `app` and `tests`. This was
+  not in the original scope but establishes a typed baseline for later tasks; `uv run mypy` is now part
+  of the gate. Existing test functions were annotated `-> None` to satisfy strict mode.
 - Use Python's stdlib `email` + `email.parser.BytesParser` to read `.eml` files. No third-party email lib needed.
 - Suggested interface shape:
   ```python

@@ -1,0 +1,1198 @@
+Delivered-To: reader@example.com
+Received: by 2002:a05:7000:3841:b0:83e:6115:5cfa with SMTP id n1csp2797320mal;
+        Tue, 2 Jun 2026 04:32:55 -0700 (PDT)
+X-Received: by 2002:a05:6214:428a:b0:8cc:e8f4:163d with SMTP id 6a1803df08f44-8ccefdac17emr208016086d6.23.1780399975789;
+        Tue, 02 Jun 2026 04:32:55 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780399975; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Rl0RnslpjSu4mV/RWyy918VMYUvTOvNJ4RqkGLCTsdEwSRFchu6FxujMNpG5Ja4nYL
+         2mzMgEIsq8eF07Z2OTai9qZiExfmcG9KCkC1RqSLQ1JoBj+/e8IB3so41ZeIgySEGLSv
+         1ooaLbZ75vVfW1wmlgJDH7IktfROgpM34AKHBmibVMihKyj0uINn94DS9e60XfyAspe/
+         u5Thfv/zMTSfFc28gNxm0RA2ReDSoFsW2J4IdcZF9umJgzYKhQ1hW9LRICMehGvTHvQt
+         lFqyKu9wZhQ5RjuBL4RDv86RC8XjPZyZe8EeVr8nQO6RUZRGQt0Czv6RpVezr1dSD5LW
+         nQXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=feedback-id:list-unsubscribe:list-unsubscribe-post:mime-version
+         :subject:message-id:to:from:date:cfbl-address:dkim-signature
+         :dkim-signature;
+        bh=DFBgzwiTD10nXHe7EYNlXuQ6mt1ruc2BjiIhva0CHTg=;
+        fh=Y0U3DcH6mAU0UABO/ziMIjMdtk1YqlY2rjY9Rt0/fxM=;
+        b=eb/LiXotqEv4RGCFzt8WEF7FZXmnYI+n1YPsU5cSpusNMvhc9GSuSB0pZUtSTQe98v
+         W32AZAWU2M9sgvLlbCrkbSc3CSvlMslGWv1MzFkPNdA5oBbTeG7ZzeYKF2a74KgPWU1N
+         ao48zcxEIm2knY9zyhGeRUv6nTNSKv62yqw4xot+1dsg3tmNfRm56mVuig1H6IlJpeQa
+         25Y688dmbMXbKL0yCOmRY4atbojZPIWAOr+3bd76SUOwuizOMu1uX22xekvr2fU0ZYzx
+         /Eu326YWUqXqA9vLX7OdpXe7h3/QNsnp/+Cc8SM39QE0TtoSTeK1OLDLCSzn+s2WcM5E
+         pF6A==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@tikr.com header.s=acdkim1 header.b=QrGr6u9t;
+       dkim=pass header.i=@acems1.com header.s=acdkim1 header.b="YB5T/E1z";
+       spf=pass (google.com: domain of bounce-3787869-2276-40704-reader=example.com@em-3787869.tikr.com designates 52.128.42.239 as permitted sender) smtp.mailfrom="bounce-3787869-2276-40704-reader=example.com@em-3787869.tikr.com";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=tikr.com
+Return-Path: <bounce-3787869-2276-40704-reader=example.com@em-3787869.tikr.com>
+Received: from mail-42-239.acems1.com (mail-42-239.acems1.com. [52.128.42.239])
+        by mx.google.com with ESMTPS id 6a1803df08f44-8ccea209f95si146655116d6.414.2026.06.02.04.32.55
+        for <reader@example.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2026 04:32:55 -0700 (PDT)
+Received-SPF: pass (google.com: domain of bounce-3787869-2276-40704-reader=example.com@em-3787869.tikr.com designates 52.128.42.239 as permitted sender) client-ip=52.128.42.239;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@tikr.com header.s=acdkim1 header.b=QrGr6u9t;
+       dkim=pass header.i=@acems1.com header.s=acdkim1 header.b="YB5T/E1z";
+       spf=pass (google.com: domain of bounce-3787869-2276-40704-reader=example.com@em-3787869.tikr.com designates 52.128.42.239 as permitted sender) smtp.mailfrom="bounce-3787869-2276-40704-reader=example.com@em-3787869.tikr.com";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=tikr.com
+X-KumoRef: eyJfQF8iOiJcXF8vIiwicmVjaXBpZW50IjoiZGF2aWRzbm9va2VyQGdtYWlsLmNvbSJ9
+DKIM-Signature: v=1; a=rsa-sha256; d=tikr.com; s=acdkim1; c=relaxed/relaxed;
+	bh=DFBgzwiTD10nXHe7EYNlXuQ6mt1ruc2BjiIhva0CHTg=;
+	h=from:to:subject:date:mime-version:content-type:sender:cc:date:message-id:
+		list-unsubscribe:list-unsubscribe-post; t=1780399974; x=1781004774;
+	b=QrGr6u9tqs3uJ6OjQwiC1Bi+d9P4+mAjUZ9rXOEXkfdRM7YK3t8nGT6FlPphgT1i+vASxQII/
+	6JMPRegOyvMjRU6+jlTSws2AP3IWZ1MvGsONW3eHvVih0fR9hvgkz85xUDTJXy19VQo7vadZyEb
+	h8X2HAesIqo2v9QiTJZh0fNmLZhEKDiQT/VxpiUItj9ve5UATI2qqERzhSyM4IDV8A0OZqTKRz2
+	rXAWiX5miScLF+F9/eK7FMJsX/aX3yO7HR63h7L/Dp+adR1n2FeufRNBL355xpk1+yARvJG24xK
+	79eoKrE8RDCzGXsxlUWb7HLMtoOeJidsS5S8pLBbH4QQ==;
+DKIM-Signature: v=1; a=rsa-sha256; d=acems1.com; s=acdkim1; c=relaxed/relaxed;
+	bh=DFBgzwiTD10nXHe7EYNlXuQ6mt1ruc2BjiIhva0CHTg=;
+	h=from:to:subject:date:mime-version:content-type:sender:cc:date:message-id:
+		list-unsubscribe:list-unsubscribe-post; t=1780399974; x=1781004774;
+	b=YB5T/E1zxHtbt7qek78VwU+wJlMcusp/tdfAU6YYyp8+bKFlfBge88mBvUtaqoUt6HeKESKV5
+	xlfkkGdkXa01c4M44MiGEX1a+Ws/V49grI9ShqN4uBMN3h6QYqDD3Y783HpN/I4yA+cBa40+JWL
+	4J2LUn28bm5rPnQnPDq+Xmml+ABbF1QDgewQs4UseTO/dI4C7HX9ryfDEplArq7SYOgGzw+sZCZ
+	Fqma+IGaFIr/War33AGN22v4F2hvNYMDIsBRAdRcu+cXnwuXSXlelHuZcezqWcdcTn3phMUkrlB
+	aWqaAROLR0244maPYhe1SlwwqfhBdcFmJFLY4jdWqchA==;
+CFBL-Address: fbl-report@acems1.com; report=arf
+X-Mailer: ActiveCampaign Mailer
+Received: from cell-4-9768d8447-29scf (10.65.74.146)
+  by acems1.com (KumoMTA 10.13.179.61) 
+  with ESMTPS (TLSv1_3:TLS13_AES_256_GCM_SHA384)  id cbe4b5085e7611f1bbc20affdb8d7a0b for <reader@example.com>;
+  Tue, 2 Jun 2026 11:32:54 +0000
+Date: Tue, 2 Jun 2026 11:32:54 +0000 (GMT)
+From: TIKR <newsletter@tikr.com>
+To: reader@example.com
+Message-ID: <463657205.3961466.1780399974443@cell-4-9768d8447-29scf>
+Subject: Berkshire Backs Google
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_3961465_1053700819.1780399974443"
+X-DKIM-Options: s=acdkim1
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+X-Virtual-Mta: camp-use1-a-c1-42-236
+X-250ok-CID: 3787869-2276
+List-Unsubscribe: <https://tikr.activehosted.com/box.php?nl=4&c=2276&m=2603&s=40e36c14b2dcd80066d2b0254d9bb1da&funcml=unsub2&luha=1>,<mailto:unsubscribe-9f9470bad6b51462118b851fa85dc4b6-2276-40e36c14b2dcd80066d2b0254d9bb1da@mail-42-236.acems1.com>
+Feedback-ID: 3787869:activecampaign
+X-Sending-Engine: Hedwig PCS
+X-Report-Abuse: Please report abuse to abuse@activecampaign.com
+X-lid: ZGF2aWRzbm9va2VyQGdtYWlsLmNvbSAsIGMyMjc2ICwgbTI2MDMgLCBzMTA5MTgyICwgbDQ=
+X-mid: ZGF2aWRzbm9va2VyQGdtYWlsLmNvbSAsIGMyMjc2ICwgbTI2MDMgLCBzMTA5MTgy
+
+------=_Part_3961465_1053700819.1780399974443
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Trending news and stocks from TIKRNo longer interested in receiving The TIK=
+R Tape? Click here and we'll remove you from the list! https://tikr.ac-page=
+.com/tikr-tape
+
+June 2, 2026
+
+****Market Performance****
+
+****Trending on TIKR****
+
+Alphabet (NASDAQ: GOOGL) https://app.tikr.com/stock/about?cid=3D29096&tid=
+=3D11311662: Alphabet is making headlines after unveiling plans to raise $8=
+0 billion in stock to fund its AI buildout. The package includes $30 billio=
+n in underwritten offerings, a $40 billion at-the-market program starting i=
+n Q3, and a $10 billion private placement bought directly by Berkshire Hath=
+away, now led by new CEO Greg Abel. The cash backs capital spending that ma=
+nagement has guided as high as $190 billion this year, roughly double 2025.
+
+Hewlett Packard Enterprise (NYSE: HPE) https://app.tikr.com/stock/about?cid=
+=3D273983758&tid=3D313064514: HPE, which sells the servers, storage, and ne=
+tworking gear companies use to run their data centers and AI systems, climb=
+ed over 9% Monday and then jumped roughly 30% after hours on a blowout quar=
+ter. Revenue rose about 40% to $10.7 billion, and the company nearly double=
+d both its AI orders and its AI backlog versus a year ago. Management sharp=
+ly raised guidance, lifting its full-year adjusted earnings outlook to arou=
+nd $3.40 a share from roughly $2.40 and pushing revenue growth toward the 3=
+0% range. After years as the sleepy half of the old HP, HPE is suddenly rid=
+ing the AI infrastructure wave hard.
+
+Nvidia (NASDAQ: NVDA) https://app.tikr.com/stock/about?cid=3D32307&tid=3D26=
+35154: Nvidia rose over 6% Monday as CEO Jensen Huang used his Computex key=
+note in Taipei to push the company into brand-new territory. The headline w=
+as the RTX Spark, Nvidia's first processor built for Windows PCs, an Arm-ba=
+sed chip co-developed with Microsoft and MediaTek that lands in laptops fro=
+m Dell, Lenovo, and HP this fall. Huang framed it as the first true reinven=
+tion of the PC in 40 years. The move plants Nvidia squarely in a market it =
+has never competed in, and investors clearly liked the idea of the AI chip =
+leader opening up an entirely new multi-billion-dollar revenue line.
+
+Intel (NASDAQ: INTC) https://app.tikr.com/stock/about?cid=3D21127&tid=3D262=
+1295: Intel, the chipmaker whose processors have powered most of the world'=
+s Windows PCs for four decades, fell nearly 5% as the other side of Nvidia'=
+s announcement played out. Nvidia's new chip directly targets the processor=
+ market that Intel and AMD have split between them since the 1980s, and Wal=
+l Street read it as a real threat to one of Intel's core businesses. Intel =
+tried to counter with its own new data-center chip, but the launch got drow=
+ned out, and Northland Capital downgraded the stock. The selloff says inves=
+tors think Intel's turf just got a lot smaller.
+
+Taylor Morrison Home (NYSE: TMHC) https://app.tikr.com/stock/about?cid=3D22=
+4946128&tid=3D234239320: Taylor Morrison, one of the largest homebuilders i=
+n the US, jumped about 22% after Berkshire Hathaway agreed to buy it for $7=
+2.50 a share in cash, a deal worth roughly $6.8 billion. The price is a 24%=
+ premium to Friday's close, and the shares snapped almost right up to the o=
+ffer. It is the first big acquisition under new Berkshire CEO Greg Abel, an=
+d pairing Taylor Morrison with Berkshire's existing Clayton Homes would mak=
+e the conglomerate one of the four largest US homebuilders. The move reads =
+as a bet that American housing demand recovers, even with mortgage rates ne=
+ar multi-year highs.
+
+Access More on TIKR Terminal Now! https://app.tikr.com/markets
+
+**Lumentum (NASDAQ: LITE): Why Analysts Are Forecasting Revenue to Roughly =
+5x by FY 2028**
+
+Lumentum makes the lasers and optical parts that move data around as pulses=
+ of light, the technology that shuttles information between the chips insid=
+e AI data centers and across the buildings that house them. It was spun out=
+ of telecom-equipment maker JDS Uniphase back in 2015, and for years it was=
+ a fairly sleepy supplier tied to phone networks and the sensors behind App=
+le's Face ID. The AI boom changed everything. Analysts now expect revenue t=
+o climb from about $1.6 billion in fiscal 2025 to over $8 billion by fiscal=
+ 2028, roughly a 5x jump, with growth topping 80% in each of the next two y=
+ears.
+
+https://app.tikr.com/stock/financials?cid=3DPLACEHOLDER_CID&tid=3DPLACEHOLD=
+ER_TID&tab=3Dis=20
+
+A few things are driving that. The biggest is cloud transceivers, the optic=
+al modules that connect AI chips to each other at very high speeds. Lumentu=
+m's most recent quarter saw revenue jump about 90% to a record $808 million=
+, led by these parts as customers upgrade their networks to faster standard=
+s. Two newer products add fuel: optical circuit switches, which let data ce=
+nters rewire their connections on the fly to save power, and co-packaged op=
+tics, which build the light-handling pieces directly onto chips. Switch bac=
+klog alone has already passed $400 million.
+
+The catch, and the reason the forecast looks credible rather than hopeful, =
+is that demand is outrunning supply. Lumentum says it is short-shipping cus=
+tomers by around 30% because it cannot make these laser chips fast enough, =
+and Nvidia signed a multi-year partnership with the company earlier this ye=
+ar.
+
+Access More on TIKR Terminal Now! https://app.tikr.com/markets
+
+****The Week Ahead****
+
+A loaded week of prints across AI hardware, cybersecurity, healthcare, and =
+the consumer, capped by Friday's May jobs report. Here are the five events =
+worth watching:
+
+**Tuesday, June 2**
+
+*=20
+
+**Palo Alto Networks (NASDAQ: PANW), After Close:** The cybersecurity giant=
+ is expected to post revenue around $2.9 billion, up about 28%, with earnin=
+gs near $0.80. Much of that growth comes from its recent CyberArk acquisiti=
+on, so investors will zero in on organic momentum and next-generation secur=
+ity ARR guided near $8 billion. With the stock up over 50% this year, expec=
+tations are high and any soft guidance could sting.
+
+**Wednesday, June 3**
+
+*=20
+
+**Medtronic (NYSE: MDT), Before Open:** One of the world's biggest medical-=
+device makers (pacemakers, insulin pumps, surgical tools) closes its fiscal=
+ year with full-year adjusted earnings guided to roughly $5.50 a share. Wat=
+ch for the drag from carving out its diabetes unit, MiniMed, and any read o=
+n whether device demand and hospital procedure volumes are holding up. Medt=
+ronic is a useful health-of-healthcare bellwether.
+
+*=20
+
+**Broadcom (NASDAQ: AVGO), After Close:** The biggest print of the week. Br=
+oadcom designs custom AI chips for the largest cloud companies and is expec=
+ted to report revenue around $22 billion, up roughly 47%, with AI chip sale=
+s near $10.7 billion. Investors want an updated order backlog after recent =
+deals with Google and Meta. As the main Nvidia alternative, Broadcom's numb=
+ers set the tone for the whole AI hardware trade.
+
+**Thursday, June 4**
+
+*=20
+
+**Ciena (NYSE: CIEN), Before Open:** Ciena builds the optical gear that car=
+ries traffic between data centers, and it has become a key beneficiary of A=
+I-driven network demand. Management guided revenue near $1.5 billion, with =
+the full-year outlook implying growth around 28%. After a monster prior qua=
+rter, watch gross margins and any comments on how aggressively cloud giants=
+ are buying. A strong print would echo the Lumentum story above.
+
+*=20
+
+**Lululemon (NASDAQ: LULU), After Close:** The athletic-apparel brand is ex=
+pected to grow revenue only about 3% to roughly $2.4 billion, with earnings=
+ down around 36% to near $1.67. Soft North American demand and tariff press=
+ure are the worries. After a rough stretch for the stock, this report is a =
+real test of whether the brand still has pricing power, and a useful gauge =
+of the higher-end US consumer.
+
+Access More on TIKR Terminal Now! https://app.tikr.com/markets
+
+**P.S. Fun Fact:** Lumentum traces its roots to JDS Uniphase, a fiber-optic=
+s highflyer that split its stock again and again during the dot-com boom. W=
+hen the telecom bubble burst, JDS Uniphase reported a loss of roughly $50 b=
+illion for fiscal 2001, including a nearly $39 billion write-down for overp=
+riced acquisitions, a record loss for a US company at the time.
+
+JDS Uniphase split into Lumentum and Viavi Solutions in 2015.
+
+Check out $LITE and discover other high-performing stocks with TIKR! https:=
+//app.tikr.com/markets
+
+Unsubscribe http://tikr.activehosted.com/proc.php?c=3D2276&m=3D2603&s=3D40e=
+36c14b2dcd80066d2b0254d9bb1da&d=3D109182&v=3D2&nl=3D4&act=3Dunsub&ALL
+
+**=C2=A0**=C2=A0 =C2=A0=C2=A0Manage Preferences https://tikr.activehosted.c=
+om/f/1/?t=3DeyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0MGUzNmMxNGIyZGNkODAwNjZkMmIwMj=
+U0ZDliYjFkYSIsImlhdCI6MTc4MDM5OTk3MywiaXNzIjoiSGVkd2lnIiwiZXhwIjoxNzgwNDg2M=
+zczLCJhdWQiOiJQcmVmZXJlbmNlIENlbnRlcnMifQ.Gq-gmAcnZ6Z1yI0KFWoZ23UvvB0Hw90dL=
+AX82QdQ6w8
+
+https://www.tikr.com=20
+
+TIKR, 3003 Maple Ave, Dallas, TX 75201, United States
+
+https://x.com/theTIKR=20
+
+https://www.linkedin.com/company/tikrterminal/=20
+
+https://www.youtube.com/@TIKR=20
+
+https://www.facebook.com/tikrterminal/=20
+
+https://www.facebook.com=20
+
+https://twitter.com=20
+
+https://www.linkedin.com=20
+
+https://www.youtube.com=20
+
+https://www.instagram.com
+------=_Part_3961465_1053700819.1780399974443
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html><html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8">
+<meta name=3D"viewport" content=3D"width=3Ddevice-width, minimal-ui, initia=
+l-scale=3D1.0, maximum-scale=3D1.0, user-scalable=3D0;">
+<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
+<meta name=3D"format-detection" content=3D"telephone=3Dno, date=3Dno, email=
+=3Dno, address=3Dno">
+<meta name=3D"x-apple-disable-message-reformatting">
+<title></title><!--[if (mso 16)]><style type=3D"text/css"> a { text-decorat=
+ion: none; } </style><![endif]--><!--[if gte mso 9]><style> sup { font-size=
+: 100% !important; } </style><![endif]--><!--[if gte mso 9]><noscript>
+<xml>
+<o:OfficeDocumentSettings>
+<o:AllowPNG></o:AllowPNG>
+<o:PixelsPerInch>96</o:PixelsPerInch>
+</o:OfficeDocumentSettings>
+</xml>
+</noscript><![endif]--><!--[if gte mso 9]><style>sup { font-size: 100% !imp=
+ortant; }</style><![endif]--><!--[if mso]><xml>
+<w:WordDocument xmlns:w=3D"urn:schemas-microsoft-com:office:word">
+<w:DontUseAdvancedTypographyReadingMail/>
+</w:WordDocument>
+</xml>
+<![endif]--><!--[if !mso]><!-- -->
+<link href=3D"https://fonts.googleapis.com/css?family=3DRoboto:400,400i,700=
+,700i" rel=3D"stylesheet"><!--<![endif]-->
+<style type=3D"text/css">#outlook a { padding:0;}.es-button { mso-style-pri=
+ority:100!important; text-decoration:none!important;}a[x-apple-data-detecto=
+rs] { color:inherit!important; text-decoration:none!important; font-size:in=
+herit!important; font-family:inherit!important; font-weight:inherit!importa=
+nt; line-height:inherit!important;}.es-desk-hidden { display:none; float:le=
+ft; overflow:hidden; width:0; max-height:0; line-height:0; mso-hide:all;}@m=
+edia only screen and (max-width:600px) {p, ul li, ol li, a { line-height:15=
+0%!important } h1, h2, h3, h1 a, h2 a, h3 a { line-height:120%!important } =
+h1 { font-size:30px!important; text-align:inherit } h2 { font-size:26px!imp=
+ortant; text-align:inherit } h3 { font-size:20px!important; text-align:inhe=
+rit }
+.es-header-body h1 a, .es-content-body h1 a, .es-footer-body h1 a { font-si=
+ze:30px!important } .es-header-body h2 a, .es-content-body h2 a, .es-footer=
+-body h2 a { font-size:26px!important } .es-header-body h3 a, .es-content-b=
+ody h3 a, .es-footer-body h3 a { font-size:20px!important } .es-menu td a {=
+ font-size:13px!important } .es-header-body p, .es-header-body ul li, .es-h=
+eader-body ol li, .es-header-body a { font-size:16px!important } .es-conten=
+t-body p, .es-content-body ul li, .es-content-body ol li, .es-content-body =
+a { font-size:16px!important } .es-footer-body p, .es-footer-body ul li, .e=
+s-footer-body ol li, .es-footer-body a { font-size:16px!important } .es-inf=
+oblock p, .es-infoblock ul li, .es-infoblock ol li, .es-infoblock a { font-=
+size:12px!important } *[class=3D"gmail-fix"] { display:none!important } .es=
+-m-txt-c, .es-m-txt-c h1, .es-m-txt-c h2, .es-m-txt-c h3 { text-align:cente=
+r!important }
+.es-m-txt-r, .es-m-txt-r h1, .es-m-txt-r h2, .es-m-txt-r h3 { text-align:ri=
+ght!important } .es-m-txt-l, .es-m-txt-l h1, .es-m-txt-l h2, .es-m-txt-l h3=
+ { text-align:left!important } .es-m-txt-r img, .es-m-txt-c img, .es-m-txt-=
+l img { display:inline!important } .es-button-border { display:inline-block=
+!important } a.es-button, button.es-button { display:inline-block!important=
+; font-size:16px!important } .es-adaptive table, .es-left, .es-right { widt=
+h:100%!important } .ac-footer, .es-content table, .es-header table, .es-foo=
+ter table, .es-content, .es-footer, .es-header { width:100%!important; max-=
+width:600px!important } .ac-footer td, .ac-footer p, .es-adapt-td { display=
+:block!important; width:100%!important } .adapt-img { width:100%!important;=
+ height:auto!important } .es-m-p0 { padding:0px!important } .es-m-p0r { pad=
+ding-right:0px!important } .es-m-p0l { padding-left:0px!important } .es-m-p=
+0t { padding-top:0px!important }
+.es-m-p0b { padding-bottom:0!important } .es-m-p20b { padding-bottom:20px!i=
+mportant } .es-mobile-hidden, .es-hidden { display:none!important } tr.es-d=
+esk-hidden, td.es-desk-hidden, table.es-desk-hidden { width:auto!important;=
+ overflow:visible!important; float:none!important; max-height:inherit!impor=
+tant; line-height:inherit!important } tr.es-desk-hidden { display:table-row=
+!important } table.es-desk-hidden { display:table!important } td.es-desk-me=
+nu-hidden { display:table-cell!important } .es-menu td { width:1%!important=
+ } .es-adapt-td { display:block!important; width:100%!important } table.es-=
+table-not-adapt, .esd-block-html table { width:auto!important } table.es-so=
+cial { display:inline-block!important } table.es-social td { display:inline=
+-block!important } .es-desk-hidden { display:table-row!important; width:aut=
+o!important; overflow:visible!important; max-height:inherit!important } }
+@media screen and (max-width:384px) {.mail-message-content { width:414px!im=
+portant } }</style>
+</head>
+<body class=3D"es-wrapper-color" lang=3D"und" style=3D"font-family:helvetic=
+a, 'helvetica neue', arial, verdana, sans-serif;width:100%;-webkit-text-siz=
+e-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0;background-color=
+:#FFFDFB">
+<div style=3D"display: none !important; padding: 0; height: 1px; font-size:=
+ 1px; background-color: inherit !important; opacity: 0; color: transparent;=
+ mso-line-height-rule: exactly; line-height:1px; mso-hide:all;">
+Trending news and stocks from TIKR=20
+<div style=3D"display: none; max-height: 0px; overflow: hidden;">
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C
+</div>
+</div>
+<table class=3D"es-wrapper" width=3D"100%" cellspacing=3D"0" cellpadding=3D=
+"0" role=3D"none" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border=
+-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;backgro=
+und-repeat:repeat;background-position:center top;height:100%;background-col=
+or:#FFFDFB">
+<tr>
+<td valign=3D"top" style=3D"padding:0;Margin:0">
+<table cellpadding=3D"0" cellspacing=3D"0" class=3D"es-content" align=3D"ce=
+nter" role=3D"none" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;bord=
+er-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width=
+:100%">
+<tr>
+<td align=3D"center" style=3D"padding:0;Margin:0">
+<table bgcolor=3D"#ffffff" class=3D"es-content-body" align=3D"center" cellp=
+adding=3D"0" cellspacing=3D"0" role=3D"none" style=3D"mso-table-lspace:0pt;=
+mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background=
+-color:#FFFDFB;width:650px">
+<tr>
+<td align=3D"left" style=3D"padding:0;Margin:0;padding-left:5px;padding-top=
+:20px;padding-right:20px">
+<table cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"none" sty=
+le=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;bo=
+rder-spacing:0px">
+<tr>
+<td align=3D"center" valign=3D"top" style=3D"padding:0;Margin:0;width:625px=
+">
+<table cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentat=
+ion" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:col=
+lapse;border-spacing:0px">
+<tr>
+<td align=3D"left" style=3D"padding:10px;Margin:0">
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:21px;color:#333333;font-size:14px">No lo=
+nger interested in receiving The TIKR Tape? <a target=3D"_blank" href=3D"ht=
+tps://tikr.acemlna.com/lt.php?x=3D4lZy~GDHIaWc6K_6zA1HhBOf3HygjdUij~cvXXXHV=
+XnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef957_y_6YV~Fu1X-kiq" style=3D"-webkit-tex=
+t-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;t=
+ext-decoration:underline;color:#2660f5;font-size:14px;font-family:roboto, '=
+helvetica neue', helvetica, arial, sans-serif">Click here and we'll remove =
+you from the list!</a></p></td>
+</tr>
+<tr>
+<td align=3D"left" style=3D"padding:0;Margin:0;font-size:0px"><img class=3D=
+"adapt-img" src=3D"https://content.app-us1.com/cdn-cgi/image/fit=3Dscale-do=
+wn,width=3D650,dpr=3D2,format=3Dauto,onerror=3Dredirect/bKeZPE/2025/08/13/b=
+22a11af-620e-4419-ba3c-787033e711c6.png" alt=3D"" style=3D"display:block;bo=
+rder:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" wi=
+dth=3D"300"></td>
+</tr>
+</table></td>
+</tr>
+</table></td>
+</tr>
+<tr>
+<td align=3D"left" style=3D"padding:0;Margin:0;padding-left:20px;padding-ri=
+ght:20px">
+<table cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"none" sty=
+le=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;bo=
+rder-spacing:0px">
+<tr>
+<td align=3D"center" valign=3D"top" style=3D"padding:0;Margin:0;width:610px=
+">
+<table cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentat=
+ion" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:col=
+lapse;border-spacing:0px">
+<tr>
+<td align=3D"left" style=3D"padding:0;Margin:0">
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:21px;color:#333333;font-size:14px">June =
+2, 2026</p></td>
+</tr>
+</table></td>
+</tr>
+</table></td>
+</tr>
+</table></td>
+</tr>
+</table>
+<table cellpadding=3D"0" cellspacing=3D"0" class=3D"es-content" align=3D"ce=
+nter" role=3D"none" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;bord=
+er-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width=
+:100%">
+<tr>
+<td align=3D"center" style=3D"padding:0;Margin:0">
+<table class=3D"es-content-body" align=3D"center" cellpadding=3D"0" cellspa=
+cing=3D"0" role=3D"none" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt=
+;border-collapse:collapse;border-spacing:0px;background-color:#FFFDFB;width=
+:650px">
+<tr>
+<td align=3D"left" style=3D"padding:0;Margin:0">
+<table cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"none" sty=
+le=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;bo=
+rder-spacing:0px">
+<tr>
+<td align=3D"center" valign=3D"top" style=3D"padding:0;Margin:0;width:650px=
+">
+<table cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentat=
+ion" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:col=
+lapse;border-spacing:0px">
+<tr>
+<td align=3D"center" style=3D"padding:20px;Margin:0;font-size:0">
+<table border=3D"0" width=3D"100%" height=3D"100%" cellpadding=3D"0" cellsp=
+acing=3D"0" role=3D"presentation" style=3D"mso-table-lspace:0pt;mso-table-r=
+space:0pt;border-collapse:collapse;border-spacing:0px">
+<tr>
+<td style=3D"padding:0;Margin:0;border-bottom:1px solid #ff9900;background:=
+unset;height:0px;width:100%;margin:0px"></td>
+</tr>
+</table></td>
+</tr>
+<tr>
+<td align=3D"center" style=3D"padding:5px;Margin:0">
+<h2 style=3D"Margin:0;line-height:30px;mso-line-height-rule:exactly;font-fa=
+mily:roboto, 'helvetica neue', helvetica, arial, sans-serif;font-size:25px;=
+font-style:normal;font-weight:normal;color:#333333"><strong>Market Performa=
+nce</strong></h2></td>
+</tr>
+<tr>
+<td align=3D"center" style=3D"padding:0;Margin:0;font-size:0px"><img class=
+=3D"adapt-img" src=3D"https://content.app-us1.com/cdn-cgi/image/fit=3Dscale=
+-down,width=3D650,dpr=3D2,format=3Dauto,onerror=3Dredirect/bKeZPE/2026/06/0=
+2/707c76db-ea8e-4a9e-8596-7cb0bc9baf60.png" alt=3D"" style=3D"display:block=
+;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"=
+ width=3D"650" data-cf-ir-is-resized=3D"true"></td>
+</tr>
+<tr>
+<td align=3D"center" style=3D"padding:10px;Margin:0;font-size:0">
+<table border=3D"0" width=3D"100%" height=3D"100%" cellpadding=3D"0" cellsp=
+acing=3D"0" role=3D"presentation" style=3D"mso-table-lspace:0pt;mso-table-r=
+space:0pt;border-collapse:collapse;border-spacing:0px">
+<tr>
+<td style=3D"padding:0;Margin:0;border-bottom:1px solid #ff9900;background:=
+unset;height:0px;width:100%;margin:0px"></td>
+</tr>
+</table></td>
+</tr>
+<tr>
+<td align=3D"center" style=3D"padding:5px;Margin:0">
+<h2 style=3D"Margin:0;line-height:30px;mso-line-height-rule:exactly;font-fa=
+mily:roboto, 'helvetica neue', helvetica, arial, sans-serif;font-size:25px;=
+font-style:normal;font-weight:normal;color:#333333"><strong>Trending on TIK=
+R</strong></h2></td>
+</tr>
+<tr>
+<td align=3D"left" style=3D"padding:5px;Margin:0">
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px"><stro=
+ng><a target=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GD=
+HIaWc6K_6zA1HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef957_y_=
+6YV~Fu1X-mkK" style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:n=
+one;mso-line-height-rule:exactly;text-decoration:underline;color:#2660f5;fo=
+nt-size:16px;font-family:roboto, 'helvetica neue', helvetica, arial, sans-s=
+erif">Alphabet (NASDAQ: GOOGL)</a>:</strong> Alphabet is making headlines a=
+fter unveiling plans to raise $80 billion in stock to fund its AI buildout.=
+ The package includes $30 billion in underwritten offerings, a $40 billion =
+at-the-market program starting in Q3, and a $10 billion private placement b=
+ought directly by Berkshire Hathaway, now led by new CEO Greg Abel. The cas=
+h backs capital spending that management has guided as high as $190 billion=
+ this year, roughly double 2025.<br><br></p>
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px"><stro=
+ng><a target=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GD=
+HIaWc6K_6zA1HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef957_y_=
+6YV~Fu1X-ni8" style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:n=
+one;mso-line-height-rule:exactly;text-decoration:underline;color:#2660f5;fo=
+nt-size:16px;font-family:roboto, 'helvetica neue', helvetica, arial, sans-s=
+erif">Hewlett Packard Enterprise (NYSE: HPE)</a>:</strong> HPE, which sells=
+ the servers, storage, and networking gear companies use to run their data =
+centers and AI systems, climbed over 9% Monday and then jumped roughly 30% =
+after hours on a blowout quarter. Revenue rose about 40% to $10.7 billion, =
+and the company nearly doubled both its AI orders and its AI backlog versus=
+ a year ago. Management sharply raised guidance, lifting its full-year adju=
+sted earnings outlook to around $3.40 a share from roughly $2.40 and pushin=
+g revenue growth toward the 30% range. After years as the sleepy half of th=
+e old HP, HPE is suddenly riding the AI infrastructure wave hard.<br><br></=
+p>
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px"><stro=
+ng><a target=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GD=
+HIaWc6K_6zA1HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef957_y_=
+6YV~Fu1X-kj8" style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:n=
+one;mso-line-height-rule:exactly;text-decoration:underline;color:#2660f5;fo=
+nt-size:16px;font-family:roboto, 'helvetica neue', helvetica, arial, sans-s=
+erif">Nvidia (NASDAQ: NVDA)</a>:</strong> Nvidia rose over 6% Monday as CEO=
+ Jensen Huang used his Computex keynote in Taipei to push the company into =
+brand-new territory. The headline was the RTX Spark, Nvidia's first process=
+or built for Windows PCs, an Arm-based chip co-developed with Microsoft and=
+ MediaTek that lands in laptops from Dell, Lenovo, and HP this fall. Huang =
+framed it as the first true reinvention of the PC in 40 years. The move pla=
+nts Nvidia squarely in a market it has never competed in, and investors cle=
+arly liked the idea of the AI chip leader opening up an entirely new multi-=
+billion-dollar revenue line.<br><br></p>
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px"><stro=
+ng><a target=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GD=
+HIaWc6K_6zA1HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef957_y_=
+6YV~Fu1X-niK" style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:n=
+one;mso-line-height-rule:exactly;text-decoration:underline;color:#2660f5;fo=
+nt-size:16px;font-family:roboto, 'helvetica neue', helvetica, arial, sans-s=
+erif">Intel (NASDAQ: INTC)</a>:</strong> Intel, the chipmaker whose process=
+ors have powered most of the world's Windows PCs for four decades, fell nea=
+rly 5% as the other side of Nvidia's announcement played out. Nvidia's new =
+chip directly targets the processor market that Intel and AMD have split be=
+tween them since the 1980s, and Wall Street read it as a real threat to one=
+ of Intel's core businesses. Intel tried to counter with its own new data-c=
+enter chip, but the launch got drowned out, and Northland Capital downgrade=
+d the stock. The selloff says investors think Intel's turf just got a lot s=
+maller.<br><br></p>
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px"><stro=
+ng><a target=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GD=
+HIaWc6K_6zA1HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef957_y_=
+6YV~Fu1X-nia" style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:n=
+one;mso-line-height-rule:exactly;text-decoration:underline;color:#2660f5;fo=
+nt-size:16px;font-family:roboto, 'helvetica neue', helvetica, arial, sans-s=
+erif">Taylor Morrison Home (NYSE: TMHC)</a>:</strong> Taylor Morrison, one =
+of the largest homebuilders in the US, jumped about 22% after Berkshire Hat=
+haway agreed to buy it for $72.50 a share in cash, a deal worth roughly $6.=
+8 billion. The price is a 24% premium to Friday's close, and the shares sna=
+pped almost right up to the offer. It is the first big acquisition under ne=
+w Berkshire CEO Greg Abel, and pairing Taylor Morrison with Berkshire's exi=
+sting Clayton Homes would make the conglomerate one of the four largest US =
+homebuilders. The move reads as a bet that American housing demand recovers=
+, even with mortgage rates near multi-year highs.</p></td>
+</tr>
+<tr>
+<td align=3D"center" style=3D"padding:10px;Margin:0"><!--[if mso]><a href=
+=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GDHIaWc6K_6zA1HhBOf3HygjdUij~c=
+vXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef957_y_6YV~Fu1X-mja" target=3D"_bla=
+nk" hidden>
+<v:roundrect xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:w=3D"urn:schem=
+as-microsoft-com:office:word" esdevVmlButton href=3D"https://tikr.acemlna.c=
+om/lt.php?x=3D4lZy~GDHIaWc6K_6zA1HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oi=
+kA0_ueglPHFI3ef957_y_6YV~Fu1X-mja"=20
+style=3D"height:58px; v-text-anchor:middle; width:475px" arcsize=3D"5%" str=
+okecolor=3D"#0d1a26" strokeweight=3D"1px" fillcolor=3D"#ff9900">
+<w:anchorlock></w:anchorlock>
+<center style=3D'color:#333333; font-family:helvetica, "helvetica neue", ar=
+ial, verdana, sans-serif; font-size:23px; font-weight:700; line-height:23px=
+;  mso-text-raise:1px'>Access More on TIKR Terminal Now!</center>
+</v:roundrect></a>
+<![endif]--><!--[if !mso]><!-- --><span class=3D"msohide es-button-border" =
+style=3D"border-style:solid;border-color:#0d1a26;background:#ff9900;border-=
+width:1px;display:inline-block;border-radius:3px;width:auto;mso-hide:all"><=
+a href=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GDHIaWc6K_6zA1HhBOf3Hygj=
+dUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef957_y_6YV~Fu1X-mja" class=3D=
+"es-button" target=3D"_blank" style=3D"mso-style-priority:100 !important;te=
+xt-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;=
+mso-line-height-rule:exactly;color:#333333;font-size:24px;display:inline-bl=
+ock;background:#FF9900;border-radius:3px;font-family:helvetica, 'helvetica =
+neue', arial, verdana, sans-serif;font-weight:bold;font-style:normal;line-h=
+eight:28.8px;width:auto;text-align:center;padding:15px;mso-padding-alt:0;ms=
+o-border-alt:10px solid #FF9900">Access More on TIKR Terminal Now!</a> </sp=
+an><!--<![endif]--></td>
+</tr>
+<tr>
+<td align=3D"center" style=3D"padding:10px;Margin:0;font-size:0">
+<table border=3D"0" width=3D"100%" height=3D"100%" cellpadding=3D"0" cellsp=
+acing=3D"0" role=3D"presentation" style=3D"mso-table-lspace:0pt;mso-table-r=
+space:0pt;border-collapse:collapse;border-spacing:0px">
+<tr>
+<td style=3D"padding:0;Margin:0;border-bottom:1px solid #ff9900;background:=
+unset;height:0px;width:100%;margin:0px"></td>
+</tr>
+</table></td>
+</tr>
+<tr>
+<td align=3D"center" style=3D"Margin:0;padding-bottom:5px;padding-left:5px;=
+padding-right:5px;padding-top:10px">
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:37.5px;color:#333333;font-size:25px"><st=
+rong>Lumentum (NASDAQ: LITE): Why Analysts Are Forecasting Revenue to Rough=
+ly 5x by FY 2028</strong></p></td>
+</tr>
+<tr>
+<td align=3D"left" style=3D"padding:5px;Margin:0">
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px">Lumen=
+tum makes the lasers and optical parts that move data around as pulses of l=
+ight, the technology that shuttles information between the chips inside AI =
+data centers and across the buildings that house them. It was spun out of t=
+elecom-equipment maker JDS Uniphase back in 2015, and for years it was a fa=
+irly sleepy supplier tied to phone networks and the sensors behind Apple's =
+Face ID. The AI boom changed everything. Analysts now expect revenue to cli=
+mb from about $1.6 billion in fiscal 2025 to over $8 billion by fiscal 2028=
+, roughly a 5x jump, with growth topping 80% in each of the next two years.=
+</p></td>
+</tr>
+<tr>
+<td align=3D"center" style=3D"padding:0;Margin:0;font-size:0px"><a target=
+=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GDHIaWc6K_6zA1=
+HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef957_y_6YV~Fu1X-mjq=
+" style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line=
+-height-rule:exactly;text-decoration:underline;color:#FF9900;font-size:14px=
+"><img class=3D"adapt-img" src=3D"https://content.app-us1.com/cdn-cgi/image=
+/fit=3Dscale-down,width=3D650,dpr=3D2,format=3Dauto,onerror=3Dredirect/bKeZ=
+PE/2026/06/02/afca667b-043e-46c6-98a7-cda940b2fd78.png" alt=3D"" style=3D"d=
+isplay:block;border:0;outline:none;text-decoration:none;-ms-interpolation-m=
+ode:bicubic" width=3D"650" data-cf-ir-is-resized=3D"true"></a></td>
+</tr>
+<tr>
+<td align=3D"left" style=3D"padding:5px;Margin:0">
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px">A few=
+ things are driving that. The biggest is cloud transceivers, the optical mo=
+dules that connect AI chips to each other at very high speeds. Lumentum's m=
+ost recent quarter saw revenue jump about 90% to a record $808 million, led=
+ by these parts as customers upgrade their networks to faster standards. Tw=
+o newer products add fuel: optical circuit switches, which let data centers=
+ rewire their connections on the fly to save power, and co-packaged optics,=
+ which build the light-handling pieces directly onto chips. Switch backlog =
+alone has already passed $400 million.</p>
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px"><br><=
+/p>
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px">The c=
+atch, and the reason the forecast looks credible rather than hopeful, is th=
+at demand is outrunning supply. Lumentum says it is short-shipping customer=
+s by around 30% because it cannot make these laser chips fast enough, and N=
+vidia signed a multi-year partnership with the company earlier this year.</=
+p></td>
+</tr>
+<tr>
+<td align=3D"center" style=3D"padding:10px;Margin:0"><!--[if mso]><a href=
+=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GDHIaWc6K_6zA1HhBOf3HygjdUij~c=
+vXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef957_y_6YV~Fu1X-mja" target=3D"_bla=
+nk" hidden>
+<v:roundrect xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:w=3D"urn:schem=
+as-microsoft-com:office:word" esdevVmlButton href=3D"https://tikr.acemlna.c=
+om/lt.php?x=3D4lZy~GDHIaWc6K_6zA1HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oi=
+kA0_ueglPHFI3ef957_y_6YV~Fu1X-mja"=20
+style=3D"height:48px; v-text-anchor:middle; width:471px" arcsize=3D"6%" str=
+okecolor=3D"#0d1a26" strokeweight=3D"1px" fillcolor=3D"#ff9900">
+<w:anchorlock></w:anchorlock>
+<center style=3D'color:#333333; font-family:helvetica, "helvetica neue", ar=
+ial, verdana, sans-serif; font-size:19px; font-weight:700; line-height:19px=
+;  mso-text-raise:1px'>Access More on TIKR Terminal Now!</center>
+</v:roundrect></a>
+<![endif]--><!--[if !mso]><!-- --><span class=3D"msohide es-button-border" =
+style=3D"border-style:solid;border-color:#0d1a26;background:#ff9900;border-=
+width:1px;display:inline-block;border-radius:3px;width:auto;mso-hide:all"><=
+a href=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GDHIaWc6K_6zA1HhBOf3Hygj=
+dUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef957_y_6YV~Fu1X-mja" class=3D=
+"es-button" target=3D"_blank" style=3D"mso-style-priority:100 !important;te=
+xt-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;=
+mso-line-height-rule:exactly;color:#333333;font-size:24px;display:inline-bl=
+ock;background:#FF9900;border-radius:3px;font-family:helvetica, 'helvetica =
+neue', arial, verdana, sans-serif;font-weight:bold;font-style:normal;line-h=
+eight:28.8px;width:auto;text-align:center;padding:10px 15px 10px 15px;mso-p=
+adding-alt:0;mso-border-alt:10px solid #FF9900">Access More on TIKR Termina=
+l Now!</a> </span><!--<![endif]--></td>
+</tr>
+<tr>
+<td align=3D"center" style=3D"padding:10px;Margin:0;font-size:0">
+<table border=3D"0" width=3D"100%" height=3D"100%" cellpadding=3D"0" cellsp=
+acing=3D"0" role=3D"presentation" style=3D"mso-table-lspace:0pt;mso-table-r=
+space:0pt;border-collapse:collapse;border-spacing:0px">
+<tr>
+<td style=3D"padding:0;Margin:0;border-bottom:1px solid #ff9900;background:=
+unset;height:0px;width:100%;margin:0px"></td>
+</tr>
+</table></td>
+</tr>
+<tr>
+<td align=3D"center" style=3D"Margin:0;padding-bottom:5px;padding-left:5px;=
+padding-right:5px;padding-top:20px">
+<h2 style=3D"Margin:0;line-height:30px;mso-line-height-rule:exactly;font-fa=
+mily:roboto, 'helvetica neue', helvetica, arial, sans-serif;font-size:25px;=
+font-style:normal;font-weight:normal;color:#333333"><b>The Week Ahead</b></=
+h2></td>
+</tr>
+<tr>
+<td align=3D"left" style=3D"padding:5px;Margin:0">
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px">A loa=
+ded week of prints across AI hardware, cybersecurity, healthcare, and the c=
+onsumer, capped by Friday's May jobs report. Here are the five events worth=
+ watching:</p>
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:helvetica, 'helvetica neue', ari=
+al, verdana, sans-serif;line-height:21px;color:#333333;font-size:14px"><br>=
+</p>
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:30px;color:#333333;font-size:20px"><b>Tu=
+esday, June 2</b><br></p>
+<ul>
+<li style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-li=
+ne-height-rule:exactly;font-family:helvetica, 'helvetica neue', arial, verd=
+ana, sans-serif;line-height:24px;color:#333333;margin-left:0;font-size:14px=
+">
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px"><stro=
+ng>Palo Alto Networks (NASDAQ: PANW), After Close:</strong> The cybersecuri=
+ty giant is expected to post revenue around $2.9 billion, up about 28%, wit=
+h earnings near $0.80. Much of that growth comes from its recent CyberArk a=
+cquisition, so investors will zero in on organic momentum and next-generati=
+on security ARR guided near $8 billion. With the stock up over 50% this yea=
+r, expectations are high and any soft guidance could sting.</p></li>
+</ul>
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:30px;color:#333333;font-size:20px"><b>We=
+dnesday, June 3</b><br></p>
+<ul>
+<li style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-li=
+ne-height-rule:exactly;font-family:helvetica, 'helvetica neue', arial, verd=
+ana, sans-serif;line-height:24px;color:#333333;margin-left:0;font-size:14px=
+">
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px"><stro=
+ng>Medtronic (NYSE: MDT), Before Open:</strong> One of the world's biggest =
+medical-device makers (pacemakers, insulin pumps, surgical tools) closes it=
+s fiscal year with full-year adjusted earnings guided to roughly $5.50 a sh=
+are. Watch for the drag from carving out its diabetes unit, MiniMed, and an=
+y read on whether device demand and hospital procedure volumes are holding =
+up. Medtronic is a useful health-of-healthcare bellwether.</p></li>
+<li style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-li=
+ne-height-rule:exactly;font-family:helvetica, 'helvetica neue', arial, verd=
+ana, sans-serif;line-height:24px;color:#333333;margin-left:0;font-size:14px=
+">
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px"><stro=
+ng>Broadcom (NASDAQ: AVGO), After Close:</strong> The biggest print of the =
+week. Broadcom designs custom AI chips for the largest cloud companies and =
+is expected to report revenue around $22 billion, up roughly 47%, with AI c=
+hip sales near $10.7 billion. Investors want an updated order backlog after=
+ recent deals with Google and Meta. As the main Nvidia alternative, Broadco=
+m's numbers set the tone for the whole AI hardware trade.</p></li>
+</ul>
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:30px;color:#333333;font-size:20px"><b>Th=
+ursday, June 4</b><br></p>
+<ul>
+<li style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-li=
+ne-height-rule:exactly;font-family:helvetica, 'helvetica neue', arial, verd=
+ana, sans-serif;line-height:24px;color:#333333;margin-left:0;font-size:14px=
+">
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px"><stro=
+ng>Ciena (NYSE: CIEN), Before Open:</strong> Ciena builds the optical gear =
+that carries traffic between data centers, and it has become a key benefici=
+ary of AI-driven network demand. Management guided revenue near $1.5 billio=
+n, with the full-year outlook implying growth around 28%. After a monster p=
+rior quarter, watch gross margins and any comments on how aggressively clou=
+d giants are buying. A strong print would echo the Lumentum story above.</p=
+></li>
+<li style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-li=
+ne-height-rule:exactly;font-family:helvetica, 'helvetica neue', arial, verd=
+ana, sans-serif;line-height:24px;color:#333333;margin-left:0;font-size:14px=
+">
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px"><stro=
+ng>Lululemon (NASDAQ: LULU), After Close:</strong> The athletic-apparel bra=
+nd is expected to grow revenue only about 3% to roughly $2.4 billion, with =
+earnings down around 36% to near $1.67. Soft North American demand and tari=
+ff pressure are the worries. After a rough stretch for the stock, this repo=
+rt is a real test of whether the brand still has pricing power, and a usefu=
+l gauge of the higher-end US consumer.</p></li>
+</ul></td>
+</tr>
+<tr>
+<td align=3D"center" style=3D"padding:10px;Margin:0"><!--[if mso]><a href=
+=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GDHIaWc6K_6zA1HhBOf3HygjdUij~c=
+vXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef957_y_6YV~Fu1X-mja" target=3D"_bla=
+nk" hidden>
+<v:roundrect xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:w=3D"urn:schem=
+as-microsoft-com:office:word" esdevVmlButton href=3D"https://tikr.acemlna.c=
+om/lt.php?x=3D4lZy~GDHIaWc6K_6zA1HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oi=
+kA0_ueglPHFI3ef957_y_6YV~Fu1X-mja"=20
+style=3D"height:48px; v-text-anchor:middle; width:471px" arcsize=3D"6%" str=
+okecolor=3D"#0d1a26" strokeweight=3D"1px" fillcolor=3D"#ff9900">
+<w:anchorlock></w:anchorlock>
+<center style=3D'color:#333333; font-family:helvetica, "helvetica neue", ar=
+ial, verdana, sans-serif; font-size:19px; font-weight:700; line-height:19px=
+;  mso-text-raise:1px'>Access More on TIKR Terminal Now!</center>
+</v:roundrect></a>
+<![endif]--><!--[if !mso]><!-- --><span class=3D"msohide es-button-border" =
+style=3D"border-style:solid;border-color:#0d1a26;background:#ff9900;border-=
+width:1px;display:inline-block;border-radius:3px;width:auto;mso-hide:all"><=
+a href=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GDHIaWc6K_6zA1HhBOf3Hygj=
+dUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef957_y_6YV~Fu1X-mja" class=3D=
+"es-button" target=3D"_blank" style=3D"mso-style-priority:100 !important;te=
+xt-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;=
+mso-line-height-rule:exactly;color:#333333;font-size:24px;display:inline-bl=
+ock;background:#FF9900;border-radius:3px;font-family:helvetica, 'helvetica =
+neue', arial, verdana, sans-serif;font-weight:bold;font-style:normal;line-h=
+eight:28.8px;width:auto;text-align:center;padding:10px 15px 10px 15px;mso-p=
+adding-alt:0;mso-border-alt:10px solid #FF9900">Access More on TIKR Termina=
+l Now!</a> </span><!--<![endif]--></td>
+</tr>
+<tr>
+<td align=3D"center" style=3D"padding:10px;Margin:0;font-size:0">
+<table border=3D"0" width=3D"100%" height=3D"100%" cellpadding=3D"0" cellsp=
+acing=3D"0" role=3D"presentation" style=3D"mso-table-lspace:0pt;mso-table-r=
+space:0pt;border-collapse:collapse;border-spacing:0px">
+<tr>
+<td style=3D"padding:0;Margin:0;border-bottom:1px solid #ff9900;background:=
+unset;height:0px;width:100%;margin:0px"></td>
+</tr>
+</table></td>
+</tr>
+<tr>
+<td align=3D"left" style=3D"padding:5px;Margin:0">
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px"><stro=
+ng>P.S. Fun Fact:</strong> Lumentum traces its roots to JDS Uniphase, a fib=
+er-optics highflyer that split its stock again and again during the dot-com=
+ boom. When the telecom bubble burst, JDS Uniphase reported a loss of rough=
+ly $50 billion for fiscal 2001, including a nearly $39 billion write-down f=
+or overpriced acquisitions, a record loss for a US company at the time.</p>
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px"><br><=
+/p>
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px">JDS U=
+niphase split into Lumentum and Viavi Solutions in 2015.</p></td>
+</tr>
+<tr>
+<td align=3D"left" style=3D"padding:5px;Margin:0">
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px"><stro=
+ng><em><a target=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4lZ=
+y~GDHIaWc6K_6zA1HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef95=
+7_y_6YV~Fu1X-mja" style=3D"-webkit-text-size-adjust:none;-ms-text-size-adju=
+st:none;mso-line-height-rule:exactly;text-decoration:underline;color:#2660f=
+5;font-size:16px;font-family:roboto, 'helvetica neue', helvetica, arial, sa=
+ns-serif">Check out $LITE and discover other high-performing stocks with TI=
+KR!</a></em></strong></p></td>
+</tr>
+<tr>
+<td align=3D"center" height=3D"70" style=3D"padding:0;Margin:0"></td>
+</tr>
+</table></td>
+</tr>
+<tr>
+<td align=3D"center" valign=3D"top" style=3D"padding:0;Margin:0;width:650px=
+">
+<table cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentat=
+ion" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:col=
+lapse;border-spacing:0px">
+<tr>
+<td align=3D"center" class=3D"es-m-txt-c" style=3D"padding:0;Margin:0;paddi=
+ng-bottom:5px;padding-left:15px">
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:helvetica, 'helvetica neue', ari=
+al, verdana, sans-serif;line-height:18px;color:#333333;font-size:12px"><a t=
+arget=3D"_blank" href=3D"http://tikr.activehosted.com/proc.php?c=3D2276&m=
+=3D2603&s=3D40e36c14b2dcd80066d2b0254d9bb1da&d=3D109182&v=3D2&nl=3D4&act=3D=
+unsub&ALL=3Dtrue" style=3D"-webkit-text-size-adjust:none;-ms-text-size-adju=
+st:none;mso-line-height-rule:exactly;text-decoration:underline;color:#2660f=
+5;font-size:12px;font-family:helvetica, 'helvetica neue', arial, verdana, s=
+ans-serif">Unsubscribe</a><strong>&nbsp;</strong>&nbsp; &nbsp;&nbsp;<a targ=
+et=3D"_blank" href=3D"https://tikr.activehosted.com/f/1/?t=3DeyJhbGciOiJIUz=
+I1NiJ9.eyJzdWIiOiI0MGUzNmMxNGIyZGNkODAwNjZkMmIwMjU0ZDliYjFkYSIsImlhdCI6MTc4=
+MDM5OTk3MywiaXNzIjoiSGVkd2lnIiwiZXhwIjoxNzgwNDg2MzczLCJhdWQiOiJQcmVmZXJlbmN=
+lIENlbnRlcnMifQ.Gq-gmAcnZ6Z1yI0KFWoZ23UvvB0Hw90dLAX82QdQ6w8" style=3D"-webk=
+it-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exa=
+ctly;text-decoration:underline;color:#2660f5;font-size:12px;font-family:hel=
+vetica, 'helvetica neue', arial, verdana, sans-serif">Manage Preferences</a=
+></p></td>
+</tr>
+<tr>
+<td align=3D"center" class=3D"es-m-txt-c" style=3D"padding:0;Margin:0;font-=
+size:0px"><a target=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D=
+4lZy~GDHIaWc6K_6zA1HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3e=
+f957_y_6YV~Fu1X-lj8" style=3D"-webkit-text-size-adjust:none;-ms-text-size-a=
+djust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#FF=
+9900;font-size:14px"><img src=3D"https://content.app-us1.com/cdn-cgi/image/=
+fit=3Dscale-down,width=3D650,dpr=3D2,format=3Dauto,onerror=3Dredirect/bKeZP=
+E/2024/10/14/e68e0e02-b79a-41e8-b318-afcaf9971bf3.png" alt=3D"" style=3D"di=
+splay:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mo=
+de:bicubic" height=3D"42"></a></td>
+</tr>
+<tr>
+<td align=3D"center" class=3D"es-m-txt-c" style=3D"padding:0;Margin:0">
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:helvetica, 'helvetica neue', ari=
+al, verdana, sans-serif;line-height:18px;color:#696969;font-size:12px">TIKR=
+, 3003 Maple Ave, Dallas, TX 75201, United States</p></td>
+</tr>
+<tr>
+<td align=3D"center" class=3D"es-m-txt-c" style=3D"padding:0;Margin:0;paddi=
+ng-top:10px;padding-bottom:25px;font-size:0">
+<table cellpadding=3D"0" cellspacing=3D"0" class=3D"es-table-not-adapt es-s=
+ocial" dir=3D"ltr" role=3D"presentation" style=3D"mso-table-lspace:0pt;mso-=
+table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+<tr>
+<td align=3D"center" valign=3D"top" style=3D"padding:0;Margin:0;padding-rig=
+ht:10px"><a target=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4=
+lZy~GDHIaWc6K_6zA1HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef=
+957_y_6YV~Fu1X-ljK" style=3D"-webkit-text-size-adjust:none;-ms-text-size-ad=
+just:none;mso-line-height-rule:exactly;text-decoration:underline;color:#FF9=
+900;font-size:14px"><img src=3D"https://stripo.app-us1.com/static/assets/im=
+g/social-icons/logo-black/x-logo-black.png" alt=3D"X" title=3D"X" width=3D"=
+24" height=3D"24" style=3D"display:block;border:0;outline:none;text-decorat=
+ion:none;-ms-interpolation-mode:bicubic"></a></td>
+<td align=3D"center" valign=3D"top" style=3D"padding:0;Margin:0;padding-rig=
+ht:10px"><a target=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4=
+lZy~GDHIaWc6K_6zA1HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef=
+957_y_6YV~Fu1X-lja" style=3D"-webkit-text-size-adjust:none;-ms-text-size-ad=
+just:none;mso-line-height-rule:exactly;text-decoration:underline;color:#FF9=
+900;font-size:14px"><img src=3D"https://stripo.app-us1.com/static/assets/im=
+g/social-icons/logo-black/linkedin-logo-black.png" alt=3D"In" title=3D"Link=
+edIn" width=3D"24" height=3D"24" style=3D"display:block;border:0;outline:no=
+ne;text-decoration:none;-ms-interpolation-mode:bicubic"></a></td>
+<td align=3D"center" valign=3D"top" style=3D"padding:0;Margin:0;padding-rig=
+ht:10px"><a target=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4=
+lZy~GDHIaWc6K_6zA1HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef=
+957_y_6YV~Fu1X-ljq" style=3D"-webkit-text-size-adjust:none;-ms-text-size-ad=
+just:none;mso-line-height-rule:exactly;text-decoration:underline;color:#FF9=
+900;font-size:14px"><img src=3D"https://stripo.app-us1.com/static/assets/im=
+g/social-icons/logo-black/youtube-logo-black.png" alt=3D"Yt" title=3D"YouTu=
+be" width=3D"24" height=3D"24" style=3D"display:block;border:0;outline:none=
+;text-decoration:none;-ms-interpolation-mode:bicubic"></a></td>
+<td align=3D"center" valign=3D"top" style=3D"padding:0;Margin:0"><a target=
+=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GDHIaWc6K_6zA1=
+HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef957_y_6YV~Fu1X-lk8=
+" style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line=
+-height-rule:exactly;text-decoration:underline;color:#FF9900;font-size:14px=
+"><img src=3D"https://stripo.app-us1.com/static/assets/img/social-icons/log=
+o-black/facebook-logo-black.png" alt=3D"Fb" title=3D"Facebook" width=3D"24"=
+ height=3D"24" style=3D"display:block;border:0;outline:none;text-decoration=
+:none;-ms-interpolation-mode:bicubic"></a></td>
+</tr>
+</table></td>
+</tr>
+</table></td>
+</tr>
+</table></td>
+</tr>
+</table></td>
+</tr>
+</table>
+<table cellpadding=3D"0" cellspacing=3D"0" class=3D"es-content" align=3D"ce=
+nter" role=3D"none" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;bord=
+er-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width=
+:100%">
+<tr>
+<td align=3D"center" style=3D"padding:0;Margin:0">
+<table class=3D"es-content-body" align=3D"center" cellpadding=3D"0" cellspa=
+cing=3D"0" role=3D"none" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt=
+;border-collapse:collapse;border-spacing:0px;background-color:#FFFDFB;width=
+:650px">
+<tr>
+<td align=3D"left" style=3D"padding:0;Margin:0">
+<table cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"none" sty=
+le=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;bo=
+rder-spacing:0px">
+<tr>
+<td align=3D"center" valign=3D"top" style=3D"padding:0;Margin:0;width:650px=
+">
+<table cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentat=
+ion" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:col=
+lapse;border-spacing:0px">
+<tr>
+<td align=3D"center" style=3D"padding:0;Margin:0;padding-top:30px;padding-b=
+ottom:30px;font-size:0">
+<table border=3D"0" width=3D"100%" height=3D"100%" cellpadding=3D"0" cellsp=
+acing=3D"0" role=3D"presentation" style=3D"mso-table-lspace:0pt;mso-table-r=
+space:0pt;border-collapse:collapse;border-spacing:0px">
+<tr>
+<td style=3D"padding:0;Margin:0;border-bottom:0px solid #cccccc;background:=
+none;height:0px;width:100%;margin:0px"></td>
+</tr>
+</table></td>
+</tr>
+</table></td>
+</tr>
+</table></td>
+</tr>
+</table></td>
+</tr>
+</table>
+<table cellpadding=3D"0" cellspacing=3D"0" class=3D"es-content" align=3D"ce=
+nter" role=3D"none" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;bord=
+er-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width=
+:100%">
+<tr>
+<td align=3D"center" style=3D"padding:0;Margin:0">
+<table class=3D"es-content-body" align=3D"center" cellpadding=3D"0" cellspa=
+cing=3D"0" role=3D"none" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt=
+;border-collapse:collapse;border-spacing:0px;background-color:#FFFDFB;width=
+:650px">
+<tr>
+<td align=3D"left" style=3D"padding:0;Margin:0">
+<table cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"none" sty=
+le=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;bo=
+rder-spacing:0px">
+<tr>
+<td align=3D"center" valign=3D"top" style=3D"padding:0;Margin:0;width:650px=
+">
+<table cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentat=
+ion" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:col=
+lapse;border-spacing:0px">
+<tr>
+<td align=3D"center" style=3D"padding:0;Margin:0;font-size:0">
+<table cellpadding=3D"0" cellspacing=3D"0" class=3D"es-table-not-adapt es-s=
+ocial" role=3D"presentation" style=3D"mso-table-lspace:0pt;mso-table-rspace=
+:0pt;border-collapse:collapse;border-spacing:0px">
+<tr>
+<td align=3D"center" valign=3D"top" style=3D"padding:0;Margin:0;padding-rig=
+ht:10px"><a target=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4=
+lZy~GDHIaWc6K_6zA1HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef=
+957_y_6YV~Fu1X-lkK" style=3D"-webkit-text-size-adjust:none;-ms-text-size-ad=
+just:none;mso-line-height-rule:exactly;text-decoration:underline;color:#FF9=
+900;font-size:14px"><img title=3D"Facebook" src=3D"https://stripo.cluster.a=
+pp-us1.com/static/assets/img/social-icons/circle-black/facebook-circle-blac=
+k.png" alt=3D"Facebook" width=3D"32" style=3D"display:block;border:0;outlin=
+e:none;text-decoration:none;-ms-interpolation-mode:bicubic"></a></td>
+<td align=3D"center" valign=3D"top" style=3D"padding:0;Margin:0;padding-rig=
+ht:10px"><a target=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4=
+lZy~GDHIaWc6K_6zA1HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef=
+957_y_6YV~Fu1X-mi8" style=3D"-webkit-text-size-adjust:none;-ms-text-size-ad=
+just:none;mso-line-height-rule:exactly;text-decoration:underline;color:#FF9=
+900;font-size:14px"><img title=3D"Twitter" src=3D"https://stripo.cluster.ap=
+p-us1.com/static/assets/img/social-icons/circle-black/twitter-circle-black.=
+png" alt=3D"Twitter" width=3D"32" style=3D"display:block;border:0;outline:n=
+one;text-decoration:none;-ms-interpolation-mode:bicubic"></a></td>
+<td align=3D"center" valign=3D"top" style=3D"padding:0;Margin:0;padding-rig=
+ht:10px"><a target=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4=
+lZy~GDHIaWc6K_6zA1HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef=
+957_y_6YV~Fu1X-miK" style=3D"-webkit-text-size-adjust:none;-ms-text-size-ad=
+just:none;mso-line-height-rule:exactly;text-decoration:underline;color:#FF9=
+900;font-size:14px"><img title=3D"Linkedin" src=3D"https://stripo.cluster.a=
+pp-us1.com/static/assets/img/social-icons/circle-black/linkedin-circle-blac=
+k.png" alt=3D"Linkedin" width=3D"32" style=3D"display:block;border:0;outlin=
+e:none;text-decoration:none;-ms-interpolation-mode:bicubic"></a></td>
+<td align=3D"center" valign=3D"top" style=3D"padding:0;Margin:0;padding-rig=
+ht:10px"><a target=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4=
+lZy~GDHIaWc6K_6zA1HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef=
+957_y_6YV~Fu1X-mia" style=3D"-webkit-text-size-adjust:none;-ms-text-size-ad=
+just:none;mso-line-height-rule:exactly;text-decoration:underline;color:#FF9=
+900;font-size:14px"><img title=3D"Youtube" src=3D"https://stripo.cluster.ap=
+p-us1.com/static/assets/img/social-icons/circle-black/youtube-circle-black.=
+png" alt=3D"Youtube" width=3D"32" style=3D"display:block;border:0;outline:n=
+one;text-decoration:none;-ms-interpolation-mode:bicubic"></a></td>
+<td align=3D"center" valign=3D"top" style=3D"padding:0;Margin:0"><a target=
+=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GDHIaWc6K_6zA1=
+HhBOf3HygjdUij~cvXXXHVXnLDH4t-Uy7xeFr3X2oikA0_ueglPHFI3ef957_y_6YV~Fu1X-miq=
+" style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line=
+-height-rule:exactly;text-decoration:underline;color:#FF9900;font-size:14px=
+"><img title=3D"Instagram" src=3D"https://stripo.cluster.app-us1.com/static=
+/assets/img/social-icons/circle-black/instagram-circle-black.png" alt=3D"In=
+stagram" width=3D"32" style=3D"display:block;border:0;outline:none;text-dec=
+oration:none;-ms-interpolation-mode:bicubic"></a></td>
+</tr>
+</table></td>
+</tr>
+</table></td>
+</tr>
+</table></td>
+</tr>
+</table></td>
+</tr>
+</table></td>
+</tr>
+</table>
+<br>
+<img src=3D"https://tikr.acemlna.com/lteo?x=3D5DZi05LFJFcKHhVpz_u8Uuae1XBSi=
+gMhwe0vX5bJVXLL5p7-zA9OghJsAK4RvETvje4wZ5N2VvbND9Ky_B6Djx-mAb7yvwwfxxCtjq.A=
+krcK5O41NAoFhR7cCeAijd9x_PZok.fGJFig7pJAMgkBwOTeD6VU_NLukMUz" border=3D"0" =
+width=3D"1" height=3D"1" style=3D"display:block;width:1px!important;min-wid=
+th:1px!important;max-width:1px!important;height:1px!important;border:0;over=
+flow:hidden;"/>
+</body>
+</html>
+------=_Part_3961465_1053700819.1780399974443--

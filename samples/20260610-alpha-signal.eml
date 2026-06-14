@@ -1,0 +1,2336 @@
+Delivered-To: reader@example.com
+Received: by 2002:a05:6370:c143:20b0:868:4dae:afed with SMTP id yi3-n2csp981758mab;
+        Wed, 10 Jun 2026 14:03:01 -0700 (PDT)
+X-Received: by 2002:a05:6820:1529:b0:69d:e746:6ec9 with SMTP id 006d021491bc7-69e68b09a59mr13856059eaf.9.1781125381625;
+        Wed, 10 Jun 2026 14:03:01 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781125381; cv=none;
+        d=google.com; s=arc-20240605;
+        b=H2VE5LUIveVKiU2yAjNUGWbCc+MtTGoxUl4f57PM+abG2uXgpR8KuZ7jG/E3G0FzIQ
+         iWdpsoUyZYfK6ze//43UcPZYMHX2K5BVszafGwi7Ul5XRPXeEzU/iSbDfwcMNhwwz5dy
+         DQ+YossxTm4NysqZHg46PTLgH3ctt8m/OCX6u0L/1gwChhp7UoW6TJ7jypB3oZNxq9Ye
+         o329FodnqPmALL1yLYn4eRAqRwVko0VTkcmacQxvlC6X6CBUD6lCTs5mxm3YJkRXfx93
+         0TAY+SlFdNCeolTbtCk/I5zIUfRK2DmyaLpYUWBBdN5GT2EiOgUMd2POs+8j+K3sRHzY
+         sXEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=date:message-id:list-help:abuse-reports-to:archived-at:organization
+         :auto-submitted:precedence:feedback-id:list-id:list-unsubscribe-post
+         :list-unsubscribe:mime-version:subject:to:from:dkim-signature
+         :dkim-signature;
+        bh=tJodmfFU5IYut07LY8iljBcZLBaQ1iJn2kYtpa+IBgo=;
+        fh=Y0U3DcH6mAU0UABO/ziMIjMdtk1YqlY2rjY9Rt0/fxM=;
+        b=XE4qo0DTfiYtGZD4SuZhRWI+FuMlRDX1VX7FXNFoScruC77W9Bzf1RVOTaOm5kjW/N
+         Tt8zoYpZL7umYiqT3MKL/yfB/hdneg/tsw0SYhV+ItdsPUxJ9vBIbFo8sMuq6d2h1d9S
+         Gho/oNf1HC8851tR/RWn1OqM419avHEj3bMK3jTLuAv19SHcACPQbmKuN/4v4fBxMczL
+         YG4pQubPpl3l3FISuEb4UysG7NS/Vt3ngfDCsE5lnrU6ZMlbHfxz5SCRWm1glwCYERK9
+         FyPlvQRaBYSKAh3j63zsO0c+JpiEilKu52NZD1S4XBYjQ7UkTUQ5p9I4OPFafdS1NxPJ
+         lX+w==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@alphasignal.ai header.s=6t4xwwgfigb46q3fzae2xqfpgghp2ub3 header.b=Lb8SAygx;
+       dkim=pass header.i=@amazonses.com header.s=kra23psoka5qyyh6gdejiiuof3nluwuz header.b=l2Sasu3B;
+       spf=pass (google.com: domain of 010f019eb3587b8b-f85f3d77-e555-46f1-87f0-79d8aa324643-000000@news.alphasignal.ai designates 54.240.115.227 as permitted sender) smtp.mailfrom=010f019eb3587b8b-f85f3d77-e555-46f1-87f0-79d8aa324643-000000@news.alphasignal.ai;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=alphasignal.ai
+Return-Path: <010f019eb3587b8b-f85f3d77-e555-46f1-87f0-79d8aa324643-000000@news.alphasignal.ai>
+Received: from a115-227.smtp-out.us-east-2.amazonses.com (a115-227.smtp-out.us-east-2.amazonses.com. [54.240.115.227])
+        by mx.google.com with ESMTPS id 6a1803df08f44-8cecd50b1e0si310887386d6.612.2026.06.10.14.03.01
+        for <reader@example.com>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jun 2026 14:03:01 -0700 (PDT)
+Received-SPF: pass (google.com: domain of 010f019eb3587b8b-f85f3d77-e555-46f1-87f0-79d8aa324643-000000@news.alphasignal.ai designates 54.240.115.227 as permitted sender) client-ip=54.240.115.227;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@alphasignal.ai header.s=6t4xwwgfigb46q3fzae2xqfpgghp2ub3 header.b=Lb8SAygx;
+       dkim=pass header.i=@amazonses.com header.s=kra23psoka5qyyh6gdejiiuof3nluwuz header.b=l2Sasu3B;
+       spf=pass (google.com: domain of 010f019eb3587b8b-f85f3d77-e555-46f1-87f0-79d8aa324643-000000@news.alphasignal.ai designates 54.240.115.227 as permitted sender) smtp.mailfrom=010f019eb3587b8b-f85f3d77-e555-46f1-87f0-79d8aa324643-000000@news.alphasignal.ai;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=alphasignal.ai
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=6t4xwwgfigb46q3fzae2xqfpgghp2ub3; d=alphasignal.ai; t=1781125381;
+	h=From:To:Subject:MIME-Version:Content-Type:List-Unsubscribe:List-Unsubscribe-Post:List-Id:List-Help:Message-ID:Date;
+	bh=HyW9ps0qpYVuxkxYmZ+/K0dZvXiiF34y7BdmfbooD/w=;
+	b=Lb8SAygxFa4k3MUZPhyqD0B2qa999NY5yt0svtAn+TmQEUBchZckmEfYy9nDW1PV
+	Q9d6S8QT46zAsWo4UAOGcRbPM9ojslhQei62jznMChS5jIduO9D58vusIn9r5Cz7qAI
+	Qu4Zea1QFwpqfL+7dsMxPMQFkaPRb0oFtryqAHXK8oTuH+8GlVRZu4yaIvjuQd1JeOs
+	8SaTLFc0MLO/HMGHUgvCtgk3zVLf+5B3VQkEqn0FWpj06R2n/ivldDFbTz9uYaTIo2L
+	6HtAunZZuIiVZY0I3hLWdoT8VP++y/7+rjefeY1KHb+gU2rHevNb+kcSaMD+wZXX1dD
+	XlP+o7TrVw==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=kra23psoka5qyyh6gdejiiuof3nluwuz; d=amazonses.com; t=1781125381;
+	h=From:To:Subject:MIME-Version:Content-Type:List-Unsubscribe:List-Unsubscribe-Post:List-Id:Feedback-ID:List-Help:Message-ID:Date;
+	bh=HyW9ps0qpYVuxkxYmZ+/K0dZvXiiF34y7BdmfbooD/w=;
+	b=l2Sasu3B53z4s2HIC3UFowzZja/CgvbidpJ7HQ6BOhB156u3ENmjquayHWFqLr7U
+	7NH2fEuguLOB8GIhKCQX3K2RvRLJL/uLm0ml0Pl9psnwC++3Rg5pm80NCpFSZu7t4vl
+	QTrYG4MUVdZYEVZKXfnEEQBYSf1jyOh5I85eu/Pk=
+From: AlphaSignal <news@alphasignal.ai>
+To: reader@example.com
+Subject: Anthropic ships scheduled Claude agents with credential vaults +
+ paral
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_885056_247089383.1781125381003"
+List-Unsubscribe: <mailto:news@alphasignal.ai?subject=unsubscribe%20fc2daecbc1948b68>, <https://alphasignal.ai/us?uid=1rbQTN73dcamvOrOO&cid=fc2daecbc1948b68>
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+List-Id: AlphaSignal Newsletter <news.alphasignal.ai>
+Feedback-ID: ::1.us-east-2.jAR5U7QBOAP7Zz6aQYGcElD40cTATkRIc5pck9uHLa4=:AmazonSES
+Precedence: bulk
+Auto-Submitted: auto-generated
+Organization: AlphaSignal
+Archived-At: https://alphasignal.ai/email/fc2daecbc1948b68
+X-Report-Abuse: mailto:news@alphasignal.ai
+X-Report-Spam: mailto:news@alphasignal.ai
+Abuse-Reports-To: mailto:news@alphasignal.ai
+List-Help: <mailto:news@alphasignal.ai?subject=help>
+Message-ID: <010f019eb3587b8b-f85f3d77-e555-46f1-87f0-79d8aa324643-000000@us-east-2.amazonses.com>
+Date: Wed, 10 Jun 2026 21:03:01 +0000
+X-SES-Outgoing: 2026.06.10-54.240.115.227
+
+------=_Part_885056_247089383.1781125381003
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+AlphaSignal
+Stay updated with today's top AI news, papers, and repos.
+Signup
+|
+Work With Us
+|
+Follow on X
+|
+Archive
+Hey David,
+Anthropic had a big day. A new Claude topping coding benchmarks and agents =
+that finally run while you sleep. Two very different announcements, same un=
+derlying bet: Claude stops being a tool you prompt and becomes infrastructu=
+re you deploy.
+The benchmark race is fun to watch, but the agents story is the real one. C=
+ron schedules, credential vaults, parallel subagents. That's a backend engi=
+neer on autopilot.
+Meanwhile, someone finally wrote the math textbook explaining why any of th=
+is works. Good timing.
+In Partnership with
+=C2=B7
+Today's Author
+Lior Alexander. Founder of AlphaSignal and former ML Engineer. Previously b=
+uilt ML systems at Iguazio, Guesty, Enphase, Mila.
+Summary
+Read time: 6 min 44 sec
+Top News
+=E2=96=B8 Cursor ships Claude with 72.9% on its coding benchmark, 8 points =
+ahead
+Lambda
+=E2=96=B8
+H
+o
+w
+t
+o
+p
+u
+s
+h
+M
+o
+d
+e
+l
+F
+L
+O
+P
+S
+U
+t
+i
+l
+i
+z
+a
+t
+i
+o
+n
+p
+a
+s
+t
+6
+0
+%
+Top News
+=E2=96=B8 Anthropic ships
+scheduled Claude agents
+with secret API key vaults and parallel subagents
+ghost
+=E2=96=B8
+Y
+o
+u
+r
+A
+g
+e
+n
+t
+N
+e
+e
+d
+s
+M
+o
+r
+e
+T
+h
+a
+n
+2
+P
+r
+o
+j
+e
+c
+t
+s
+Top News
+=E2=96=B8 Luma ships Ray3.2, a video model that
+turns text directions
+into cinematic shots
+Signals
+1. Cohere releases first
+open-source coding model
+, 30B params under Apache 2.0
+2.
+Presented by WorkOS:
+WorkOS launches auth.md, an open protocol so AI agents can register with yo=
+ur app without sign-up forms
+3. Yi Ma releases free open-source book explaining the math behind deep lea=
+rning black boxes
+4. New math framework brings
+Nesterov-style acceleration
+to shape optimization problems
+5. Stanford and Meta say
+code should replace
+language as the backbone of AI agents
+6. Perplexity and Harvard study finds AI agents
+cut task time
+87% vs search
+Top News
+Cursor ships Claude with 72.9% on its coding benchmark, 8 points ahead
+6,028 Likes
+Claude Fable 5
+just landed in Cursor, and the numbers are hard to ignore. It hit
+72.9% on CursorBench
+, a test built from real, messy, multi-file coding tasks pulled from actual=
+ Cursor sessions. That's 8 points above the previous best.
+So what makes it different? It's built to stay focused across very long tas=
+ks without losing track of what you asked it to do. It holds intent across =
+long sessions and drives tasks to completion with fewer check-ins. Think: r=
+efactoring a whole module, not just one function.
+Here's what it can do inside Cursor:
+Search your codebase by meaning, find files by name, read directory structu=
+res, and grep for patterns
+Suggest edits, apply them automatically, and execute terminal commands
+A thinking variant is available for problems that reward extra deliberation
+The tradeoff: it costs about twice as much as Claude Opus 4.8, at $10 per m=
+illion input tokens and $50 per million output tokens. Use
+Fable 5 for the hard stuff
+, not everything.
+READ MORE
+forward =E2=86=92
+Presented by Lambda
+How to push Model FLOPS Utilization past 60%
+Most large-scale training runs operate at 35=E2=80=9345% Model FLOPS Utiliz=
+ation (MFU). You're paying for twice the compute you're using.
+Lambda's engineers
+benchmarked Llama 3.1 models
+from 8B to 405B on NVIDIA Blackwell GPUs and traced efficiency loss to its =
+root causes:
+Memory overhead
+Parallelism strategy
+Serialized communication
+The result:
+a reproducible framework
+that pushed MFU past 60% (25%+ improvement vs. industry benchmark) with no =
+changes to model architecture.
+GET THE GUIDE
+partner with us =E2=86=92
+Top News
+Anthropic ships scheduled Claude agents with secret API key vaults and para=
+llel subagents
+3,760 Likes
+Claude agents used to die when you closed the tab. That changes now with th=
+ree new features.
+Here is what shipped:
+Scheduled deployments (public beta):
+Give an agent a cron schedule, and each time it fires, the agent starts a n=
+ew session and completes its task with no scheduler for you to build or hos=
+t. Perfect for nightly data syncs, weekly compliance scans, or daily digest=
+s.
+Environment variables in vaults (public beta):
+The agent never sees your real API key. The sandbox holds only a placeholde=
+r, and the real key is attached at the network boundary, only on requests t=
+o domains you allow.
+Dynamic workflows in Claude Code (now GA):
+Claude writes its own orchestration program on the fly, then runs it across=
+ many separate agents, each with a clean context window and one focused job=
+.
+One team deleted all the scheduling infrastructure they had built in-house =
+and replaced it with scheduled deployments, simplifying their stack. That i=
+s the kind of boilerplate this kills.
+READ MORE
+forward =E2=86=92
+Presented by ghost
+Your Agent Needs More Than 2 Projects
+Most Postgres providers give you a handful of databases and call it a free =
+tier.
+Your agent burns through that before lunch.
+Ghost
+is built for how agents use databases:
+Fork prod in 58ms. Spin up a fresh instance per task. Delete without cleanu=
+p.
+100 hours/month free. 1TB storage. No credit card.
+START BUILDING
+partner with us =E2=86=92
+Top News
+Luma ships Ray3.2, a video model that turns text directions into cinematic =
+shots
+3,684 Likes
+Luma AI just dropped
+Ray3.2
+, and the pitch is simple: you direct, the AI shoots. You're no longer just=
+ typing prompts and hoping for the best. You're actually controlling the sc=
+ene.
+The big question: what changed? A lot. Here's what you can now do:
+Up to 16 keyframes
+per clip, so you control exactly how motion and pacing unfold, frame by fra=
+me
+Track up to 8 faces at once, preserving expressions, posture, and gestures =
+across the whole shot
+Export native
+16-bit HDR in EXR format
+, which drops straight into color grading and VFX pipelines
+Reframe shots after the fact, swap backgrounds, change aspect ratios, witho=
+ut reshooting anything
+Generate clips
+up to 20 seconds at 1080p
+, long enough to build real scenes
+The other big thing: Ray3.2 now has an
+API
+. For the first time, you can plug Luma's video generation directly into yo=
+ur own tools, render farms, or custom pipelines. No middleware needed.
+READ MORE
+forward =E2=86=92
+Signals
+1
+Cohere releases first open-source coding model, 30B params under Apache 2.0
+1,996 Likes
+2
+WorkOS launches auth.md, an open protocol so AI agents can register with yo=
+ur app without sign-up forms
+Presented by WorkOS
+3
+Yi Ma releases free open-source book explaining the math behind deep learni=
+ng black boxes
+1,089 Likes
+4
+New math framework brings Nesterov-style acceleration to shape optimization=
+ problems
+Must Read
+5
+Stanford and Meta say code should replace language as the backbone of AI ag=
+ents
+1,003 Likes
+6
+Perplexity and Harvard study finds AI agents cut task time 87% vs search
+516 Likes
+At Alpha Signal, our mission is to build a sharp, engaged community focused=
+ on AI, machine learning, and cutting-edge language models, helping over 20=
+0,000 developers stay informed and ahead. We're passionate about curating t=
+he best in AI, from top research and trending technical blogs to expert ins=
+ights and tailored job opportunities. We keep you connected to the breakthr=
+oughs and discussions that matter, so you can stay in the loop without endl=
+ess searching. We also work closely with partners who value the future of A=
+I, including employers and advertisers who want to reach an audience as pas=
+sionate about AI as we are.
+Our partnerships are based on shared values of ethics, responsibility, and =
+a commitment to building a better world through technology.Privacy is a pri=
+ority at Alpha Signal. Our Privacy Policy clearly explains how we collect, =
+store, and use your personal and non-personal information. By using our web=
+site, you accept these terms, which you can review on our website. This pol=
+icy applies across all Alpha Signal pages, outlining your rights and how to=
+ contact us if you want to adjust the use of your information. We're based =
+in the United States. By using our site, you agree to be governed by U.S. l=
+aws.
+Looking to promote your company, product, service, or event to 250,000+ AI =
+developers?
+WORK WITH US
+How was today's email?
+Awesome
+Decent
+Not Great
+unsubscribe_me(): return True
+{"AlphaSignal": "214 Barton Springs Rd, Austin, USA"}
+
+Stop receiving emails here: https://app.alphasignal.ai/unsubscribe/u/1rbQTN=
+73dcamvOrOO?cid=3Dfc2daecbc1948b68
+------=_Part_885056_247089383.1781125381003
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+
+<!DOCTYPE html>
+
+<html lang=3D"en">
+<head>
+<meta charset=3D"utf-8"/>
+<meta content=3D"IE=3Dedge" http-equiv=3D"X-UA-Compatible"/>
+<meta content=3D"width=3Ddevice-width, initial-scale=3D1.0" name=3D"viewpor=
+t"/>
+<meta content=3D"light" name=3D"color-scheme"/>
+<meta content=3D"light dark" name=3D"supported-color-schemes"/>
+<title>AlphaSignal</title>
+<style type=3D"text/css">
+      /* Reset text resizing */
+      body,
+      table,
+      td,
+      a {
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+      }
+
+      li:last-child {
+        margin-bottom: 0; /* remove margin from last item */
+      }
+
+      img {
+        border: 0;
+        outline: none;
+        text-decoration: none;
+        -ms-interpolation-mode: bicubic;
+        display: block;
+      }
+
+      .h1 {
+        font-size: 17px !important;
+      }
+
+      .p {
+        font-size: 15px !important;
+      }
+
+      p {
+        margin-top: 10px;
+        padding: 0;
+      }
+
+
+      .menu-bar {
+        text-align: center !important;
+        font-size: 14px !important;
+        line-height: 20px !important;
+      }
+
+      .menu-bar a {
+        display: inline-block !important;
+        padding: 3px 8px !important;
+      }
+
+      /* Mobile styles */
+      @media only screen and (max-width: 600px) {
+
+        .mobile-hidden {
+          display: none !important;
+          mso-hide: all !important;
+        }
+       =20
+
+        .signal-img-cell {
+          width: 90px !important;
+          padding-left: 10px !important;
+        }
+
+        .signal-img {
+          width: 90px !important;
+          height: 90px !important;
+          min-width: 90px !important;
+          min-height: 90px !important;
+          max-width: 90px !important;
+          max-height: 90px !important;
+        }
+
+        .h1 {
+          font-size: 17px !important;
+          line-height: 22px !important;
+        }
+
+        .p {
+          font-size: 14px !important;
+          line-height: 22px !important;
+        }
+
+        .btn {
+          font-size: 15px !important;
+          padding: 14px 20px !important;
+        }
+
+        .ul li {
+          font-size: 14px !important;
+          line-height: 22px !important;
+        }
+
+        .menu-bar {
+          text-align: center !important;
+        }
+
+        .menu-bar a {
+          display: inline-block !important;
+          padding: 6px 8px !important;
+        }
+
+        .feedback-box {
+          padding: 20px !important;
+        }
+
+        .feedback-title {
+          font-size: 16px !important;
+          line-height: 22px !important;
+        }
+
+        .feedback-link {
+          font-size: 15px !important;
+          line-height: 20px !important;
+        }
+
+        .feedback-btn {
+          display: block !important;
+          width: 100% !important;
+          margin: 0 0 10px 0 !important;
+          box-sizing: border-box !important;
+          text-align: center !important;
+        }
+
+.feedback-btn-last {
+          margin-bottom: 0 !important;
+        }
+
+        /* "Your Signal" preferences block =E2=80=94 stack columns on mobil=
+e */
+        .ys-col {
+          display: block !important;
+          width: 100% !important;
+          padding: 0 !important;
+          max-width: 100% !important;
+        }
+
+        .ys-divider-cell {
+          display: none !important;
+          mso-hide: all !important;
+        }
+
+    .ys-col-right {
+          padding-top: 18px !important;
+          margin-top: 18px !important;
+        }
+      }
+    </style>
+<!--[if mso]>
+    <style type=3D"text/css">
+      .h1,
+      .p,
+      .btn,
+      .ul li {
+        font-family: Arial, sans-serif !important;
+      }
+    </style>
+    <![endif]-->
+</head><img src=3D"https://app.alphasignal.ai/o?uid=3D1rbQTN73dcamvOrOO&cid=
+=3Dfc2daecbc1948b68&mid=3D547015b7-3e5b-4d72-949d-8cda333362f2&s=3DAnthropi=
+c%20ships%20scheduled%20Claude%20agents%20with%20credential%20vaults%20%2B%=
+20paral&t=3D1781125378" width=3D"1" height=3D"1" alt=3D"" aria-hidden=3D"tr=
+ue" role=3D"presentation" style=3D"display:block;border:0;outline:none;text=
+-decoration:none;opacity:0;"><div style=3D"display:none!important;max-heigh=
+t:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;opacity:0;co=
+lor:transparent;">Cron schedules for deployments, environment variable vaul=
+ts, dynamic workflows across parallel subagents now GA</div>
+<body bgcolor=3D"#fcfcfc" style=3D"margin:0; padding:0; background-color:#f=
+cfcfc;">
+<table bgcolor=3D"#fcfcfc" border=3D"0" cellpadding=3D"0" cellspacing=3D"0"=
+ role=3D"presentation" style=3D"background-color:#fcfcfc;" width=3D"100%">
+<tr>
+<td align=3D"center" style=3D"padding:0 10px;">
+<!-- all your inner tables start here -->
+<!-- Hidden Preheader -->
+<div style=3D"display:none !important;font-size:1px;color:#ffffff;line-heig=
+ht:1px;
+                  max-height:0px;max-width:0px;overflow:hidden;opacity:0;">
+        Stay updated with today's top AI news, papers, and repos.
+      </div>
+<!--Centered header menu (desktop + mobile) -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;margin:0 auto;" width=3D"100%">
+<tr>
+<td align=3D"center" style=3D"padding:4px 0px 0px 0px;text-align:center;">
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" cl=
+ass=3D"menu-bar" role=3D"presentation" style=3D"display:inline-table;margin=
+:0 auto;text-align:center;">
+<tr>
+<td style=3D"font-size:12px;line-height:18px;font-family:Helvetica, Arial, =
+sans-serif;">
+<a href=3D"https://alphasignal.ai/?utm_source=3Demail" style=3D"text-decora=
+tion:none;color:#000000 !important;
+                          font-family:Helvetica, Arial, sans-serif;
+                          font-size:12px;line-height:18px;" target=3D"_blan=
+k">
+                  Signup
+                </a>
+</td>
+<td style=3D"font-size:13px;line-height:18px;color:#000000;
+                         font-family:Helvetica, Arial, sans-serif;">|</td>
+<td style=3D"font-size:12px;line-height:18px;font-family:Helvetica, Arial, =
+sans-serif;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3DHbNQqXh4Tv7XTq6D&amp;mid=3D547015b7-3e5b-4d72-949=
+d-8cda333362f2" style=3D"text-decoration:none;color:#000000 !important;
+                          font-family:Helvetica, Arial, sans-serif;
+                          font-size:12px;line-height:18px;" target=3D"_blan=
+k">
+                  Work With Us
+                </a>
+</td>
+<td style=3D"font-size:13px;line-height:18px;color:#000000;
+                         font-family:Helvetica, Arial, sans-serif;">|</td>
+<td style=3D"font-size:12px;line-height:18px;font-family:Helvetica, Arial, =
+sans-serif;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3DvhHJwqZh9IEgTAIn&amp;mid=3D547015b7-3e5b-4d72-949=
+d-8cda333362f2" style=3D"text-decoration:none;color:#000000 !important;
+                          font-family:Helvetica, Arial, sans-serif;
+                          font-size:12px;line-height:18px;" target=3D"_blan=
+k">
+                  Follow on X
+                </a>
+</td>
+<td style=3D"font-size:13px;line-height:18px;color:#000000;
+               font-family:Helvetica, Arial, sans-serif;">|</td>
+<td style=3D"font-size:12px;line-height:18px;font-family:Helvetica, Arial, =
+sans-serif;">
+<a href=3D"https://alphasignal.ai/archive?utm_source=3Dforward" style=3D"te=
+xt-decoration:none;color:#000000 !important;
+                font-family:Helvetica, Arial, sans-serif;
+                font-size:12px;line-height:18px;" target=3D"_blank">
+        Archive
+      </a>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<!-- Header Image -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;margin:0 auto;margin-bottom:0;" width=3D"100%">
+<tr>
+<td style=3D"padding:0;border-bottom:none;">
+<img alt=3D"AlphaSignal" border=3D"0" src=3D"https://alphasignal.ai/image/1=
+774379296454-hg8tkk.png" style=3D"display:block;width:100%;max-width:600px;=
+height:auto;" width=3D"600"/>
+</td>
+</tr>
+</table>
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;margin:auto;margin-top:30px;border:1px solid #6=
+B6B6B;background-color:#ffffff;margin-bottom:30px;" width=3D"100%">
+<tr>
+<td style=3D"padding:0;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr>
+<td style=3D"padding:20px;">
+<!-- Greeting -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr>
+<td style=3D"font-family:Helvetica, Arial, sans-serif;
+                   font-size:16px;
+                   line-height:24px;
+                   font-weight:bold;
+                   color:#000000;
+                   padding:0 0 10px 0;">
+<p style=3D"margin:0;">Hey David,</p>
+</td>
+</tr>
+</table>
+<!-- Intro text -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr>
+<td style=3D"font-family:Helvetica, Arial, sans-serif;
+                   font-size:15px;
+                   line-height:22px;
+                   font-weight:400;
+                   color:#000000;">
+          Anthropic had a big day. A new Claude topping coding benchmarks a=
+nd agents that finally run while you sleep. Two very different announcement=
+s, same underlying bet: Claude stops being a tool you prompt and becomes in=
+frastructure you deploy.<br/><br/>The benchmark race is fun to watch, but t=
+he agents story is the real one. Cron schedules, credential vaults, paralle=
+l subagents. That's a backend engineer on autopilot.<br/><br/>Meanwhile, so=
+meone finally wrote the math textbook explaining why any of this works. Goo=
+d timing.
+        </td>
+</tr>
+</table>
+<!-- Ad block -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;" width=3D"100%">
+<tr>
+<td style=3D"padding:30px 0 0 0;">
+<table align=3D"right" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" rol=
+e=3D"presentation">
+<tr>
+<td style=3D"font-family:Helvetica, Arial, sans-serif;
+                         font-size:13px;
+                         line-height:24px;
+                         color:#999999;
+                         vertical-align:middle;
+                         padding-right:8px;">
+               =20
+In Partnership with
+              </td>
+<td style=3D"font-family:Helvetica, Arial, sans-serif;
+                         font-size:13px;
+                         line-height:24px;
+                         color:#999999;
+                         vertical-align:middle;
+                         padding-right:8px;">
+                =C2=B7
+              </td>
+<td style=3D"vertical-align:middle;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3DNWgPJW4EVj1wmd0B&amp;mid=3D547015b7-3e5b-4d72-949=
+d-8cda333362f2" style=3D"text-decoration:none;" target=3D"_blank"><img alt=
+=3D"partner_image" src=3D"https://alphasignal.ai/image/1781120119634-hq72x4=
+.png" style=3D"max-height:100%;width:150px;max-width:150px;vertical-align:m=
+iddle;"/></a>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<!-- Author Box -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;margin:auto;border:1px solid #6B6B6B;background=
+-color:#ffffff;padding:15px 20px 20px 20px;margin-bottom:30px;" width=3D"10=
+0%">
+<tr>
+<!-- Profile Image -->
+<td style=3D"padding-right:12px;" valign=3D"top" width=3D"70">
+<img alt=3D"Author photo" height=3D"60" src=3D"https://alphasignal.ai/image=
+/1773273870123-brvvx0.png" style=3D"display:block;border:1px solid #6B6B6B;=
+outline:none;text-decoration:none;" width=3D"60"/>
+</td>
+<!-- Text Content -->
+<td style=3D"font-family:system-ui, Helvetica, Arial, sans-serif;color:#000=
+000;" valign=3D"middle">
+<div style=3D"font-size:15px;font-weight:700;line-height:20px;margin:0 0 3p=
+x 0;padding:0;">
+    Today's Author
+  </div>
+<div style=3D"font-size:15px;line-height:20px;margin:0;padding:0;">
+    Lior Alexander. Founder of AlphaSignal and former ML Engineer. Previous=
+ly built ML systems at Iguazio, Guesty, Enphase, Mila.
+  </div>
+</td>
+</tr>
+</table>
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;margin:auto;border:1px solid #6B6B6B;background=
+-color:#ffffff;padding:0 20px;margin-bottom:30px;padding-bottom:20px;" widt=
+h=3D"100%">
+<tr>
+<td class=3D"h1" style=3D"font-family:system-ui, sans-serif;font-size:17px;=
+font-weight:bold;line-height:22.5px;
+                      margin:0;padding:15px 0 10px 0;
+                      color:#000000 !important;mso-color-alt:windowtext;mso=
+-style-textfill-fill-color:#000000;">
+  Summary
+</td>
+</tr>
+<tr>
+<td style=3D"padding:0 0 10px 0;color:#000000 !important;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr><td style=3D"border-top:1px solid #6B6B6B;"></td></tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style=3D"color:#000000 !important;">
+<p style=3D"font-family:system-ui; font-size:13px;line-height:22.5px;font-w=
+eight:normal;
+            margin:0;padding:0;
+            color:#000000 !important;mso-color-alt:windowtext;mso-style-tex=
+tfill-fill-color:#000000;">
+    Read time: 6 min 44 sec
+  </p>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr><td style=3D"border-top:1px solid #6B6B6B;"></td></tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:5px 0 0 0;color:#000000 !important;">
+<p style=3D"font-family:Helvetica, sans-serif;font-size:15px;font-weight:bo=
+ld;line-height:22.5px;
+            margin:0;padding:0;
+            color:#000000 !important;mso-color-alt:windowtext;
+            mso-style-textfill-fill-color:#000000;">
+<u>Top News</u>
+</p>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3Dud3NpgEdQJWKN0bN&amp;mid=3D547015b7-3e5b-4d72-949=
+d-8cda333362f2" style=3D"font-family:Helvetica, sans-serif;font-size:15px;l=
+ine-height:22.5px;
+                     color:#000000 !important;text-decoration:none;display:=
+block;
+                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
+:#000000;">
+    =E2=96=B8 Cursor ships Claude with 72.9% on its coding benchmark, 8 poi=
+nts ahead
+  </a>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr><td style=3D"border-top:1px solid #6B6B6B;"></td></tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:5px 0 0 0;color:#000000 !important;">
+<p style=3D"font-family:Helvetica, sans-serif;font-size:15px;font-weight:bo=
+ld;line-height:22.5px;
+            margin:0;padding:0;
+            color:#000000 !important;mso-color-alt:windowtext;
+            mso-style-textfill-fill-color:#000000;">
+<u>Lambda</u>
+</p>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3DNWgPJW4EVj1wmd0B&amp;mid=3D547015b7-3e5b-4d72-949=
+d-8cda333362f2" style=3D"font-family:Helvetica, sans-serif;font-size:15px;l=
+ine-height:22.5px;
+                     color:#000000 !important;text-decoration:none;display:=
+block;
+                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
+:#000000;">
+<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-=
+alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"><=
+/span>=E2=96=B8<span style=3D"background-color:#FBEDE7;color:#f74904 !impor=
+tant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highli=
+ght:#FBEDE7;"></span> <span style=3D"background-color:#FBEDE7;color:#f74904=
+ !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso=
+-highlight:#FBEDE7;"></span>H<span style=3D"background-color:#FBEDE7;color:=
+#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74=
+904;mso-highlight:#FBEDE7;"></span>o<span style=3D"background-color:#FBEDE7=
+;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-col=
+or:#f74904;mso-highlight:#FBEDE7;"></span>w<span style=3D"background-color:=
+#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-f=
+ill-color:#f74904;mso-highlight:#FBEDE7;"></span> <span style=3D"background=
+-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-tex=
+tfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>t<span style=3D"bac=
+kground-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-st=
+yle-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>o<span style=
+=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904=
+;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span> <spa=
+n style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:=
+#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></spa=
+n>p<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-col=
+or-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;=
+"></span>u<span style=3D"background-color:#FBEDE7;color:#f74904 !important;=
+mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#=
+FBEDE7;"></span>s<span style=3D"background-color:#FBEDE7;color:#f74904 !imp=
+ortant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-high=
+light:#FBEDE7;"></span>h<span style=3D"background-color:#FBEDE7;color:#f749=
+04 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;m=
+so-highlight:#FBEDE7;"></span> <span style=3D"background-color:#FBEDE7;colo=
+r:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f=
+74904;mso-highlight:#FBEDE7;"></span>M<span style=3D"background-color:#FBED=
+E7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-c=
+olor:#f74904;mso-highlight:#FBEDE7;"></span>o<span style=3D"background-colo=
+r:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill=
+-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>d<span style=3D"backgrou=
+nd-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-t=
+extfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>e<span style=3D"b=
+ackground-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-=
+style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>l<span sty=
+le=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f749=
+04;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span> <s=
+pan style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-al=
+t:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></s=
+pan>F<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-c=
+olor-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE=
+7;"></span>L<span style=3D"background-color:#FBEDE7;color:#f74904 !importan=
+t;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight=
+:#FBEDE7;"></span>O<span style=3D"background-color:#FBEDE7;color:#f74904 !i=
+mportant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-hi=
+ghlight:#FBEDE7;"></span>P<span style=3D"background-color:#FBEDE7;color:#f7=
+4904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904=
+;mso-highlight:#FBEDE7;"></span>S<span style=3D"background-color:#FBEDE7;co=
+lor:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:=
+#f74904;mso-highlight:#FBEDE7;"></span> <span style=3D"background-color:#FB=
+EDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill=
+-color:#f74904;mso-highlight:#FBEDE7;"></span>U<span style=3D"background-co=
+lor:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfi=
+ll-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>t<span style=3D"backgr=
+ound-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style=
+-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>i<span style=3D=
+"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;ms=
+o-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>l<span s=
+tyle=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f7=
+4904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>i=
+<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-=
+alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"><=
+/span>z<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso=
+-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBE=
+DE7;"></span>a<span style=3D"background-color:#FBEDE7;color:#f74904 !import=
+ant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlig=
+ht:#FBEDE7;"></span>t<span style=3D"background-color:#FBEDE7;color:#f74904 =
+!important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-=
+highlight:#FBEDE7;"></span>i<span style=3D"background-color:#FBEDE7;color:#=
+f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f749=
+04;mso-highlight:#FBEDE7;"></span>o<span style=3D"background-color:#FBEDE7;=
+color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-colo=
+r:#f74904;mso-highlight:#FBEDE7;"></span>n<span style=3D"background-color:#=
+FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fi=
+ll-color:#f74904;mso-highlight:#FBEDE7;"></span> <span style=3D"background-=
+color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-text=
+fill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>p<span style=3D"back=
+ground-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-sty=
+le-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>a<span style=
+=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904=
+;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>s<spa=
+n style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:=
+#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></spa=
+n>t<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-col=
+or-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;=
+"></span> <span style=3D"background-color:#FBEDE7;color:#f74904 !important;=
+mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#=
+FBEDE7;"></span>6<span style=3D"background-color:#FBEDE7;color:#f74904 !imp=
+ortant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-high=
+light:#FBEDE7;"></span>0<span style=3D"background-color:#FBEDE7;color:#f749=
+04 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;m=
+so-highlight:#FBEDE7;"></span>%<span style=3D"background-color:#FBEDE7;colo=
+r:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f=
+74904;mso-highlight:#FBEDE7;"></span>
+</a>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr><td style=3D"border-top:1px solid #6B6B6B;"></td></tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:5px 0 0 0;color:#000000 !important;">
+<p style=3D"font-family:Helvetica, sans-serif;font-size:15px;font-weight:bo=
+ld;line-height:22.5px;
+            margin:0;padding:0;
+            color:#000000 !important;mso-color-alt:windowtext;
+            mso-style-textfill-fill-color:#000000;">
+<u>Top News</u>
+</p>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3DRxVZWIN2ZqplA5Ye&amp;mid=3D547015b7-3e5b-4d72-949=
+d-8cda333362f2" style=3D"font-family:Helvetica, sans-serif;font-size:15px;l=
+ine-height:22.5px;
+                     color:#000000 !important;text-decoration:none;display:=
+block;
+                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
+:#000000;">
+    =E2=96=B8 Anthropic ships <span style=3D"background-color:#FBEDE7;color=
+:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f7=
+4904;mso-highlight:#FBEDE7;">scheduled Claude agents</span> with secret API=
+ key vaults and parallel subagents
+  </a>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr><td style=3D"border-top:1px solid #6B6B6B;"></td></tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:5px 0 0 0;color:#000000 !important;">
+<p style=3D"font-family:Helvetica, sans-serif;font-size:15px;font-weight:bo=
+ld;line-height:22.5px;
+            margin:0;padding:0;
+            color:#000000 !important;mso-color-alt:windowtext;
+            mso-style-textfill-fill-color:#000000;">
+<u>ghost</u>
+</p>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3Dz3fYlSg7Q96CSzPk&amp;mid=3D547015b7-3e5b-4d72-949=
+d-8cda333362f2" style=3D"font-family:Helvetica, sans-serif;font-size:15px;l=
+ine-height:22.5px;
+                     color:#000000 !important;text-decoration:none;display:=
+block;
+                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
+:#000000;">
+<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-=
+alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"><=
+/span>=E2=96=B8<span style=3D"background-color:#FBEDE7;color:#f74904 !impor=
+tant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highli=
+ght:#FBEDE7;"></span> <span style=3D"background-color:#FBEDE7;color:#f74904=
+ !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso=
+-highlight:#FBEDE7;"></span>Y<span style=3D"background-color:#FBEDE7;color:=
+#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74=
+904;mso-highlight:#FBEDE7;"></span>o<span style=3D"background-color:#FBEDE7=
+;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-col=
+or:#f74904;mso-highlight:#FBEDE7;"></span>u<span style=3D"background-color:=
+#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-f=
+ill-color:#f74904;mso-highlight:#FBEDE7;"></span>r<span style=3D"background=
+-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-tex=
+tfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span> <span style=3D"bac=
+kground-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-st=
+yle-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>A<span style=
+=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904=
+;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>g<spa=
+n style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:=
+#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></spa=
+n>e<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-col=
+or-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;=
+"></span>n<span style=3D"background-color:#FBEDE7;color:#f74904 !important;=
+mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#=
+FBEDE7;"></span>t<span style=3D"background-color:#FBEDE7;color:#f74904 !imp=
+ortant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-high=
+light:#FBEDE7;"></span> <span style=3D"background-color:#FBEDE7;color:#f749=
+04 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;m=
+so-highlight:#FBEDE7;"></span>N<span style=3D"background-color:#FBEDE7;colo=
+r:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f=
+74904;mso-highlight:#FBEDE7;"></span>e<span style=3D"background-color:#FBED=
+E7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-c=
+olor:#f74904;mso-highlight:#FBEDE7;"></span>e<span style=3D"background-colo=
+r:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill=
+-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>d<span style=3D"backgrou=
+nd-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-t=
+extfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>s<span style=3D"b=
+ackground-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-=
+style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span> <span sty=
+le=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f749=
+04;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>M<s=
+pan style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-al=
+t:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></s=
+pan>o<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-c=
+olor-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE=
+7;"></span>r<span style=3D"background-color:#FBEDE7;color:#f74904 !importan=
+t;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight=
+:#FBEDE7;"></span>e<span style=3D"background-color:#FBEDE7;color:#f74904 !i=
+mportant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-hi=
+ghlight:#FBEDE7;"></span> <span style=3D"background-color:#FBEDE7;color:#f7=
+4904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904=
+;mso-highlight:#FBEDE7;"></span>T<span style=3D"background-color:#FBEDE7;co=
+lor:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:=
+#f74904;mso-highlight:#FBEDE7;"></span>h<span style=3D"background-color:#FB=
+EDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill=
+-color:#f74904;mso-highlight:#FBEDE7;"></span>a<span style=3D"background-co=
+lor:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfi=
+ll-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>n<span style=3D"backgr=
+ound-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style=
+-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span> <span style=3D=
+"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;ms=
+o-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>2<span s=
+tyle=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f7=
+4904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span> =
+<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-=
+alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"><=
+/span>P<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso=
+-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBE=
+DE7;"></span>r<span style=3D"background-color:#FBEDE7;color:#f74904 !import=
+ant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlig=
+ht:#FBEDE7;"></span>o<span style=3D"background-color:#FBEDE7;color:#f74904 =
+!important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-=
+highlight:#FBEDE7;"></span>j<span style=3D"background-color:#FBEDE7;color:#=
+f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f749=
+04;mso-highlight:#FBEDE7;"></span>e<span style=3D"background-color:#FBEDE7;=
+color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-colo=
+r:#f74904;mso-highlight:#FBEDE7;"></span>c<span style=3D"background-color:#=
+FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fi=
+ll-color:#f74904;mso-highlight:#FBEDE7;"></span>t<span style=3D"background-=
+color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-text=
+fill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>s<span style=3D"back=
+ground-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-sty=
+le-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>
+</a>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr><td style=3D"border-top:1px solid #6B6B6B;"></td></tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:5px 0 0 0;color:#000000 !important;">
+<p style=3D"font-family:Helvetica, sans-serif;font-size:15px;font-weight:bo=
+ld;line-height:22.5px;
+            margin:0;padding:0;
+            color:#000000 !important;mso-color-alt:windowtext;
+            mso-style-textfill-fill-color:#000000;">
+<u>Top News</u>
+</p>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3DGOjEceaprjrUDrBJ&amp;mid=3D547015b7-3e5b-4d72-949=
+d-8cda333362f2" style=3D"font-family:Helvetica, sans-serif;font-size:15px;l=
+ine-height:22.5px;
+                     color:#000000 !important;text-decoration:none;display:=
+block;
+                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
+:#000000;">
+    =E2=96=B8 Luma ships Ray3.2, a video model that <span style=3D"backgrou=
+nd-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-t=
+extfill-fill-color:#f74904;mso-highlight:#FBEDE7;">turns text directions</s=
+pan> into cinematic shots
+  </a>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr><td style=3D"border-top:1px solid #6B6B6B;"></td></tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:5px 0 0 0;color:#000000 !important;">
+<p style=3D"font-family:Helvetica, sans-serif;font-size:15px;font-weight:bo=
+ld;line-height:22.5px;
+            margin:0;padding:0;
+            color:#000000 !important;mso-color-alt:windowtext;
+            mso-style-textfill-fill-color:#000000;">
+<u>Signals</u>
+</p>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3D1fV2Yoor5paeDuwsy&amp;mid=3D547015b7-3e5b-4d72-94=
+9d-8cda333362f2" style=3D"font-family:Helvetica, sans-serif;font-size:15px;=
+line-height:22.5px;
+                     color:#000000 !important;text-decoration:none;display:=
+block;
+                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
+:#000000;">
+    1. Cohere releases first <span style=3D"background-color:#FBEDE7;color:=
+#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74=
+904;mso-highlight:#FBEDE7;">open-source coding model</span>, 30B params und=
+er Apache 2.0
+  </a>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3D1DTdYrH2MFhoPaJjw&amp;mid=3D547015b7-3e5b-4d72-94=
+9d-8cda333362f2" style=3D"font-family:Helvetica, sans-serif;font-size:15px;=
+line-height:22.5px;
+                     color:#000000 !important;text-decoration:none;display:=
+block;
+                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
+:#000000;">
+    2. <span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso=
+-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBE=
+DE7;">Presented by WorkOS:</span> WorkOS launches auth.md, an open protocol=
+ so AI agents can register with your app without sign-up forms
+  </a>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3D1z6kg6884xriInhL4&amp;mid=3D547015b7-3e5b-4d72-94=
+9d-8cda333362f2" style=3D"font-family:Helvetica, sans-serif;font-size:15px;=
+line-height:22.5px;
+                     color:#000000 !important;text-decoration:none;display:=
+block;
+                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
+:#000000;">
+    3. Yi Ma releases free open-source book explaining the math behind deep=
+ learning black boxes
+  </a>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3D1jsSgGMsqosxt0jT3&amp;mid=3D547015b7-3e5b-4d72-94=
+9d-8cda333362f2" style=3D"font-family:Helvetica, sans-serif;font-size:15px;=
+line-height:22.5px;
+                     color:#000000 !important;text-decoration:none;display:=
+block;
+                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
+:#000000;">
+    4. New math framework brings <span style=3D"background-color:#FBEDE7;co=
+lor:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:=
+#f74904;mso-highlight:#FBEDE7;">Nesterov-style acceleration</span> to shape=
+ optimization problems
+  </a>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3D16n4SQqBX7qTvi05h&amp;mid=3D547015b7-3e5b-4d72-94=
+9d-8cda333362f2" style=3D"font-family:Helvetica, sans-serif;font-size:15px;=
+line-height:22.5px;
+                     color:#000000 !important;text-decoration:none;display:=
+block;
+                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
+:#000000;">
+    5. Stanford and Meta say <span style=3D"background-color:#FBEDE7;color:=
+#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74=
+904;mso-highlight:#FBEDE7;">code should replace</span> language as the back=
+bone of AI agents
+  </a>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3D1gwDZvcZvbxCOKYu2&amp;mid=3D547015b7-3e5b-4d72-94=
+9d-8cda333362f2" style=3D"font-family:Helvetica, sans-serif;font-size:15px;=
+line-height:22.5px;
+                     color:#000000 !important;text-decoration:none;display:=
+block;
+                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
+:#000000;">
+    6. Perplexity and Harvard study finds AI agents <span style=3D"backgrou=
+nd-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-t=
+extfill-fill-color:#f74904;mso-highlight:#FBEDE7;">cut task time</span> 87%=
+ vs search
+  </a>
+</td>
+</tr>
+</table>
+<!-- Outer Box -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;margin:30px auto 0 auto;border:1px solid #6B6B6=
+B;background-color:#ffffff;padding:15px 20px 20px 20px;" width=3D"100%">
+<!-- Section Title -->
+<tr>
+<td style=3D"font-family: system-ui, sans-serif;font-size:16px;line-height:=
+22px;font-weight:bold;
+             color:#000000 !important;mso-color-alt:windowtext;mso-style-te=
+xtfill-fill-color:#000000;
+             padding:0 0 10px 0;">
+    Top News
+    </td>
+</tr>
+<!-- Divider -->
+<tr>
+<td style=3D"padding:0 0 10px 0;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr><td style=3D"border-top:1px solid #6B6B6B;"></td></tr>
+</table>
+</td>
+</tr>
+<!-- Headline -->
+<tr>
+<td class=3D"h1" style=3D"font-family:Helvetica, sans-serif;font-size:17px;=
+line-height:22px;font-weight:bold;
+           color:#000000 !important;mso-color-alt:windowtext;
+           mso-style-textfill-fill-color:#000000;
+           padding:0 0 5px 0;">
+<span style=3D"color:#000000 !important;text-decoration:none;">
+    Cursor ships Claude with 72.9% on its coding benchmark, 8 points ahead
+  </span>
+</td>
+</tr>
+<tr>
+<td style=3D"font-family:system-ui;
+                  font-size:13px;line-height:18px;
+                  font-weight:normal;
+                  padding:0 0 10px 0;
+                  color:#f74904 !important;
+                  mso-color-alt:#f74904;
+                  mso-style-textfill-fill-color:#f74904;">
+          6,028 Likes
+        </td>
+</tr>
+<!-- Feature Image -->
+<tr>
+<td style=3D"padding:0 0 10px 0;"> <!-- bottom only -->
+<img alt=3D"Cursor ships Claude with 72.9% on its coding bench" border=3D"0=
+" src=3D"https://alphasignal.ai/image/1781120663095-enp2ko.png" style=3D"di=
+splay:block;width:100%;max-width:560px;height:auto;" width=3D"560"/>
+</td>
+</tr>
+<!-- Body Text (processed with code highlighting) -->
+<tr>
+<td style=3D"font-family:Helvetica, sans-serif;font-size:15px;line-height:2=
+2px;font-weight:normal;
+         color:#000000 !important;mso-color-alt:windowtext;mso-style-textfi=
+ll-fill-color:#000000;
+         padding:0;">
+<div style=3D"margin-top:0;">
+<p><b>Claude Fable 5</b> just landed in Cursor, and the numbers are hard to=
+ ignore. It hit <b>72.9% on CursorBench</b>, a test built from real, messy,=
+ multi-file coding tasks pulled from actual Cursor sessions. That's 8 point=
+s above the previous best.</p><p>So what makes it different? It's built to =
+stay focused across very long tasks without losing track of what you asked =
+it to do. It holds intent across long sessions and drives tasks to completi=
+on with fewer check-ins. Think: refactoring a whole module, not just one fu=
+nction.</p><p>Here's what it can do inside Cursor:</p><ul><li>Search your c=
+odebase by meaning, find files by name, read directory structures, and grep=
+ for patterns</li><li>Suggest edits, apply them automatically, and execute =
+terminal commands</li><li>A thinking variant is available for problems that=
+ reward extra deliberation</li></ul><p>The tradeoff: it costs about twice a=
+s much as Claude Opus 4.8, at $10 per million input tokens and $50 per mill=
+ion output tokens. Use <b>Fable 5 for the hard stuff</b>, not everything.</=
+p>
+</div>
+</td>
+</tr>
+<!-- Button -->
+<tr>
+<td align=3D"center" style=3D"padding:15px 0 0px 0;">
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" ro=
+le=3D"presentation">
+<tr>
+<td align=3D"center" bgcolor=3D"#f74904" class=3D"btn" style=3D"font-family=
+:Helvetica, sans-serif;font-size:16px;font-weight:bold;
+                   padding:12px 12px;color:#ffffff !important;
+                   border:1px solid #6B6B6B;display:block;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3Dud3NpgEdQJWKN0bN&amp;mid=3D547015b7-3e5b-4d72-949=
+d-8cda333362f2" style=3D"text-decoration:none;color:#ffffff !important;disp=
+lay:inline-block;font-size:16px;" target=3D"_blank">
+<span style=3D"color:#ffffff !important;">READ MORE</span>
+</a>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<!-- Promo Text (outside box) -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;margin:0 auto;" width=3D"100%">
+<tr>
+<td style=3D"padding:0; text-align:right;">
+<a href=3D"mailto:?subject=3DFwd%3A%20Cursor%20ships%20Claude%20with%2072.9=
+%25%20on%20its%20coding%20benchmark%2C%208%20points%20ahead&amp;body=3DThou=
+ght%20you%27d%20find%20this%20interesting%3A%0D%0A%0D%0A%22Claude%20Fable%2=
+05%20just%20landed%20in%20Cursor%2C%20and%20the%20numbers%20are%20hard%20to=
+%20ignore.%20It%20hit%2072.9%25%20on%20CursorBench%2C%20a%20test%20built%20=
+from%20real%2C%20messy%2C%20multi-file%20coding%20tasks%20pulled%20from%20a=
+ctual%20Cursor%20sessions.%20That%27s%208%20points%20above%20the%20previous=
+%20best.%0D%0A%0D%0ASo%20what%20makes%20it%20different%3F%20It%27s%20built%=
+20to%20stay%20focused%20across%20very%20long%20tasks%20without%20losing%20t=
+rack%20of%20what%20you...%22%0D%0A%0D%0ARead%20it%20here%3A%20https%3A%2F%2=
+Falphasignal.ai%2Femail%2Ffc2daecbc1948b68%3Futm_source%3Dforward" style=3D=
+"text-decoration:none;color:#767676 !important;font-family:Helvetica, sans-=
+serif;font-size:13px;font-style:italic;" target=3D"_blank">
+<span style=3D"color:#767676 !important;font-style:italic;">forward =E2=86=
+=92</span>
+</a>
+</td>
+</tr>
+</table>
+<!-- Outer Box -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;margin:30px auto 0 auto;border:1px solid #6B6B6=
+B;background-color:#ffffff;padding:15px 20px 20px 20px;" width=3D"100%">
+<tr>
+<td style=3D"font-family:system-ui;
+                  font-size:13px;line-height:18px;
+                  font-weight:normal;
+                  padding:0 0 10px 0;
+                  color:#999999 !important;
+                  mso-color-alt:#999999;
+                  mso-style-textfill-fill-color:#999999;">
+          Presented by Lambda
+        </td>
+</tr>
+<!-- Headline -->
+<tr>
+<td class=3D"h1" style=3D"font-family:Helvetica, sans-serif;font-size:17px;=
+line-height:22px;font-weight:bold;
+           color:#000000 !important;mso-color-alt:windowtext;
+           mso-style-textfill-fill-color:#000000;
+           padding:0 0 5px 0;">
+<span style=3D"color:#000000 !important;text-decoration:none;">
+    How to push Model FLOPS Utilization past 60%
+  </span>
+</td>
+</tr>
+<!-- Feature Image -->
+<tr>
+<td style=3D"padding:0 0 10px 0;"> <!-- bottom only -->
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3DNWgPJW4EVj1wmd0B&amp;mid=3D547015b7-3e5b-4d72-949=
+d-8cda333362f2" style=3D"text-decoration:none;" target=3D"_blank"><img alt=
+=3D"" border=3D"0" src=3D"https://alphasignal.ai/image/1781120120879-0394kn=
+.png" style=3D"display:block;width:100%;max-width:560px;height:auto;" width=
+=3D"560"/></a>
+</td>
+</tr>
+<!-- Body Text (processed with code highlighting) -->
+<tr>
+<td style=3D"font-family:Helvetica, sans-serif;font-size:15px;line-height:2=
+2px;font-weight:normal;
+         color:#000000 !important;mso-color-alt:windowtext;mso-style-textfi=
+ll-fill-color:#000000;
+         padding:0;">
+<div style=3D"margin-top:0;">
+<p>Most large-scale training runs operate at 35=E2=80=9345% Model FLOPS Uti=
+lization (MFU). You're paying for twice the compute you're using.</p><p>Lam=
+bda's engineers <a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamv=
+OrOO&amp;cid=3Dfc2daecbc1948b68&amp;lid=3DNWgPJW4EVj1wmd0B&amp;mid=3D547015=
+b7-3e5b-4d72-949d-8cda333362f2" style=3D"color:#000000 !important;text-deco=
+ration:none;"><span style=3D"color:#000000 !important;border-bottom:1px sol=
+id #f74904;display:inline;">benchmarked Llama 3.1 models</span></a> from 8B=
+ to 405B on NVIDIA Blackwell GPUs and traced efficiency loss to its root ca=
+uses:</p><ul><li>Memory overhead</li><li>Parallelism strategy</li><li>Seria=
+lized communication</li></ul><p></p><p>The result: <a href=3D"https://app.a=
+lphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Dfc2daecbc1948b68&amp;lid=
+=3DNWgPJW4EVj1wmd0B&amp;mid=3D547015b7-3e5b-4d72-949d-8cda333362f2" style=
+=3D"color:#000000 !important;text-decoration:none;"><span style=3D"color:#0=
+00000 !important;border-bottom:1px solid #f74904;display:inline;">a reprodu=
+cible framework</span></a> that pushed MFU past 60% (25%+ improvement vs. i=
+ndustry benchmark) with no changes to model architecture.</p>
+</div>
+</td>
+</tr>
+<!-- Button -->
+<tr>
+<td align=3D"center" style=3D"padding:15px 0 0px 0;">
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" ro=
+le=3D"presentation">
+<tr>
+<td align=3D"center" bgcolor=3D"#f74904" class=3D"btn" style=3D"font-family=
+:Helvetica, sans-serif;font-size:16px;font-weight:bold;
+                   padding:12px 12px;color:#ffffff !important;
+                   border:1px solid #6B6B6B;display:block;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3DNWgPJW4EVj1wmd0B&amp;mid=3D547015b7-3e5b-4d72-949=
+d-8cda333362f2" style=3D"text-decoration:none;color:#ffffff !important;disp=
+lay:inline-block;font-size:16px;" target=3D"_blank">
+<span style=3D"color:#ffffff !important;">GET THE GUIDE</span>
+</a>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<!-- Promo Text (outside box) -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;margin:0 auto;" width=3D"100%">
+<tr>
+<td style=3D"padding:0; text-align:right;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3DHbNQqXh4Tv7XTq6D&amp;mid=3D547015b7-3e5b-4d72-949=
+d-8cda333362f2" style=3D"text-decoration:none;color:#767676 !important;font=
+-family:Helvetica, sans-serif;font-size:13px;font-style:italic;" target=3D"=
+_blank">
+<span style=3D"color:#767676 !important;font-style:italic;">partner with us=
+ =E2=86=92</span>
+</a>
+</td>
+</tr>
+</table>
+<!-- Outer Box -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;margin:30px auto 0 auto;border:1px solid #6B6B6=
+B;background-color:#ffffff;padding:15px 20px 20px 20px;" width=3D"100%">
+<!-- Section Title -->
+<tr>
+<td style=3D"font-family: system-ui, sans-serif;font-size:16px;line-height:=
+22px;font-weight:bold;
+             color:#000000 !important;mso-color-alt:windowtext;mso-style-te=
+xtfill-fill-color:#000000;
+             padding:0 0 10px 0;">
+    Top News
+    </td>
+</tr>
+<!-- Divider -->
+<tr>
+<td style=3D"padding:0 0 10px 0;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr><td style=3D"border-top:1px solid #6B6B6B;"></td></tr>
+</table>
+</td>
+</tr>
+<!-- Headline -->
+<tr>
+<td class=3D"h1" style=3D"font-family:Helvetica, sans-serif;font-size:17px;=
+line-height:22px;font-weight:bold;
+           color:#000000 !important;mso-color-alt:windowtext;
+           mso-style-textfill-fill-color:#000000;
+           padding:0 0 5px 0;">
+<span style=3D"color:#000000 !important;text-decoration:none;">
+    Anthropic ships scheduled Claude agents with secret API key vaults and =
+parallel subagents
+  </span>
+</td>
+</tr>
+<tr>
+<td style=3D"font-family:system-ui;
+                  font-size:13px;line-height:18px;
+                  font-weight:normal;
+                  padding:0 0 10px 0;
+                  color:#f74904 !important;
+                  mso-color-alt:#f74904;
+                  mso-style-textfill-fill-color:#f74904;">
+          3,760 Likes
+        </td>
+</tr>
+<!-- Feature Image -->
+<tr>
+<td style=3D"padding:0 0 10px 0;"> <!-- bottom only -->
+<img alt=3D"Anthropic ships scheduled Claude agents with secre" border=3D"0=
+" src=3D"https://alphasignal.ai/image/1781120726783-6879ct.png" style=3D"di=
+splay:block;width:100%;max-width:560px;height:auto;" width=3D"560"/>
+</td>
+</tr>
+<!-- Body Text (processed with code highlighting) -->
+<tr>
+<td style=3D"font-family:Helvetica, sans-serif;font-size:15px;line-height:2=
+2px;font-weight:normal;
+         color:#000000 !important;mso-color-alt:windowtext;mso-style-textfi=
+ll-fill-color:#000000;
+         padding:0;">
+<div style=3D"margin-top:0;">
+<p>Claude agents used to die when you closed the tab. That changes now with=
+ three new features.</p><p>Here is what shipped:</p><ul><li><b>Scheduled de=
+ployments (public beta):</b> Give an agent a cron schedule, and each time i=
+t fires, the agent starts a new session and completes its task with no sche=
+duler for you to build or host. Perfect for nightly data syncs, weekly comp=
+liance scans, or daily digests.</li><li><b>Environment variables in vaults =
+(public beta):</b> The agent never sees your real API key. The sandbox hold=
+s only a placeholder, and the real key is attached at the network boundary,=
+ only on requests to domains you allow.</li><li><b>Dynamic workflows in Cla=
+ude Code (now GA):</b> Claude writes its own orchestration program on the f=
+ly, then runs it across many separate agents, each with a clean context win=
+dow and one focused job.</li></ul><p>One team deleted all the scheduling in=
+frastructure they had built in-house and replaced it with scheduled deploym=
+ents, simplifying their stack. That is the kind of boilerplate this kills.<=
+/p>
+</div>
+</td>
+</tr>
+<!-- Button -->
+<tr>
+<td align=3D"center" style=3D"padding:15px 0 0px 0;">
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" ro=
+le=3D"presentation">
+<tr>
+<td align=3D"center" bgcolor=3D"#f74904" class=3D"btn" style=3D"font-family=
+:Helvetica, sans-serif;font-size:16px;font-weight:bold;
+                   padding:12px 12px;color:#ffffff !important;
+                   border:1px solid #6B6B6B;display:block;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3DRxVZWIN2ZqplA5Ye&amp;mid=3D547015b7-3e5b-4d72-949=
+d-8cda333362f2" style=3D"text-decoration:none;color:#ffffff !important;disp=
+lay:inline-block;font-size:16px;" target=3D"_blank">
+<span style=3D"color:#ffffff !important;">READ MORE</span>
+</a>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<!-- Promo Text (outside box) -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;margin:0 auto;" width=3D"100%">
+<tr>
+<td style=3D"padding:0; text-align:right;">
+<a href=3D"mailto:?subject=3DFwd%3A%20Anthropic%20ships%20scheduled%20Claud=
+e%20agents%20with%20secret%20API%20key%20vaults%20and%20parallel%20subagent=
+s&amp;body=3DThought%20you%27d%20find%20this%20interesting%3A%0D%0A%0D%0A%2=
+2Claude%20agents%20used%20to%20die%20when%20you%20closed%20the%20tab.%20Tha=
+t%20changes%20now%20with%20three%20new%20features.%0D%0A%0D%0AHere%20is%20w=
+hat%20shipped%3A%0D%0A%0D%0AScheduled%20deployments%20%28public%20beta%29%3=
+A%20%0D%0A%0D%0AGive%20an%20agent%20a%20cron%20schedule%2C%20and%20each%20t=
+ime%20it%20fires%2C%20the%20agent%20starts%20a%20new%20session%20and%20comp=
+letes%20its%20task%20with%20no%20scheduler%20for%20you%20to%20build%20or%20=
+host.%20Perfect%20for%20nightly%20data%20syncs%2C...%22%0D%0A%0D%0ARead%20i=
+t%20here%3A%20https%3A%2F%2Falphasignal.ai%2Femail%2Ffc2daecbc1948b68%3Futm=
+_source%3Dforward" style=3D"text-decoration:none;color:#767676 !important;f=
+ont-family:Helvetica, sans-serif;font-size:13px;font-style:italic;" target=
+=3D"_blank">
+<span style=3D"color:#767676 !important;font-style:italic;">forward =E2=86=
+=92</span>
+</a>
+</td>
+</tr>
+</table>
+<!-- Outer Box -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;margin:30px auto 0 auto;border:1px solid #6B6B6=
+B;background-color:#ffffff;padding:15px 20px 20px 20px;" width=3D"100%">
+<tr>
+<td style=3D"font-family:system-ui;
+                  font-size:13px;line-height:18px;
+                  font-weight:normal;
+                  padding:0 0 10px 0;
+                  color:#999999 !important;
+                  mso-color-alt:#999999;
+                  mso-style-textfill-fill-color:#999999;">
+          Presented by ghost
+        </td>
+</tr>
+<!-- Headline -->
+<tr>
+<td class=3D"h1" style=3D"font-family:Helvetica, sans-serif;font-size:17px;=
+line-height:22px;font-weight:bold;
+           color:#000000 !important;mso-color-alt:windowtext;
+           mso-style-textfill-fill-color:#000000;
+           padding:0 0 5px 0;">
+<span style=3D"color:#000000 !important;text-decoration:none;">
+    Your Agent Needs More Than 2 Projects
+  </span>
+</td>
+</tr>
+<!-- Feature Image -->
+<tr>
+<td style=3D"padding:0 0 10px 0;"> <!-- bottom only -->
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3Dz3fYlSg7Q96CSzPk&amp;mid=3D547015b7-3e5b-4d72-949=
+d-8cda333362f2" style=3D"text-decoration:none;" target=3D"_blank"><img alt=
+=3D"" border=3D"0" src=3D"https://alphasignal.ai/image/1781120122026-eaawlb=
+.png" style=3D"display:block;width:100%;max-width:560px;height:auto;" width=
+=3D"560"/></a>
+</td>
+</tr>
+<!-- Body Text (processed with code highlighting) -->
+<tr>
+<td style=3D"font-family:Helvetica, sans-serif;font-size:15px;line-height:2=
+2px;font-weight:normal;
+         color:#000000 !important;mso-color-alt:windowtext;mso-style-textfi=
+ll-fill-color:#000000;
+         padding:0;">
+<div style=3D"margin-top:0;">
+<p>Most Postgres providers give you a handful of databases and call it a fr=
+ee tier.</p><p>Your agent burns through that before lunch.</p><p><a href=3D=
+"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Dfc2daecbc19=
+48b68&amp;lid=3Dz3fYlSg7Q96CSzPk&amp;mid=3D547015b7-3e5b-4d72-949d-8cda3333=
+62f2" style=3D"color:#000000 !important;text-decoration:none;"><span style=
+=3D"color:#000000 !important;border-bottom:1px solid #f74904;display:inline=
+;">Ghost</span></a> is built for how agents use databases:</p><p>Fork prod =
+in 58ms. Spin up a fresh instance per task. Delete without cleanup. </p><p>=
+100 hours/month free. 1TB storage. No credit card.</p>
+</div>
+</td>
+</tr>
+<!-- Button -->
+<tr>
+<td align=3D"center" style=3D"padding:15px 0 0px 0;">
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" ro=
+le=3D"presentation">
+<tr>
+<td align=3D"center" bgcolor=3D"#f74904" class=3D"btn" style=3D"font-family=
+:Helvetica, sans-serif;font-size:16px;font-weight:bold;
+                   padding:12px 12px;color:#ffffff !important;
+                   border:1px solid #6B6B6B;display:block;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3Dz3fYlSg7Q96CSzPk&amp;mid=3D547015b7-3e5b-4d72-949=
+d-8cda333362f2" style=3D"text-decoration:none;color:#ffffff !important;disp=
+lay:inline-block;font-size:16px;" target=3D"_blank">
+<span style=3D"color:#ffffff !important;">START BUILDING</span>
+</a>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<!-- Promo Text (outside box) -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;margin:0 auto;" width=3D"100%">
+<tr>
+<td style=3D"padding:0; text-align:right;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3DHbNQqXh4Tv7XTq6D&amp;mid=3D547015b7-3e5b-4d72-949=
+d-8cda333362f2" style=3D"text-decoration:none;color:#767676 !important;font=
+-family:Helvetica, sans-serif;font-size:13px;font-style:italic;" target=3D"=
+_blank">
+<span style=3D"color:#767676 !important;font-style:italic;">partner with us=
+ =E2=86=92</span>
+</a>
+</td>
+</tr>
+</table>
+<!-- Outer Box -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;margin:30px auto 0 auto;border:1px solid #6B6B6=
+B;background-color:#ffffff;padding:15px 20px 20px 20px;" width=3D"100%">
+<!-- Section Title -->
+<tr>
+<td style=3D"font-family: system-ui, sans-serif;font-size:16px;line-height:=
+22px;font-weight:bold;
+             color:#000000 !important;mso-color-alt:windowtext;mso-style-te=
+xtfill-fill-color:#000000;
+             padding:0 0 10px 0;">
+    Top News
+    </td>
+</tr>
+<!-- Divider -->
+<tr>
+<td style=3D"padding:0 0 10px 0;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr><td style=3D"border-top:1px solid #6B6B6B;"></td></tr>
+</table>
+</td>
+</tr>
+<!-- Headline -->
+<tr>
+<td class=3D"h1" style=3D"font-family:Helvetica, sans-serif;font-size:17px;=
+line-height:22px;font-weight:bold;
+           color:#000000 !important;mso-color-alt:windowtext;
+           mso-style-textfill-fill-color:#000000;
+           padding:0 0 5px 0;">
+<span style=3D"color:#000000 !important;text-decoration:none;">
+    Luma ships Ray3.2, a video model that turns text directions into cinema=
+tic shots
+  </span>
+</td>
+</tr>
+<tr>
+<td style=3D"font-family:system-ui;
+                  font-size:13px;line-height:18px;
+                  font-weight:normal;
+                  padding:0 0 10px 0;
+                  color:#f74904 !important;
+                  mso-color-alt:#f74904;
+                  mso-style-textfill-fill-color:#f74904;">
+          3,684 Likes
+        </td>
+</tr>
+<!-- Feature Image -->
+<tr>
+<td style=3D"padding:0 0 10px 0;"> <!-- bottom only -->
+<img alt=3D"Luma ships Ray3.2, a video model that turns text d" border=3D"0=
+" src=3D"https://alphasignal.ai/image/1781120795668-0jeaxp.png" style=3D"di=
+splay:block;width:100%;max-width:560px;height:auto;" width=3D"560"/>
+</td>
+</tr>
+<!-- Body Text (processed with code highlighting) -->
+<tr>
+<td style=3D"font-family:Helvetica, sans-serif;font-size:15px;line-height:2=
+2px;font-weight:normal;
+         color:#000000 !important;mso-color-alt:windowtext;mso-style-textfi=
+ll-fill-color:#000000;
+         padding:0;">
+<div style=3D"margin-top:0;">
+<p>Luma AI just dropped <b>Ray3.2</b>, and the pitch is simple: you direct,=
+ the AI shoots. You're no longer just typing prompts and hoping for the bes=
+t. You're actually controlling the scene.</p><p>The big question: what chan=
+ged? A lot. Here's what you can now do:</p><ul><li><b>Up to 16 keyframes</b=
+> per clip, so you control exactly how motion and pacing unfold, frame by f=
+rame</li><li>Track up to 8 faces at once, preserving expressions, posture, =
+and gestures across the whole shot</li><li>Export native <b>16-bit HDR in E=
+XR format</b>, which drops straight into color grading and VFX pipelines</l=
+i><li>Reframe shots after the fact, swap backgrounds, change aspect ratios,=
+ without reshooting anything</li><li>Generate clips <b>up to 20 seconds at =
+1080p</b>, long enough to build real scenes</li></ul><p>The other big thing=
+: Ray3.2 now has an <b>API</b>. For the first time, you can plug Luma's vid=
+eo generation directly into your own tools, render farms, or custom pipelin=
+es. No middleware needed.</p>
+</div>
+</td>
+</tr>
+<!-- Button -->
+<tr>
+<td align=3D"center" style=3D"padding:15px 0 0px 0;">
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" ro=
+le=3D"presentation">
+<tr>
+<td align=3D"center" bgcolor=3D"#f74904" class=3D"btn" style=3D"font-family=
+:Helvetica, sans-serif;font-size:16px;font-weight:bold;
+                   padding:12px 12px;color:#ffffff !important;
+                   border:1px solid #6B6B6B;display:block;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3DGOjEceaprjrUDrBJ&amp;mid=3D547015b7-3e5b-4d72-949=
+d-8cda333362f2" style=3D"text-decoration:none;color:#ffffff !important;disp=
+lay:inline-block;font-size:16px;" target=3D"_blank">
+<span style=3D"color:#ffffff !important;">READ MORE</span>
+</a>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<!-- Promo Text (outside box) -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;margin:0 auto;" width=3D"100%">
+<tr>
+<td style=3D"padding:0; text-align:right;">
+<a href=3D"mailto:?subject=3DFwd%3A%20Luma%20ships%20Ray3.2%2C%20a%20video%=
+20model%20that%20turns%20text%20directions%20into%20cinematic%20shots&amp;b=
+ody=3DThought%20you%27d%20find%20this%20interesting%3A%0D%0A%0D%0A%22Luma%2=
+0AI%20just%20dropped%20Ray3.2%2C%20and%20the%20pitch%20is%20simple%3A%20you=
+%20direct%2C%20the%20AI%20shoots.%20You%27re%20no%20longer%20just%20typing%=
+20prompts%20and%20hoping%20for%20the%20best.%20You%27re%20actually%20contro=
+lling%20the%20scene.%0D%0A%0D%0AThe%20big%20question%3A%20what%20changed%3F=
+%20A%20lot.%20Here%27s%20what%20you%20can%20now%20do%3A%0D%0A%0D%0AUp%20to%=
+2016%20keyframes%20per%20clip%2C%20so%20you%20control%20exactly%20how%20mot=
+ion%20and%20pacing%20unfold%2C%20frame...%22%0D%0A%0D%0ARead%20it%20here%3A=
+%20https%3A%2F%2Falphasignal.ai%2Femail%2Ffc2daecbc1948b68%3Futm_source%3Df=
+orward" style=3D"text-decoration:none;color:#767676 !important;font-family:=
+Helvetica, sans-serif;font-size:13px;font-style:italic;" target=3D"_blank">
+<span style=3D"color:#767676 !important;font-style:italic;">forward =E2=86=
+=92</span>
+</a>
+</td>
+</tr>
+</table>
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;margin:30px auto 0 auto;border:1px solid #6B6B6=
+B;background-color:#ffffff;" width=3D"100%"><tr><td style=3D"padding:0 20px=
+;"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presenta=
+tion" width=3D"100%">
+<!-- Section Title -->
+<tr>
+<td class=3D"h1" style=3D"font-family:system-ui,-apple-system,BlinkMacSyste=
+mFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+             font-size:17px;font-weight:bold;line-height:22.5px;
+             margin:0;padding:15px 0 10px 0;
+             color:#000000 !important;mso-color-alt:windowtext;
+             mso-style-textfill-fill-color:#000000;">
+    Signals
+   =20
+  </td>
+</tr>
+<tr>
+<td>
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr><td style=3D"border-top:1px solid #6B6B6B;"></td></tr>
+</table>
+</td>
+</tr>
+<!-- Item 1 -->
+<tr>
+<td style=3D"padding:15px 0;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr>
+<td style=3D"font-family:Helvetica,Arial,sans-serif;font-size:17px;font-wei=
+ght:bold;color:#f74904;padding-right:10px;" valign=3D"top" width=3D"30">1</=
+td>
+<td valign=3D"top">
+<!--[if mso]><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" =
+cellpadding=3D"0" border=3D"0"><tr><td valign=3D"top"><![endif]-->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tr>
+<td style=3D"font-family:Helvetica,Arial,sans-serif;font-size:16px !importa=
+nt;
+                           font-weight:bold;line-height:22.5px;
+                           color:#000000 !important;mso-color-alt:windowtex=
+t;
+                           mso-style-textfill-fill-color:#000000;
+                           margin:0;padding:0 0 5px 0;">
+<a class=3D"h1" href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrO=
+O&amp;cid=3Dfc2daecbc1948b68&amp;lid=3D1fV2Yoor5paeDuwsy&amp;mid=3D547015b7=
+-3e5b-4d72-949d-8cda333362f2" style=3D"font-family:Helvetica,Arial,sans-ser=
+if;
+                            font-size:16px !important;font-weight:bold;line=
+-height:22.5px;
+                            color:#000000 !important;mso-color-alt:windowte=
+xt;
+                            text-decoration:none;display:block;margin:0;">
+                    Cohere releases first open-source coding model, 30B par=
+ams under Apache 2.0
+                  </a>
+</td>
+</tr>
+<tr><td><span style=3D"font-family:system-ui,-apple-system,BlinkMacSystemFo=
+nt,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f74904;font-weight:6=
+00;font-size:13px;line-height:22.5px;margin:0;padding:0;display:block;">1,9=
+96 Likes</span></td></tr>
+</table>
+<!--[if mso]></td></tr></table><![endif]-->
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr><td><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"pre=
+sentation" width=3D"100%">
+<tr><td style=3D"border-top:1px solid #cbcbcb;"></td></tr>
+</table></td></tr>
+<!-- Item 2 -->
+<tr>
+<td style=3D"padding:15px 0;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr>
+<td style=3D"font-family:Helvetica,Arial,sans-serif;font-size:17px;font-wei=
+ght:bold;color:#f74904;padding-right:10px;" valign=3D"top" width=3D"30">2</=
+td>
+<td valign=3D"top">
+<!--[if mso]><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" =
+cellpadding=3D"0" border=3D"0"><tr><td valign=3D"top"><![endif]-->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tr>
+<td style=3D"font-family:Helvetica,Arial,sans-serif;font-size:16px !importa=
+nt;
+                           font-weight:bold;line-height:22.5px;
+                           color:#000000 !important;mso-color-alt:windowtex=
+t;
+                           mso-style-textfill-fill-color:#000000;
+                           margin:0;padding:0 0 5px 0;">
+<a class=3D"h1" href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrO=
+O&amp;cid=3Dfc2daecbc1948b68&amp;lid=3D1DTdYrH2MFhoPaJjw&amp;mid=3D547015b7=
+-3e5b-4d72-949d-8cda333362f2" style=3D"font-family:Helvetica,Arial,sans-ser=
+if;
+                            font-size:16px !important;font-weight:bold;line=
+-height:22.5px;
+                            color:#000000 !important;mso-color-alt:windowte=
+xt;
+                            text-decoration:none;display:block;margin:0;">
+                    WorkOS launches auth.md, an open protocol so AI agents =
+can register with your app without sign-up forms
+                  </a>
+</td>
+</tr>
+<tr><td><span style=3D"font-family:system-ui,-apple-system,BlinkMacSystemFo=
+nt,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#999999;font-weight:6=
+00;font-size:13px;line-height:22.5px;margin:0;padding:0;display:block;">Pre=
+sented by WorkOS</span></td></tr>
+</table>
+<!--[if mso]></td></tr></table><![endif]-->
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr><td><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"pre=
+sentation" width=3D"100%">
+<tr><td style=3D"border-top:1px solid #cbcbcb;"></td></tr>
+</table></td></tr>
+<!-- Item 3 -->
+<tr>
+<td style=3D"padding:15px 0;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr>
+<td style=3D"font-family:Helvetica,Arial,sans-serif;font-size:17px;font-wei=
+ght:bold;color:#f74904;padding-right:10px;" valign=3D"top" width=3D"30">3</=
+td>
+<td valign=3D"top">
+<!--[if mso]><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" =
+cellpadding=3D"0" border=3D"0"><tr><td valign=3D"top"><![endif]-->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tr>
+<td style=3D"font-family:Helvetica,Arial,sans-serif;font-size:16px !importa=
+nt;
+                           font-weight:bold;line-height:22.5px;
+                           color:#000000 !important;mso-color-alt:windowtex=
+t;
+                           mso-style-textfill-fill-color:#000000;
+                           margin:0;padding:0 0 5px 0;">
+<a class=3D"h1" href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrO=
+O&amp;cid=3Dfc2daecbc1948b68&amp;lid=3D1z6kg6884xriInhL4&amp;mid=3D547015b7=
+-3e5b-4d72-949d-8cda333362f2" style=3D"font-family:Helvetica,Arial,sans-ser=
+if;
+                            font-size:16px !important;font-weight:bold;line=
+-height:22.5px;
+                            color:#000000 !important;mso-color-alt:windowte=
+xt;
+                            text-decoration:none;display:block;margin:0;">
+                    Yi Ma releases free open-source book explaining the mat=
+h behind deep learning black boxes
+                  </a>
+</td>
+</tr>
+<tr><td><span style=3D"font-family:system-ui,-apple-system,BlinkMacSystemFo=
+nt,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f74904;font-weight:6=
+00;font-size:13px;line-height:22.5px;margin:0;padding:0;display:block;">1,0=
+89 Likes</span></td></tr>
+</table>
+<!--[if mso]></td></tr></table><![endif]-->
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr><td><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"pre=
+sentation" width=3D"100%">
+<tr><td style=3D"border-top:1px solid #cbcbcb;"></td></tr>
+</table></td></tr>
+<!-- Item 4 -->
+<tr>
+<td style=3D"padding:15px 0;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr>
+<td style=3D"font-family:Helvetica,Arial,sans-serif;font-size:17px;font-wei=
+ght:bold;color:#f74904;padding-right:10px;" valign=3D"top" width=3D"30">4</=
+td>
+<td valign=3D"top">
+<!--[if mso]><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" =
+cellpadding=3D"0" border=3D"0"><tr><td valign=3D"top"><![endif]-->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tr>
+<td style=3D"font-family:Helvetica,Arial,sans-serif;font-size:16px !importa=
+nt;
+                           font-weight:bold;line-height:22.5px;
+                           color:#000000 !important;mso-color-alt:windowtex=
+t;
+                           mso-style-textfill-fill-color:#000000;
+                           margin:0;padding:0 0 5px 0;">
+<a class=3D"h1" href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrO=
+O&amp;cid=3Dfc2daecbc1948b68&amp;lid=3D1jsSgGMsqosxt0jT3&amp;mid=3D547015b7=
+-3e5b-4d72-949d-8cda333362f2" style=3D"font-family:Helvetica,Arial,sans-ser=
+if;
+                            font-size:16px !important;font-weight:bold;line=
+-height:22.5px;
+                            color:#000000 !important;mso-color-alt:windowte=
+xt;
+                            text-decoration:none;display:block;margin:0;">
+                    New math framework brings Nesterov-style acceleration t=
+o shape optimization problems
+                  </a>
+</td>
+</tr>
+<tr><td><span style=3D"font-family:system-ui,-apple-system,BlinkMacSystemFo=
+nt,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f74904;font-weight:6=
+00;font-size:13px;line-height:22.5px;margin:0;padding:0;display:block;">Mus=
+t Read</span></td></tr>
+</table>
+<!--[if mso]></td></tr></table><![endif]-->
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr><td><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"pre=
+sentation" width=3D"100%">
+<tr><td style=3D"border-top:1px solid #cbcbcb;"></td></tr>
+</table></td></tr>
+<!-- Item 5 -->
+<tr>
+<td style=3D"padding:15px 0;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr>
+<td style=3D"font-family:Helvetica,Arial,sans-serif;font-size:17px;font-wei=
+ght:bold;color:#f74904;padding-right:10px;" valign=3D"top" width=3D"30">5</=
+td>
+<td valign=3D"top">
+<!--[if mso]><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" =
+cellpadding=3D"0" border=3D"0"><tr><td valign=3D"top"><![endif]-->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tr>
+<td style=3D"font-family:Helvetica,Arial,sans-serif;font-size:16px !importa=
+nt;
+                           font-weight:bold;line-height:22.5px;
+                           color:#000000 !important;mso-color-alt:windowtex=
+t;
+                           mso-style-textfill-fill-color:#000000;
+                           margin:0;padding:0 0 5px 0;">
+<a class=3D"h1" href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrO=
+O&amp;cid=3Dfc2daecbc1948b68&amp;lid=3D16n4SQqBX7qTvi05h&amp;mid=3D547015b7=
+-3e5b-4d72-949d-8cda333362f2" style=3D"font-family:Helvetica,Arial,sans-ser=
+if;
+                            font-size:16px !important;font-weight:bold;line=
+-height:22.5px;
+                            color:#000000 !important;mso-color-alt:windowte=
+xt;
+                            text-decoration:none;display:block;margin:0;">
+                    Stanford and Meta say code should replace language as t=
+he backbone of AI agents
+                  </a>
+</td>
+</tr>
+<tr><td><span style=3D"font-family:system-ui,-apple-system,BlinkMacSystemFo=
+nt,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f74904;font-weight:6=
+00;font-size:13px;line-height:22.5px;margin:0;padding:0;display:block;">1,0=
+03 Likes</span></td></tr>
+</table>
+<!--[if mso]></td></tr></table><![endif]-->
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr><td><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"pre=
+sentation" width=3D"100%">
+<tr><td style=3D"border-top:1px solid #cbcbcb;"></td></tr>
+</table></td></tr>
+<!-- Item 6 -->
+<tr>
+<td style=3D"padding:15px 0;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr>
+<td style=3D"font-family:Helvetica,Arial,sans-serif;font-size:17px;font-wei=
+ght:bold;color:#f74904;padding-right:10px;" valign=3D"top" width=3D"30">6</=
+td>
+<td valign=3D"top">
+<!--[if mso]><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" =
+cellpadding=3D"0" border=3D"0"><tr><td valign=3D"top"><![endif]-->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tr>
+<td style=3D"font-family:Helvetica,Arial,sans-serif;font-size:16px !importa=
+nt;
+                           font-weight:bold;line-height:22.5px;
+                           color:#000000 !important;mso-color-alt:windowtex=
+t;
+                           mso-style-textfill-fill-color:#000000;
+                           margin:0;padding:0 0 5px 0;">
+<a class=3D"h1" href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrO=
+O&amp;cid=3Dfc2daecbc1948b68&amp;lid=3D1gwDZvcZvbxCOKYu2&amp;mid=3D547015b7=
+-3e5b-4d72-949d-8cda333362f2" style=3D"font-family:Helvetica,Arial,sans-ser=
+if;
+                            font-size:16px !important;font-weight:bold;line=
+-height:22.5px;
+                            color:#000000 !important;mso-color-alt:windowte=
+xt;
+                            text-decoration:none;display:block;margin:0;">
+                    Perplexity and Harvard study finds AI agents cut task t=
+ime 87% vs search
+                  </a>
+</td>
+</tr>
+<tr><td><span style=3D"font-family:system-ui,-apple-system,BlinkMacSystemFo=
+nt,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f74904;font-weight:6=
+00;font-size:13px;line-height:22.5px;margin:0;padding:0;display:block;">516=
+ Likes</span></td></tr>
+</table>
+<!--[if mso]></td></tr></table><![endif]-->
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table></td></tr></table>
+<!-- Alpha Description -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;width:100%;border:1px solid #6B6B6B;
+             background-color:#ffffff; margin-top:30px;" width=3D"100%">
+<tr>
+<td style=3D"padding:20px;">
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" ro=
+le=3D"presentation" width=3D"100%">
+<tr>
+<td align=3D"center" class=3D"p" style=3D"font-family:Helvetica, Arial, san=
+s-serif;
+                     font-size:10px !important;
+                     line-height:22.5px;
+
+                     font-weight:normal;
+                     color:#a1a1a1 !important;
+                     mso-color-alt:#6a7788;
+                     mso-style-textfill-fill-color:#6a7788;
+                     padding:0 0 10px 0;">
+            At Alpha Signal, our mission is to build a sharp, engaged commu=
+nity focused on AI, machine learning, and cutting-edge language models, hel=
+ping over 200,000 developers stay informed and ahead. We're passionate abou=
+t curating the best in AI, from top research and trending technical blogs t=
+o expert insights and tailored job opportunities. We keep you connected to =
+the breakthroughs and discussions that matter, so you can stay in the loop =
+without endless searching. We also work closely with partners who value the=
+ future of AI, including employers and advertisers who want to reach an aud=
+ience as passionate about AI as we are.
+    <br/><br/>Our partnerships are based on shared values of ethics, respon=
+sibility, and a commitment to building a better world through technology.Pr=
+ivacy is a priority at Alpha Signal. Our Privacy Policy clearly explains ho=
+w we collect, store, and use your personal and non-personal information. By=
+ using our website, you accept these terms, which you can review on our web=
+site. This policy applies across all Alpha Signal pages, outlining your rig=
+hts and how to contact us if you want to adjust the use of your information=
+. We're based in the United States. By using our site, you agree to be gove=
+rned by U.S. laws.
+          </td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<!-- Work with us -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;width:100%;margin:auto;border:1px solid #6B6B6B=
+;
+             background-color:#ffffff;margin-top:30px;" width=3D"100%">
+<tr>
+<!-- Outer wrapper with 20px padding -->
+<td style=3D"padding:20px;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<!-- Text Content -->
+<tr>
+<td align=3D"center" class=3D"p" style=3D"font-family:Helvetica, Arial, san=
+s-serif;
+               font-size:15px !important;
+               line-height:22.5px;
+               font-weight:normal;
+               color:#000000 !important;
+               mso-color-alt:#000000;
+               mso-style-textfill-fill-color:#000000;
+               padding:0;">
+      Looking to promote your company, product, service, or event to 250,00=
+0+ AI developers?
+    </td>
+</tr>
+<tr>
+<td align=3D"center" style=3D"padding:10px 0 0 0;">
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" ro=
+le=3D"presentation">
+<tr>
+<td align=3D"center" bgcolor=3D"#f74904" style=3D"font-family:Helvetica, Ar=
+ial, sans-serif;font-size:16px;line-height:20px;
+                               font-weight:bold;padding:12px 12px;color:#ff=
+ffff !important;
+                               border:1px solid #6B6B6B;display:block;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3Df=
+c2daecbc1948b68&amp;lid=3DHbNQqXh4Tv7XTq6D&amp;mid=3D547015b7-3e5b-4d72-949=
+d-8cda333362f2" style=3D"color:#ffffff !important;text-decoration:none;disp=
+lay:inline-block;" target=3D"_blank">
+                        WORK WITH US
+                      </a>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<!-- Feedback Box -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;margin-top:30px;border:1px solid #6B6B6B;backgr=
+ound-color:#ffffff;" width=3D"100%">
+<tr>
+<td align=3D"center" style=3D"padding:30px 20px;background-color:#ffffff;">
+<!-- Title -->
+<div style=3D"font-family:Helvetica, Arial, sans-serif;
+                   font-size:18px;line-height:24px;font-weight:bold;
+                   color:#000000;
+                   padding:0 0 20px 0;">
+            How was today's email?
+          </div>
+<!-- Buttons -->
+<div style=3D"font-family:Helvetica, Arial, sans-serif;font-size:16px;line-=
+height:22px;">
+<a class=3D"feedback-btn" href=3D"https://app.alphasignal.ai/fb/1rbQTN73dca=
+mvOrOO?cid=3Dfc2daecbc1948b68&amp;feedback=3DAwesome" style=3D"display:inli=
+ne-block;
+                      text-decoration:none;
+                      color:#000000;
+                      border:1px solid #6B6B6B;
+                      padding:10px 16px;
+                      margin:0 6px;" target=3D"_blank">
+              Awesome
+            </a>
+<a class=3D"feedback-btn" href=3D"https://app.alphasignal.ai/fb/1rbQTN73dca=
+mvOrOO?cid=3Dfc2daecbc1948b68&amp;feedback=3DDecent" style=3D"display:inlin=
+e-block;
+                      text-decoration:none;
+                      color:#000000;
+                      border:1px solid #6B6B6B;
+                      padding:10px 16px;
+                      margin:0 6px;" target=3D"_blank">
+              Decent
+            </a>
+<a class=3D"feedback-btn feedback-btn-last" href=3D"https://app.alphasignal=
+.ai/fb/1rbQTN73dcamvOrOO?cid=3Dfc2daecbc1948b68&amp;feedback=3DNot%20Great"=
+ style=3D"display:inline-block;
+                      text-decoration:none;
+                      color:#000000;
+                      border:1px solid #6B6B6B;
+                      padding:10px 16px;
+                      margin:0 6px;" target=3D"_blank">
+              Not Great
+            </a>
+</div>
+</td>
+</tr>
+</table>
+<!-- Footer -->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"max-width:600px;margin:auto;" width=3D"100%">
+<tr>
+<td align=3D"center" style=3D"padding:20px 10px;">
+<!-- Unsubscribe -->
+<a href=3D"https://app.alphasignal.ai/unsubscribe/u/1rbQTN73dcamvOrOO?cid=
+=3Dfc2daecbc1948b68" style=3D"font-family:system-ui;
+                    font-size:14px;line-height:20px;
+                    text-decoration:none;color:#f74904 !important;
+                    mso-color-alt:#f74904;
+                    mso-style-textfill-fill-color:#f74904;" target=3D"_blan=
+k">
+           unsubscribe_me(): return True
+          </a>
+<!-- Address -->
+<div style=3D"padding-top:20px; font-family:system-ui;font-size:14px;color:=
+#a1a1a1;">
+    {"AlphaSignal": "214 Barton Springs Rd, Austin, USA"}
+    </div>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</body></html>
+------=_Part_885056_247089383.1781125381003--

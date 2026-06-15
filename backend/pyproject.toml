@@ -12,6 +12,7 @@ dependencies = [
     "fastapi[standard]>=0.136.3",
     "pydantic>=2.13.4",
     "python-dotenv>=1.2.2",
+    "readability-lxml>=0.8.4.1",
 ]
 
 [dependency-groups]
@@ -32,3 +33,12 @@ select = ["E", "F", "I", "UP", "B"]
 python_version = "3.13"
 strict = true
 files = ["app", "tests"]
+
+[[tool.mypy.overrides]]
+# The readability-lxml library has no type annotations, so mypy can't see what
+# its functions accept or return. Under `strict = true` that normally makes the
+# `from readability import ...` line a hard error. This block scopes a single
+# relaxation to that one library: treat its types as unknown instead of failing.
+# Everything else stays strict.
+module = "readability.*"
+ignore_missing_imports = true

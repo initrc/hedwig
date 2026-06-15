@@ -1,7 +1,7 @@
 ---
 id: T0004
 title: Parse emails into normalized items and dump to JSON
-status: new
+status: done
 dependencies:
   - T0002
 ---
@@ -12,7 +12,7 @@ dependencies:
   `{id, source, subject, received_at, clean_text, candidate_images: [{url, alt, width, height}], original_url}`.
 - Strip HTML into readable text (BeautifulSoup + a readability pass).
 - Collect candidate images with `url`, `alt`, `width`, `height`. Do NOT pick the "best" image — that's Day 2's LLM step. Filter obvious junk: images with width or height < ~100px (logos / tracking pixels).
-- Provide a CLI entry point (e.g., `uv run python -m hedwig.ingest.dump`) that runs `LocalEmlSource` over `samples/` and writes parsed items to a JSON file (path configurable; default `out/items.json`).
+- Provide a CLI entry point (e.g., `uv run python -m app.ingest.dump`) that runs `LocalEmlSource` over `samples/` and writes parsed items to a JSON file (path configurable; default `out/items.json`).
 
 # Acceptance
 
@@ -28,7 +28,7 @@ dependencies:
 # Implementation Notes
 
 - Build-plan reference: `ravel/docs/build-plan.md` Day 1 step 3 (lines 91–96) and step 4 (line 97).
-- Suggested module: `backend/hedwig/ingest/parser.py` for the parser, `backend/hedwig/ingest/dump.py` for the CLI.
+- Suggested module: `backend/app/ingest/parser.py` for the parser, `backend/app/ingest/dump.py` for the CLI (the backend package is `app`, established by T0002).
 - For readability extraction, `readability-lxml` is the simplest pick on top of BeautifulSoup. Add it to deps in this task.
 - Image dimensions: prefer the `width`/`height` HTML attributes; if absent, leave as `None` and let the filter keep the image (don't fetch the URL to measure — adds network + flakiness).
 - `samples/*.eml` are real-world newsletter HTML and will surface most edge cases. Design the parser to handle the full directory without per-file tweaks.

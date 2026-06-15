@@ -109,6 +109,13 @@ but timebox to half a day — don't let parsing eat the AI work.
 1. **Cluster by topic.** Group the day's items into topics. Start simple: one LLM call that takes
    all item titles+snippets and returns topic groupings with labels. (You can upgrade to
    embedding-based clustering later, but LLM grouping is a fine, explainable v1.)
+   - **Note (per-story segmentation, surfaced in T0004):** Day 1 parsing produces one item per
+     *email*, but a single newsletter usually bundles many distinct stories into that one item
+     (subject + concatenated body). Clustering whole emails is too coarse — a 10-story newsletter
+     collapses into a single item with one title, so this step can't separate its stories into
+     topic cards. Consider a **segmentation step** that splits each newsletter into per-story
+     sub-items *before* this clustering pass (most naturally its own LLM call). Decide the item
+     granularity (email vs. story) when writing the Day 2 tasks.
 2. **Summarize each cluster.** For each topic, prompt the LLM to produce a tight summary that
    synthesizes across its source items, with citations back to which newsletter each claim came
    from. This is your core prompt-engineering surface — iterate on it.

@@ -7,3 +7,6 @@
 .venv/
 __pycache__/
 *.pyc
+
+# Parsed-item dumps from app.ingest.dump
+out/

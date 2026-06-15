@@ -1,7 +1,7 @@
 ---
 id: T0003
 title: Implement ImapSource for Gmail
-status: new
+status: done
 dependencies:
   - T0002
 ---

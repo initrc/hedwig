@@ -1,8 +1,8 @@
 """EmailSource abstraction and the offline LocalEmlSource implementation.
 
 `EmailSource` decouples the rest of the pipeline from where email comes from.
-The parser (T0004) consumes `RawEmail` objects and does not care whether they
-were read from local `.eml` files or fetched over IMAP (T0003).
+The parser consumes `RawEmail` objects and does not care whether they were read
+from local `.eml` files or fetched over IMAP.
 """
 
 from collections.abc import Iterable, Iterator

@@ -1,7 +1,7 @@
 ---
 id: T0006
 title: Add Groq LLM client and structured-output helper
-status: new
+status: done
 dependencies: []
 ---
 

@@ -1,7 +1,7 @@
 """Parse a `RawEmail` into a normalized `Item`.
 
 The parser is the boundary between messy newsletter email and the clean,
-typed input the Day 2 LLM steps consume. It:
+typed input the downstream LLM steps consume. It:
 
 - extracts plain readable text from the HTML body (readability + BeautifulSoup),
   falling back to the text/plain part when there is no HTML;
@@ -44,7 +44,7 @@ _ORIGINAL_URL_HINTS = (
 
 
 class CandidateImage(BaseModel):
-    """An image referenced by the email, kept as a candidate for Day 2.
+    """An image referenced by the email, kept as a candidate for later selection.
 
     `alt` is always a string (possibly empty). `width`/`height` are the pixel
     dimensions from the HTML attributes, or `None` when the email omits them.

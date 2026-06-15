@@ -2,8 +2,8 @@
 
     uv run python -m app.ingest.dump [--samples-dir DIR] [--output PATH]
 
-Writes one JSON object per `.eml` file (default `out/items.json`) so the Day 2
-steps have a stable, offline input to work against.
+Writes one JSON object per `.eml` file (default `out/items.json`) so the
+downstream steps have a stable, offline input to work against.
 """
 
 import argparse

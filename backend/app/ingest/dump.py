@@ -13,9 +13,9 @@ from pathlib import Path
 from app.ingest.parser import Item, parse
 from app.ingest.source import LocalEmlSource
 
-# parser.py lives at backend/app/ingest/dump.py; the repo root is four levels up,
-# and the committed samples sit beside the backend at <repo>/samples.
-DEFAULT_SAMPLES_DIR = Path(__file__).resolve().parents[3] / "samples"
+# dump.py lives at backend/app/ingest/dump.py; the backend root is two levels up,
+# and the committed samples sit beside this package at backend/samples.
+DEFAULT_SAMPLES_DIR = Path(__file__).resolve().parents[2] / "samples"
 DEFAULT_OUTPUT = Path("out/items.json")
 
 
@@ -34,7 +34,7 @@ def main() -> None:
         "--samples-dir",
         type=Path,
         default=DEFAULT_SAMPLES_DIR,
-        help="directory of .eml files to parse (default: <repo>/samples)",
+        help="directory of .eml files to parse (default: backend/samples)",
     )
     parser.add_argument(
         "--output",

@@ -22,7 +22,7 @@ Then `GET http://127.0.0.1:8000/health` returns `{"status": "ok"}`.
 
 ```bash
 uv run python -m app.ingest.dump            # writes out/items.json (one item per samples/*.eml)
-uv run python -m app.ingest.dump -o foo.json --samples-dir ../samples
+uv run python -m app.ingest.dump -o foo.json --samples-dir samples
 ```
 
 ## Develop

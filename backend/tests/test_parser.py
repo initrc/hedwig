@@ -5,7 +5,7 @@ from pathlib import Path
 from app.ingest.parser import Item, parse
 from app.ingest.source import LocalEmlSource, RawEmail
 
-SAMPLES_DIR = Path(__file__).resolve().parents[2] / "samples"
+SAMPLES_DIR = Path(__file__).resolve().parents[1] / "samples"
 
 
 def make_raw(

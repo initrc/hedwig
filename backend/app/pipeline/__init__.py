@@ -10,4 +10,6 @@ not single messages.
 
 Segmentation (`segment.py`) is the first step: it turns one email into its
 stories so the grouping step has something finer than whole emails to work with.
+Clustering (`cluster.py`) is the second: it groups the day's stories into
+labelled topics, so the steps after it write up one topic at a time.
 """

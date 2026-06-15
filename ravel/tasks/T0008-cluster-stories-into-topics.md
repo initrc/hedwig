@@ -1,7 +1,7 @@
 ---
 id: T0008
 title: Cluster stories into labeled topics
-status: new
+status: done
 dependencies:
   - T0006
   - T0007
@@ -46,3 +46,20 @@ dependencies:
   call for a day's digest (the corpus is 8–12 emails → a few dozen stories, well within context).
 - Decide and document the policy for a story that fits no topic (e.g. a singleton "Other"/own-topic) so the
   mapping stays total; the acceptance test pins whichever choice you make.
+
+# Decisions
+
+- Module: `backend/app/pipeline/cluster.py`. `cluster(stories, *, client=None) -> list[Topic]` mirrors
+  `segment`'s shape (keyword-only `client` for test injection).
+- Schema: model returns `Clustering { topics: list[DraftTopic{ label, story_ids }] }`; code resolves ids back
+  to `Story` objects on the public `Topic { label, stories: list[Story] }`. `DraftTopic` follows the `Draft*`
+  naming from `segment.py`'s `DraftStory` (the model's raw reply before our code resolves it), in preference
+  to the task note's suggested `TopicSpec`.
+- **Totality / id discipline (all enforced in code, not trusted to the model):**
+  - hallucinated id (not in input) → dropped;
+  - story named in two topics → kept in the first, ignored after (a topic left empty this way is dropped);
+  - story the model groups with nothing → becomes its own one-story topic, labelled with its title (falling
+    back to "Other" if the title is empty).
+  So every returned topic references real input stories, and every input story lands in exactly one topic.
+- `reasoning_effort="high"` for this call (vs the helper's "low" default), since grouping weighs the whole
+  set at once. Empty input short-circuits to `[]` with no model call.

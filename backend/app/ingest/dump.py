@@ -10,7 +10,7 @@ import argparse
 import json
 from pathlib import Path
 
-from app.ingest.parser import Item, parse
+from app.ingest.parser import ParsedEmail, parse
 from app.ingest.source import LocalEmlSource
 
 # dump.py lives at backend/app/ingest/dump.py; the backend root is two levels up,
@@ -19,7 +19,7 @@ DEFAULT_SAMPLES_DIR = Path(__file__).resolve().parents[2] / "samples"
 DEFAULT_OUTPUT = Path("out/items.json")
 
 
-def dump_items(samples_dir: Path, output: Path) -> list[Item]:
+def dump_items(samples_dir: Path, output: Path) -> list[ParsedEmail]:
     """Parse every sample under `samples_dir` and write the items to `output`."""
     items = [parse(raw) for raw in LocalEmlSource(samples_dir).fetch()]
     payload = [item.model_dump(mode="json") for item in items]

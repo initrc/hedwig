@@ -19,11 +19,11 @@ dependencies:
 
 # Acceptance
 
-- A Pydantic model holds the per-topic output: `summary: str`, `sources` (references to the source `Item`s
+- A Pydantic model holds the per-topic output: `summary: str`, `sources` (references to the source `ParsedEmail`s
   backing the topic), and `action_items: list[...]`. It validates via Pydantic.
 - A function summarizes a single topic (and a convenience over a list of topics), using the T0006
   structured-output helper.
-- Citations resolve to real sources: every cited source maps to an `Item` that actually contributed a story
+- Citations resolve to real sources: every cited source maps to a `ParsedEmail` that actually contributed a story
   to the topic (recover via `Story.source_item_id`). Tests assert no citation points to an item outside the
   topic's stories.
 - Tests run **without real API calls** (stub the LLM helper) and cover: a multi-source topic produces a
@@ -37,14 +37,14 @@ dependencies:
   summarization "your core prompt-engineering surface — iterate on it" and is explicit that this is a
   **hand-write-it** learning step.
 - Inputs: `Topic` from T0008 (`backend/app/pipeline/cluster.py`) and, transitively, the `Story` →
-  `source_item_id` link from T0007 to resolve citations to `Item`s. Suggested module:
+  `source_item_id` link from T0007 to resolve citations to `ParsedEmail`s. Suggested module:
   `backend/app/pipeline/summarize.py`.
 - **Prompt design (the learning core):** pass the topic's stories with their source attribution and ask for
   (a) a synthesized summary that cites sources inline or by id, and (b) a list of action items. The skill of
   this task is iterating the prompt: run on one topic, inspect the JSON, fix faithfulness/citation issues,
   repeat.
 - **Citations are the credibility surface.** Have the model cite by a stable source id you provide (the
-  `Item.id` of each contributing story's parent), then validate in code that returned citation ids are a
+  `ParsedEmail.id` of each contributing story's parent), then validate in code that returned citation ids are a
   subset of the topic's source items — reject hallucinated citations rather than trusting them. This same
   faithfulness check is what the Day 5 eval harness will score.
 - **Reasoning depth:** summarization-with-synthesis benefits from more reasoning; consider raising Groq's

@@ -1,29 +1,29 @@
 ---
 id: T0007
 title: Segment newsletters into per-story sub-items
-status: new
+status: done
 dependencies:
   - T0006
 ---
 
 # Scope
 
-- Add an LLM step that splits each parsed newsletter `Item` into one or more per-story `Story` sub-items
+- Add an LLM step that splits each parsed newsletter `ParsedEmail` into one or more per-story `Story` sub-items
   *before* clustering. This resolves the granularity question raised in T0004 and flagged in the build plan:
-  Day 1 produces one `Item` per *email*, but a single newsletter usually bundles many distinct stories, so
+  Day 1 produces one `ParsedEmail` per *email*, but a single newsletter usually bundles many distinct stories, so
   clustering whole emails is too coarse.
 - A `Story` carries enough to be clustered and summarized downstream: a short title, the story's text (a
-  slice/synthesis of the parent's `clean_text`), and a back-reference to its source `Item` (so citations and
+  slice/synthesis of the parent's `clean_text`), and a back-reference to its source `ParsedEmail` (so citations and
   the candidate-image pool can be recovered later).
-- Provide a function that takes a list of `Item`s and returns a flat list of `Story`s (each email may yield
+- Provide a function that takes a list of `ParsedEmail`s and returns a flat list of `Story`s (each email may yield
   several).
 
 # Acceptance
 
-- A `Story` Pydantic model exists with at least: a stable `id`, `source_item_id` (the parent `Item.id`), a
+- A `Story` Pydantic model exists with at least: a stable `id`, `source_item_id` (the parent `ParsedEmail.id`), a
   `title`, and `text`. It validates via Pydantic.
-- A `segment(item: Item) -> list[Story]` (and a list-level convenience over many items) exists; each returned
-  `Story.source_item_id` matches a real input `Item.id`.
+- A `segment(item: ParsedEmail) -> list[Story]` (and a list-level convenience over many items) exists; each returned
+  `Story.source_item_id` matches a real input `ParsedEmail.id`.
 - The step uses the T0006 structured-output helper with a Pydantic schema — no hand-rolled JSON parsing.
 - A newsletter that genuinely contains one story yields exactly one `Story`; a multi-story newsletter yields
   several. (Verify against the committed `backend/samples/*.eml` corpus, which is real multi-story
@@ -38,7 +38,7 @@ dependencies:
   (lines 110–118), which explicitly says to "decide the item granularity (email vs. story) when writing
   the Day 2 tasks." This task makes that decision: **story granularity**, via a dedicated segmentation
   step that is its own LLM call.
-- Input type: `Item` from `backend/app/ingest/parser.py:59` (fields: `id`, `source`, `subject`,
+- Input type: `ParsedEmail` from `backend/app/ingest/parser.py:59` (fields: `id`, `source`, `subject`,
   `received_at`, `clean_text`, `candidate_images`, `original_url`). Suggested new module:
   `backend/app/pipeline/segment.py` (a new `app.pipeline` package for the Day 2 batch core).
 - **Prompt design (the learning core — hand-write this):** feed the model the `subject` + `clean_text` and
@@ -49,7 +49,7 @@ dependencies:
   filling `source_item_id` and a generated `id` in code (don't trust the LLM to mint stable ids). A simple
   `f"{item.id}#{index}"` id keeps stories traceable to their email.
 - **Do not** pass `candidate_images` into the segmentation prompt — image selection is a separate step
-  (T0010) that works per-topic. Stories only need to reference the parent `Item.id`; the image pool is
+  (T0010) that works per-topic. Stories only need to reference the parent `ParsedEmail.id`; the image pool is
   recovered from the parent at selection time.
-- Edge cases: an `Item` with empty `clean_text` should yield zero stories (or one trivially), not crash;
+- Edge cases: a `ParsedEmail` with empty `clean_text` should yield zero stories (or one trivially), not crash;
   keep titles short and free of trailing newsletter boilerplate.

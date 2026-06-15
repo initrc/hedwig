@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 from email.message import EmailMessage
 from pathlib import Path
 
-from app.ingest.parser import Item, parse
+from app.ingest.parser import ParsedEmail, parse
 from app.ingest.source import LocalEmlSource, RawEmail
 
 SAMPLES_DIR = Path(__file__).resolve().parents[1] / "samples"
@@ -133,7 +133,7 @@ def test_roundtrip_over_committed_samples() -> None:
     assert items, "expected committed samples/*.eml to yield items"
     for item in items:
         # Re-validate to prove each item matches the schema end to end.
-        Item.model_validate(item.model_dump())
+        ParsedEmail.model_validate(item.model_dump())
         assert item.id.endswith(".eml")
         assert item.source
         assert item.subject

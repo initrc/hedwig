@@ -16,7 +16,7 @@ dependencies:
 
 # Acceptance
 
-- A `parse(raw: RawEmail) -> Item` function exists and returns a Pydantic model matching the schema above.
+- A `parse(raw: RawEmail) -> ParsedEmail` function exists and returns a Pydantic model matching the schema above.
 - `clean_text` is plain readable text with HTML tags removed and whitespace collapsed; quoted-printable and base64 transfer encodings are decoded correctly.
 - `candidate_images` includes only images with both dimensions ≥ 100 when dimensions are known, or unknown-dimension images that aren't 1×1 tracking pixels. `alt` may be empty string but never missing.
 - `original_url` is extracted from the first prominent "View in browser" / "Read online" link when present, else `null`.

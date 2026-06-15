@@ -1,4 +1,4 @@
-"""Parse a `RawEmail` into a normalized `Item`.
+"""Parse a `RawEmail` into a normalized `ParsedEmail`.
 
 The parser is the boundary between messy newsletter email and the clean,
 typed input the downstream LLM steps consume. It:
@@ -56,7 +56,7 @@ class CandidateImage(BaseModel):
     height: int | None = None
 
 
-class Item(BaseModel):
+class ParsedEmail(BaseModel):
     """A single newsletter email normalized for downstream processing."""
 
     id: str
@@ -68,8 +68,8 @@ class Item(BaseModel):
     original_url: str | None
 
 
-def parse(raw: RawEmail) -> Item:
-    """Normalize a `RawEmail` into an `Item`."""
+def parse(raw: RawEmail) -> ParsedEmail:
+    """Normalize a `RawEmail` into a `ParsedEmail`."""
     # LocalEmlSource/ImapSource parse with policy=default, which yields the
     # modern EmailMessage API (get_body / get_content) the helpers below rely on.
     message = cast(EmailMessage, raw.message)
@@ -84,7 +84,7 @@ def parse(raw: RawEmail) -> Item:
         candidate_images = []
         original_url = None
 
-    return Item(
+    return ParsedEmail(
         id=raw.source_id,
         source=_extract_source(message),
         subject=_header_text(message, "Subject"),

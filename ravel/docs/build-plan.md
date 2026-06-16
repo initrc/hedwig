@@ -5,7 +5,7 @@ The project ingests subscribed newsletters, uses an LLM agent to cluster + summa
 a daily digest, exposes a RAG chat over the archive, and ships with a real eval harness.
 
 **What it does:** turns the pile of newsletters in an inbox into a clean daily briefing — topics
-clustered, summarized with citations, action items pulled out — plus a chat to ask questions over
+clustered, summarized with citations — plus a chat to ask questions over
 the archive. Instantly understandable ("it organizes my newsletters"), and a great vehicle for
 practicing prompt engineering, RAG, agentic pipelines, and evals in one build.
 
@@ -38,7 +38,7 @@ EmailSource (interface)
         ▼
   Agent pipeline (the "batch core"):                            (Day 2)
     cluster items by topic → summarize each cluster
-      → extract action items → pick relevant image
+      → pick relevant image
         │
         ▼
   Persisted Digest objects (Postgres or SQLite)                 (Day 2)
@@ -119,13 +119,16 @@ but timebox to half a day — don't let parsing eat the AI work.
 2. **Summarize each cluster.** For each topic, prompt the LLM to produce a tight summary that
    synthesizes across its source items, with citations back to which newsletter each claim came
    from. This is your core prompt-engineering surface — iterate on it.
-3. **Extract action items.** Same pass or a follow-up: pull concrete, dated, or actionable points
-   ("NVDA reports Wed", "new model on HuggingFace").
+3. **Extract action items (dropped).** Originally a same-pass or follow-up step to pull concrete,
+   dated, or actionable points ("NVDA reports Wed", "new model on HuggingFace"). Cut during T0009
+   after the real `backend/samples/` newsletters yielded no useful items — every candidate just
+   restated the summary, was a "go try this," or came from a sponsor ad. See T0009 Findings. Step
+   numbers below are kept as-is so other tasks' "Day 2 step N" references still hold.
 4. **Pick the relevant image.** Pass the cluster's candidate images (alt text, dimensions) to the
    LLM and have it select which image actually illustrates the story (e.g., a benchmark chart),
    or none. This filters logos/ads and is a neat bit of prompt engineering.
 5. **Structured output.** Force JSON: `{date, topics: [{label, summary, sources[],
-   action_items[], image}]}`. Validate with Pydantic.
+   image}]}`. Validate with Pydantic.
 6. **Persist** the full digest object (Postgres for the "real" version; SQLite is fine). Store the
    *full* object — the card is just a projection of a few fields; the detail panel needs the rest.
 
@@ -160,7 +163,7 @@ inspect the JSON, fix the prompts, repeat. This iteration *is* the skill.
 1. **Card list**, filterable by category. Each card: title, description, subtle source label,
    optional image (the LLM-selected one from Day 2).
 2. **Detail Sheet** on card click (shadcn `Sheet`): full summary, all source citations,
-   action items, "view original" link. This is where clustering pays off visually — a topic
+   "view original" link. This is where clustering pays off visually — a topic
    synthesized from several newsletters, each claim cited.
 3. **Scoped chat** at the bottom of the Sheet, wired to `POST /chat?topic_id=...` — ask questions
    about *that* topic, answered from its sources.

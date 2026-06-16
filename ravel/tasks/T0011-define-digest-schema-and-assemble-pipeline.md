@@ -12,20 +12,21 @@ dependencies:
 # Scope
 
 - Define the final `Digest` Pydantic schema and the orchestration that runs the full Day 2 batch core end to
-  end: `ParsedEmail`s in → segment (T0007) → cluster (T0008) → summarize + action items (T0009) → pick image
+  end: `ParsedEmail`s in → segment (T0007) → cluster (T0008) → summarize (T0009) → pick image
   (T0010) → one validated `Digest` out.
-- Target schema (from the build plan): `{date, topics: [{label, summary, sources[], action_items[], image}]}`.
+- Target schema: `{date, topics: [{label, summary, sources[], image}]}`. (The build plan also listed
+  `action_items[]` per topic; that field was dropped in T0009 — see its Findings — so it is not in this schema.)
 - Provide a single `run_pipeline(items: list[ParsedEmail], date=...) -> Digest` entry point that wires the stages
   together and assembles each topic's projection.
 
 # Acceptance
 
-- A `Digest` Pydantic model exists matching `{date, topics: [{label, summary, sources[], action_items[],
-  image}]}`, reusing the per-topic outputs from T0009 (summary/sources/action_items) and the selected image
-  from T0010 (which may be null). It validates via Pydantic.
+- A `Digest` Pydantic model exists matching `{date, topics: [{label, summary, sources[], image}]}`, reusing
+  the per-topic outputs from T0009 (summary/sources) and the selected image from T0010 (which may be null). It
+  validates via Pydantic.
 - A `run_pipeline(items, ...) -> Digest` function composes segment → cluster → summarize → image-select and
-  returns one validated `Digest`; each topic in the result carries its label, summary, citations, action
-  items, and selected image (or null).
+  returns one validated `Digest`; each topic in the result carries its label, summary, citations, and selected
+  image (or null).
 - Tests run **without real API calls** (stub each stage's LLM helper, or the stage functions) and verify the
   composition: a small set of `ParsedEmail`s flows through to a `Digest` with the expected topics, and every topic's
   `sources` resolve to input items. The assembled object round-trips through `model_dump(mode="json")` /
@@ -56,3 +57,17 @@ dependencies:
   is not listed here directly.
 - Out of scope: persistence (T0012) and the HTTP endpoint (T0013). `run_pipeline` returns the `Digest`
   object; it does not write to a DB or touch FastAPI.
+
+# Findings
+
+- **"View original" opens the publisher's hosted page; we do not re-render the email.** Clicking a source's
+  "view original" link opens `ParsedEmail.original_url` (the newsletter's own "view in browser" page) in a new
+  tab. We deliberately do not render the email HTML ourselves: the parser keeps only `clean_text`, images, and
+  `original_url` (not the raw HTML), and re-rendering third-party email HTML safely (stripping scripts and
+  tracking pixels, fixing broken styling) is more work and risk than it earns for v1.
+- **Fallback when `original_url` is `None`:** some emails have no "view in browser" link (or are plain-text),
+  so show an in-app text view of the stored `clean_text` (plus the kept images) instead — our cleaned text, not
+  the original HTML. This keeps the link from ever being dead.
+- **What this means for the data carried:** the source projection must include `original_url`, and the digest
+  must keep each source's `clean_text` reachable by id (so persistence in T0012 needs to store it too) so the
+  fallback view has something to show.

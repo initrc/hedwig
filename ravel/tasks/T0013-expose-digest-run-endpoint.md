@@ -1,7 +1,7 @@
 ---
 id: T0013
 title: Expose POST /digest/run endpoint
-status: new
+status: done
 dependencies:
   - T0011
   - T0012

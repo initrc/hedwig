@@ -22,7 +22,7 @@ from app.pipeline.segment import (
 )
 from tests.fakes import FakeClient, _parsed_email, model_reply
 
-SAMPLES_DIR = Path(__file__).resolve().parents[1] / "samples"
+SAMPLES_DIR = Path(__file__).resolve().parents[2] / "samples"
 
 
 def _fake_client(*drafts: DraftStory) -> FakeClient:

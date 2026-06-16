@@ -16,7 +16,7 @@ from tests.fakes import _digest, _digest_source, _digest_topic, _image
 
 def test_save_then_load_returns_equal_digest() -> None:
     """Saving a digest and loading it back gives a value-equal Digest."""
-    store = DigestStore(":memory:")
+    store = DigestStore(db_path=":memory:")
     original = _digest(
         topics=[
             _digest_topic(
@@ -43,17 +43,17 @@ def test_save_then_load_returns_equal_digest() -> None:
     assert loaded is not None
     assert loaded == original
     # Also check the id matches the date.
-    assert digest_id == "2026-06-15"
+    assert digest_id == original.date.isoformat()
 
 
 def test_load_returns_none_for_missing_id() -> None:
     """Loading an id that was never saved returns None."""
-    store = DigestStore(":memory:")
+    store = DigestStore(db_path=":memory:")
     assert store.load("2099-01-01") is None
 
 
 def test_load_by_date_finds_the_right_digest() -> None:
-    store = DigestStore(":memory:")
+    store = DigestStore(db_path=":memory:")
     original = _digest(digest_date=date(2026, 3, 8))
     store.save(original)
 
@@ -63,7 +63,7 @@ def test_load_by_date_finds_the_right_digest() -> None:
 
 
 def test_load_by_date_returns_none_when_no_match() -> None:
-    store = DigestStore(":memory:")
+    store = DigestStore(db_path=":memory:")
     assert store.load_by_date(date(2026, 1, 1)) is None
 
 
@@ -73,7 +73,7 @@ def test_load_by_date_returns_none_when_no_match() -> None:
 
 
 def test_list_recent_returns_saved_digests_newest_first() -> None:
-    store = DigestStore(":memory:")
+    store = DigestStore(db_path=":memory:")
 
     store.save(_digest(digest_date=date(2026, 6, 10)))
     store.save(_digest(digest_date=date(2026, 6, 14)))
@@ -88,7 +88,7 @@ def test_list_recent_returns_saved_digests_newest_first() -> None:
 
 
 def test_list_recent_respects_limit() -> None:
-    store = DigestStore(":memory:")
+    store = DigestStore(db_path=":memory:")
 
     for d in range(1, 6):
         store.save(_digest(digest_date=date(2026, 6, d)))
@@ -99,7 +99,7 @@ def test_list_recent_respects_limit() -> None:
 
 
 def test_list_recent_returns_empty_list_when_no_digests() -> None:
-    store = DigestStore(":memory:")
+    store = DigestStore(db_path=":memory:")
     assert store.list_recent() == []
 
 
@@ -109,7 +109,7 @@ def test_list_recent_returns_empty_list_when_no_digests() -> None:
 
 
 def test_saving_same_date_twice_overwrites() -> None:
-    store = DigestStore(":memory:")
+    store = DigestStore(db_path=":memory:")
 
     first = _digest(
         topics=[_digest_topic(label="First", summary="First version.")],
@@ -140,7 +140,7 @@ def test_saving_same_date_twice_overwrites() -> None:
 
 def test_full_digest_with_image_and_url_round_trips() -> None:
     """Every field — including nested image fields and optional URL — survives."""
-    store = DigestStore(":memory:")
+    store = DigestStore(db_path=":memory:")
 
     original = _digest(
         digest_date=date(2026, 6, 15),
@@ -205,7 +205,7 @@ def test_full_digest_with_image_and_url_round_trips() -> None:
 
 def test_sources_preserve_types_across_round_trip() -> None:
     """Every field on a digest source keeps its Python type after save → load."""
-    store = DigestStore(":memory:")
+    store = DigestStore(db_path=":memory:")
 
     original = _digest(
         topics=[

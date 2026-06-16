@@ -2,7 +2,7 @@ from pathlib import Path
 
 from app.ingest.source import EmailSource, LocalEmlSource, RawEmail
 
-SAMPLES_DIR = Path(__file__).resolve().parents[1] / "samples"
+SAMPLES_DIR = Path(__file__).resolve().parents[2] / "samples"
 
 
 def test_local_eml_source_satisfies_protocol() -> None:

@@ -33,9 +33,14 @@ class DigestStore:
     already exists overwrites the old row (upsert semantics).
     """
 
-    def __init__(self, db_path: str | Path = DEFAULT_DB_PATH) -> None:
+    def __init__(
+        self,
+        *,
+        db_path: str | Path = DEFAULT_DB_PATH,
+        check_same_thread: bool = True,
+    ) -> None:
         db_path = Path(db_path) if isinstance(db_path, str) else db_path
-        self._conn = sqlite3.connect(str(db_path))
+        self._conn = sqlite3.connect(str(db_path), check_same_thread=check_same_thread)
         self._conn.row_factory = sqlite3.Row
         self._conn.execute(
             """

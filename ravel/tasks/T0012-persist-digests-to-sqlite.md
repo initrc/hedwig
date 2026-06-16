@@ -1,7 +1,7 @@
 ---
 id: T0012
 title: Persist digests to SQLite
-status: new
+status: done
 dependencies:
   - T0011
 ---

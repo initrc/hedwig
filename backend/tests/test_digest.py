@@ -10,34 +10,12 @@ tests.
 
 from datetime import UTC, date, datetime
 
-from app.ingest.parser import CandidateImage, ParsedEmail
 from app.pipeline.cluster import Clustering, DraftTopic
 from app.pipeline.digest import Digest, run_pipeline
 from app.pipeline.image import ImageChoice
 from app.pipeline.segment import DraftStory, Segmentation
 from app.pipeline.summarize import DraftSummary
-from tests.fakes import QueuedFakeClient, model_reply
-
-
-def _email(
-    *,
-    email_id: str = "alpha.eml",
-    source: str = "news@example.com",
-    subject: str = "Daily digest",
-    clean_text: str = "Body text.",
-    original_url: str | None = "https://example.com/view/1",
-    images: list[CandidateImage] | None = None,
-) -> ParsedEmail:
-    """A minimal `ParsedEmail` for a pipeline test."""
-    return ParsedEmail(
-        id=email_id,
-        source=source,
-        subject=subject,
-        received_at=datetime(2026, 6, 15, tzinfo=UTC),
-        clean_text=clean_text,
-        candidate_images=images or [],
-        original_url=original_url,
-    )
+from tests.fakes import QueuedFakeClient, _image, _parsed_email, model_reply
 
 
 def _segment_reply(*titles: str) -> Segmentation:
@@ -62,11 +40,6 @@ def _image_reply(index: int | None) -> ImageChoice:
     return ImageChoice(index=index)
 
 
-def _image(url: str = "https://x/chart.png") -> CandidateImage:
-    """A minimal candidate image."""
-    return CandidateImage(url=url, alt="Chart", width=600, height=400)
-
-
 # ---------------------------------------------------------------------------
 # run_pipeline composition
 # ---------------------------------------------------------------------------
@@ -77,8 +50,16 @@ def test_run_pipeline_composes_all_stages_and_round_trips() -> None:
     image_b = _image("https://x/b.png")
 
     items = [
-        _email(email_id="alpha.eml", clean_text="Alpha news.", images=[image_a]),
-        _email(email_id="beta.eml", clean_text="Beta news.", images=[image_b]),
+        _parsed_email(
+            item_id="alpha.eml",
+            clean_text="Alpha news.",
+            candidate_images=[image_a],
+        ),
+        _parsed_email(
+            item_id="beta.eml",
+            clean_text="Beta news.",
+            candidate_images=[image_b],
+        ),
     ]
 
     # The pipeline makes 7 LLM calls in this order:
@@ -129,14 +110,14 @@ def test_run_pipeline_composes_all_stages_and_round_trips() -> None:
 
 def test_topic_sources_resolve_to_the_input_parsed_emails() -> None:
     items = [
-        _email(
-            email_id="alpha.eml",
+        _parsed_email(
+            item_id="alpha.eml",
             source="alpha@news.com",
             subject="Alpha News",
             clean_text="Alpha text.",
         ),
-        _email(
-            email_id="beta.eml",
+        _parsed_email(
+            item_id="beta.eml",
             source="beta@news.com",
             subject="Beta News",
             clean_text="Beta text.",
@@ -177,7 +158,13 @@ def test_topic_sources_resolve_to_the_input_parsed_emails() -> None:
 
 
 def test_fallback_when_original_url_is_none_is_preserved() -> None:
-    items = [_email(email_id="alpha.eml", original_url=None, clean_text="Fallback text.")]
+    items = [
+        _parsed_email(
+            item_id="alpha.eml",
+            original_url=None,
+            clean_text="Fallback text.",
+        )
+    ]
 
     client = QueuedFakeClient(
         [

@@ -11,7 +11,7 @@ traceable ids.
 from pathlib import Path
 from typing import cast
 
-from app.ingest.parser import ParsedEmail, parse
+from app.ingest.parser import parse
 from app.ingest.source import LocalEmlSource
 from app.pipeline.segment import (
     DraftStory,
@@ -20,7 +20,7 @@ from app.pipeline.segment import (
     segment,
     segment_items,
 )
-from tests.fakes import FakeClient, model_reply
+from tests.fakes import FakeClient, _parsed_email, model_reply
 
 SAMPLES_DIR = Path(__file__).resolve().parents[1] / "samples"
 
@@ -30,25 +30,12 @@ def _fake_client(*drafts: DraftStory) -> FakeClient:
     return FakeClient(model_reply(Segmentation(stories=list(drafts)).model_dump_json()))
 
 
-def _parsed_email(
-    *, item_id: str = "news.eml", subject: str = "Daily roundup", text: str = "body"
-) -> ParsedEmail:
-    """A minimal `ParsedEmail` for a single-email test."""
-    return ParsedEmail(
-        id=item_id,
-        source="news@example.com",
-        subject=subject,
-        received_at=None,
-        clean_text=text,
-        candidate_images=[],
-        original_url=None,
-    )
-
-
 def test_single_story_item_yields_one_story() -> None:
     client = _fake_client(DraftStory(title="Only story", text="It happened."))
 
-    stories = segment(_parsed_email(text="One thing happened today."), client=client)
+    stories = segment(
+        _parsed_email(clean_text="One thing happened today."), client=client
+    )
 
     assert stories == [
         Story(
@@ -69,7 +56,8 @@ def test_multi_story_item_yields_several_stories() -> None:
     )
 
     stories = segment(
-        _parsed_email(item_id="digest.eml", text="Three things happened."), client=client
+        _parsed_email(item_id="digest.eml", clean_text="Three things happened."),
+        client=client,
     )
 
     assert [s.title for s in stories] == ["Story one", "Story two", "Story three"]
@@ -78,7 +66,7 @@ def test_multi_story_item_yields_several_stories() -> None:
 
 
 def test_every_story_references_the_parent_item() -> None:
-    parent = _parsed_email(item_id="parent.eml", text="Lots of news.")
+    parent = _parsed_email(item_id="parent.eml", clean_text="Lots of news.")
     client = _fake_client(
         DraftStory(title="A", text="a"),
         DraftStory(title="B", text="b"),
@@ -94,7 +82,7 @@ def test_every_story_references_the_parent_item() -> None:
 def test_empty_clean_text_yields_no_stories_without_calling_the_model() -> None:
     client = _fake_client(DraftStory(title="ignored", text="ignored"))
 
-    stories = segment(_parsed_email(text=""), client=client)
+    stories = segment(_parsed_email(clean_text=""), client=client)
 
     assert stories == []
     # Nothing to split, so the model is never asked — no request, no cost.
@@ -104,14 +92,16 @@ def test_empty_clean_text_yields_no_stories_without_calling_the_model() -> None:
 def test_whitespace_only_clean_text_yields_no_stories() -> None:
     client = _fake_client(DraftStory(title="ignored", text="ignored"))
 
-    stories = segment(_parsed_email(text="   \n  \t "), client=client)
+    stories = segment(_parsed_email(clean_text="   \n  \t "), client=client)
 
     assert stories == []
     assert client.chat.completions.call_count == 0
 
 
 def test_titles_and_text_are_trimmed() -> None:
-    client = _fake_client(DraftStory(title="  Spacey title  ", text="\n  padded body  \n"))
+    client = _fake_client(
+        DraftStory(title="  Spacey title  ", text="\n  padded body  \n")
+    )
 
     [story] = segment(_parsed_email(), client=client)
 
@@ -121,7 +111,9 @@ def test_titles_and_text_are_trimmed() -> None:
 
 def test_prompt_carries_the_subject_and_body() -> None:
     client = _fake_client(DraftStory(title="t", text="x"))
-    item = _parsed_email(subject="Chips bounce", text="Intel rose 10% on Monday.")
+    item = _parsed_email(
+        subject="Chips bounce", clean_text="Intel rose 10% on Monday."
+    )
 
     segment(item, client=client)
 
@@ -158,11 +150,19 @@ def test_segment_items_flattens_stories_across_emails() -> None:
         DraftStory(title="A", text="a"),
         DraftStory(title="B", text="b"),
     )
-    items = [_parsed_email(item_id="one.eml"), _parsed_email(item_id="two.eml")]
+    items = [
+        _parsed_email(item_id="one.eml"),
+        _parsed_email(item_id="two.eml"),
+    ]
 
     stories = segment_items(items, client=client)
 
-    assert [s.id for s in stories] == ["one.eml#0", "one.eml#1", "two.eml#0", "two.eml#1"]
+    assert [s.id for s in stories] == [
+        "one.eml#0",
+        "one.eml#1",
+        "two.eml#0",
+        "two.eml#1",
+    ]
     assert {s.source_item_id for s in stories} == {"one.eml", "two.eml"}
     assert client.chat.completions.call_count == 2
 

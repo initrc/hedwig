@@ -12,8 +12,7 @@ matter what the model says.
 from typing import cast
 
 from app.pipeline.cluster import Clustering, DraftTopic, cluster
-from app.pipeline.segment import Story
-from tests.fakes import FakeClient, model_reply
+from tests.fakes import FakeClient, _story, model_reply
 
 
 def _fake_client(*drafts: DraftTopic) -> FakeClient:
@@ -21,15 +20,10 @@ def _fake_client(*drafts: DraftTopic) -> FakeClient:
     return FakeClient(model_reply(Clustering(topics=list(drafts)).model_dump_json()))
 
 
-def _story(story_id: str, title: str = "Title", text: str = "Body text.") -> Story:
-    """A minimal `Story` for a clustering test."""
-    return Story(id=story_id, source_item_id="news.eml", title=title, text=text)
-
-
 def test_related_stories_land_in_one_topic() -> None:
     stories = [
-        _story("a#0", "Acme raises $50M"),
-        _story("a#1", "Acme funding round led by Foo Capital"),
+        _story("a#0", title="Acme raises $50M"),
+        _story("a#1", title="Acme funding round led by Foo Capital"),
     ]
     client = _fake_client(DraftTopic(label="Acme funding", story_ids=["a#0", "a#1"]))
 
@@ -41,7 +35,10 @@ def test_related_stories_land_in_one_topic() -> None:
 
 
 def test_unrelated_stories_split_into_separate_topics() -> None:
-    stories = [_story("a#0", "Chip launch"), _story("b#0", "Bond market dips")]
+    stories = [
+        _story("a#0", title="Chip launch"),
+        _story("b#0", title="Bond market dips"),
+    ]
     client = _fake_client(
         DraftTopic(label="Chips", story_ids=["a#0"]),
         DraftTopic(label="Bonds", story_ids=["b#0"]),
@@ -83,7 +80,7 @@ def test_mapping_is_total_every_input_story_lands_in_exactly_one_topic() -> None
 
 
 def test_forgotten_story_becomes_its_own_topic_labelled_with_its_title() -> None:
-    stories = [_story("a#0", "Grouped"), _story("b#0", "Left out")]
+    stories = [_story("a#0", title="Grouped"), _story("b#0", title="Left out")]
     client = _fake_client(DraftTopic(label="Group", story_ids=["a#0"]))
 
     topics = cluster(stories, client=client)
@@ -144,8 +141,8 @@ def test_label_is_trimmed() -> None:
 
 def test_prompt_carries_each_story_id_title_and_snippet() -> None:
     stories = [
-        _story("a#0", "Chips bounce", "Intel rose 10% on Monday."),
-        _story("b#0", "Bonds dip", "Treasuries fell on the news."),
+        _story("a#0", title="Chips bounce", text="Intel rose 10% on Monday."),
+        _story("b#0", title="Bonds dip", text="Treasuries fell on the news."),
     ]
     client = _fake_client(DraftTopic(label="t", story_ids=["a#0", "b#0"]))
 

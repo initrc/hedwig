@@ -1,7 +1,7 @@
 ---
 id: T0011
 title: Define the Digest schema and assemble the pipeline
-status: new
+status: done
 dependencies:
   - T0007
   - T0008

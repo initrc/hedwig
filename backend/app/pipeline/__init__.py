@@ -13,5 +13,8 @@ stories so the grouping step has something finer than whole emails to work with.
 Clustering (`cluster.py`) is the second: it groups the day's stories into
 labelled topics, so the steps after it write up one topic at a time.
 Summarizing (`summarize.py`) is the third: it turns each topic into a short
-summary with citations back to its source newsletters.
+summary with citations back to its source newsletters. Image selection
+(`image.py`) is another per-topic step: for each topic it picks the one candidate
+image that illustrates the story, or none, from the images the topic's source
+emails already carry.
 """

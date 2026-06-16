@@ -1,7 +1,7 @@
 ---
 id: T0010
 title: Select a representative image per topic
-status: new
+status: done
 dependencies:
   - T0006
   - T0008

@@ -1,7 +1,7 @@
 ---
 id: T0014
 title: Add embedding and vector store for digest content
-status: new
+status: done
 dependencies: []
 ---
 

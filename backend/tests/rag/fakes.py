@@ -25,6 +25,9 @@ def stub_embed(texts: list[str]) -> list[list[float]]:
     Uses MD5 (not Python's ``hash()``) so the vectors are stable across
     interpreter runs.  Different texts get different vectors; identical texts
     get identical vectors.
+
+    This function satisfies the ``EmbedFn`` Protocol (from ``app.rag.embed``),
+    so it can be passed anywhere an embedding function is expected.
     """
     dim = 3
     return [

@@ -15,12 +15,13 @@ callers get typed fields, not raw text.
 from __future__ import annotations
 
 import logging
-from collections.abc import Callable, Iterable
+from collections.abc import Iterable
 
 from groq.types.chat import ChatCompletionMessageParam
 from pydantic import BaseModel
 
 from app.llm.client import LLMClient, parse_structured
+from app.rag.embed import EmbedFn
 from app.rag.embed import embed as _default_embed
 from app.rag.store import ChunkResult, VectorStore
 
@@ -113,7 +114,7 @@ def ask(
     vector_store: VectorStore,
     k: int = _DEFAULT_TOP_K,
     client: LLMClient | None = None,
-    embed_fn: Callable[[list[str]], list[list[float]]] = _default_embed,
+    embed_fn: EmbedFn = _default_embed,
 ) -> AugmentedAnswer:
     """Answer a user question using only their newsletter archive.
 

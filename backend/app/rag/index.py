@@ -14,10 +14,10 @@ so they are testable with fakes and swappable later.
 from __future__ import annotations
 
 import logging
-from collections.abc import Callable
 
 from app.pipeline.digest import Digest
 from app.rag.chunk import chunk_text
+from app.rag.embed import EmbedFn
 from app.rag.store import IndexChunk, VectorStore
 from app.storage.digest_store import DigestStore
 
@@ -34,7 +34,7 @@ def _embed_and_insert(
     metadatas: list[dict[str, str | int]],
     *,
     vector_store: VectorStore,
-    embed_fn: Callable[[list[str]], list[list[float]]],
+    embed_fn: EmbedFn,
 ) -> int:
     """Embed a batch of texts and insert them into the vector store.
 
@@ -60,7 +60,7 @@ def build_index(
     *,
     digest_store: DigestStore,
     vector_store: VectorStore,
-    embed_fn: Callable[[list[str]], list[list[float]]],
+    embed_fn: EmbedFn,
 ) -> int:
     """Index all stored digest source texts into `vector_store`.
 
@@ -123,7 +123,7 @@ def index_digest(
     digest: Digest,
     *,
     vector_store: VectorStore,
-    embed_fn: Callable[[list[str]], list[list[float]]],
+    embed_fn: EmbedFn,
 ) -> int:
     """Index a single digest's source texts into the vector store.
 

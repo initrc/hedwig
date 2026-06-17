@@ -7,11 +7,11 @@ and `FakeClient` for the LLM.  No real API calls are made.
 from __future__ import annotations
 
 import json
-from collections.abc import Callable
 
 from groq.types.chat import ChatCompletionMessageParam
 
 from app.rag.ask import AugmentedAnswer, ask
+from app.rag.embed import EmbedFn
 from app.rag.store import IndexChunk
 from tests.fakes import FakeClient, model_reply
 from tests.rag.fakes import StubStore
@@ -19,8 +19,6 @@ from tests.rag.fakes import StubStore
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
-
-_EmbedFn = Callable[[list[str]], list[list[float]]]
 
 
 def _content(msg: ChatCompletionMessageParam) -> str:
@@ -38,7 +36,7 @@ def _json_reply(obj: object) -> FakeClient:
     return FakeClient(model_reply(json.dumps(obj)))
 
 
-def _fixed_embed(*, value: list[float]) -> _EmbedFn:
+def _fixed_embed(*, value: list[float]) -> EmbedFn:
     """Return an embed function that always returns *value* for every text."""
 
     def fn(texts: list[str]) -> list[list[float]]:

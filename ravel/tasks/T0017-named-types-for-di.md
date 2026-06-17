@@ -1,7 +1,7 @@
 ---
 id: T0017
 title: Give embed_fn and LLM client named types for navigable DI
-status: new
+status: done
 dependencies: []
 ---
 

@@ -10,7 +10,6 @@ in-memory database keeps them isolated.
 """
 
 import logging
-from collections.abc import Callable
 from datetime import date as date_type
 from functools import lru_cache
 from pathlib import Path
@@ -22,9 +21,10 @@ from pydantic import BaseModel
 from app.ingest.dump import DEFAULT_SAMPLES_DIR
 from app.ingest.parser import parse
 from app.ingest.source import LocalEmlSource
+from app.llm.client import LLMClient, get_client
 from app.pipeline.digest import Digest, run_pipeline
 from app.rag.chroma_store import ChromaStore
-from app.rag.embed import embed
+from app.rag.embed import EmbedFn, embed
 from app.rag.index import index_digest
 from app.rag.store import VectorStore
 from app.storage.digest_store import DEFAULT_DB_PATH, DigestStore
@@ -73,12 +73,22 @@ def get_vector_store() -> VectorStore:
     return ChromaStore()
 
 
-def get_embed_fn() -> Callable[[list[str]], list[list[float]]]:
+def get_embed_fn() -> EmbedFn:
     """Return the real embedding function.
 
     Override this dependency in tests to use a deterministic stub.
     """
     return embed
+
+
+def get_llm_client() -> LLMClient:
+    """Return the shared Groq client for pipeline stages.
+
+    Returns the real client so a reader can trace from the route parameter
+    straight to the implementation in one hop.  Override this dependency
+    in tests to keep tests off the network.
+    """
+    return get_client()
 
 
 @digest_router.post("/digest/run")
@@ -87,12 +97,13 @@ def digest_run(
     store: Annotated[DigestStore, Depends(get_store)],
     pipeline: Annotated[object, Depends(get_pipeline_runner)],
     vector_store: Annotated[VectorStore, Depends(get_vector_store)],
-    embed_fn: Annotated[Callable[[list[str]], list[list[float]]], Depends(get_embed_fn)],
+    embed_fn: Annotated[EmbedFn, Depends(get_embed_fn)],
+    client: Annotated[LLMClient, Depends(get_llm_client)],
 ) -> Digest:
     """Run a full digest: ingest → parse → pipeline → persist → index → return."""
     samples_dir = Path(body.samples_dir) if body.samples_dir else DEFAULT_SAMPLES_DIR
     items = [parse(raw) for raw in LocalEmlSource(samples_dir).fetch()]
-    digest: Digest = pipeline(items, date=body.date)  # type: ignore[operator]
+    digest: Digest = pipeline(items, date=body.date, client=client)  # type: ignore[operator]
     store.save(digest)
     try:
         index_digest(digest, vector_store=vector_store, embed_fn=embed_fn)

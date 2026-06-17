@@ -15,6 +15,7 @@ from app.main import app
 from app.pipeline.digest import Digest
 from app.routes.digest_routes import (
     get_embed_fn,
+    get_llm_client,
     get_pipeline_runner,
     get_store,
     get_vector_store,
@@ -78,6 +79,8 @@ def test_digest_run_returns_digest_and_persists(tmp_path: Path) -> None:
     stub_store = StubStore()
     app.dependency_overrides[get_vector_store] = lambda: stub_store
     app.dependency_overrides[get_embed_fn] = lambda: stub_embed
+    # The pipeline is stubbed so the client is never called; None is enough.
+    app.dependency_overrides[get_llm_client] = lambda: None
 
     client = TestClient(app)
 

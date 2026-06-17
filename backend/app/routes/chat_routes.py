@@ -10,16 +10,15 @@ dependencies so tests can override it with fakes — no network calls
 needed in the test suite.
 """
 
-from collections.abc import Callable
 from functools import lru_cache
 from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends, Query
 
-from app.llm.client import LLMClient
+from app.llm.client import LLMClient, get_client
 from app.rag.ask import AugmentedAnswer, ask
 from app.rag.chroma_store import ChromaStore
-from app.rag.embed import embed
+from app.rag.embed import EmbedFn, embed
 from app.rag.store import VectorStore
 
 chat_router = APIRouter()
@@ -35,7 +34,7 @@ def get_rag_vector_store() -> VectorStore:
     return ChromaStore()
 
 
-def get_rag_embed_fn() -> Callable[[list[str]], list[list[float]]]:
+def get_rag_embed_fn() -> EmbedFn:
     """Return the real embedding function.
 
     Override this dependency in tests to use a deterministic stub.
@@ -43,22 +42,23 @@ def get_rag_embed_fn() -> Callable[[list[str]], list[list[float]]]:
     return embed
 
 
-def get_rag_llm_client() -> LLMClient | None:
+def get_rag_llm_client() -> LLMClient:
     """Return the LLM client for answer generation.
 
-    Returns ``None`` so ``ask()`` uses its default (the real Groq client).
-    Override this dependency in tests with a ``FakeClient`` to keep tests
-    off the network.
+    Returns the shared Groq client so a reader can trace from the route
+    parameter straight to the real implementation in one hop.  Override
+    this dependency in tests with a ``FakeClient`` to keep tests off the
+    network.
     """
-    return None
+    return get_client()
 
 
 @chat_router.post("/chat")
 def chat(
     query: Annotated[str, Body()],
     vector_store: Annotated[VectorStore, Depends(get_rag_vector_store)],
-    embed_fn: Annotated[Callable[[list[str]], list[list[float]]], Depends(get_rag_embed_fn)],
-    client: Annotated[LLMClient | None, Depends(get_rag_llm_client)],
+    embed_fn: Annotated[EmbedFn, Depends(get_rag_embed_fn)],
+    client: Annotated[LLMClient, Depends(get_rag_llm_client)],
     topic_id: Annotated[str | None, Query()] = None,
 ) -> AugmentedAnswer:
     """Answer a question using the indexed newsletter archive.

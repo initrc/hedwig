@@ -1,17 +1,22 @@
 """Read stored digests and index their source texts into a vector store.
 
-`build_index` is the entry point: it reads every digest from the SQLite store,
-chunks each source's clean text, embeds the chunks, and pushes them into the
-vector store.  It clears the store first so re-running is idempotent.
+`build_index` is the entry point for a full re-index: it reads every digest
+from the SQLite store, clears the vector store, chunks, embeds, and inserts.
 
-This module deliberately does not depend on any particular vector store or
-embedding provider — it takes both as arguments.  That makes it testable with
-fakes and swappable later.
+`index_digest` is the incremental companion: it indexes a single digest
+without clearing the store, so newly generated digests become searchable
+immediately.
+
+Both functions take their vector store and embedding function as arguments,
+so they are testable with fakes and swappable later.
 """
+
+from __future__ import annotations
 
 import logging
 from collections.abc import Callable
 
+from app.pipeline.digest import Digest
 from app.rag.chunk import chunk_text
 from app.rag.store import IndexChunk, VectorStore
 from app.storage.digest_store import DigestStore
@@ -22,6 +27,33 @@ _logger = logging.getLogger(__name__)
 # enough for a year of daily newsletters — far more than the demo holds.  If
 # your store has more, raise this limit.
 _DIGEST_LIMIT = 365
+
+
+def _embed_and_insert(
+    texts: list[str],
+    metadatas: list[dict[str, str | int]],
+    *,
+    vector_store: VectorStore,
+    embed_fn: Callable[[list[str]], list[list[float]]],
+) -> int:
+    """Embed a batch of texts and insert them into the vector store.
+
+    Shared by `build_index` (full re-index) and `index_digest`
+    (incremental).  Returns the number of chunks inserted, or 0 if
+    ``texts`` is empty.
+    """
+    if not texts:
+        return 0
+
+    embeddings = embed_fn(texts)
+
+    chunks: list[IndexChunk] = [
+        IndexChunk(text=t, embedding=e, metadata=m)
+        for t, e, m in zip(texts, embeddings, metadatas, strict=True)
+    ]
+
+    vector_store.insert(chunks)
+    return len(chunks)
 
 
 def build_index(
@@ -81,15 +113,52 @@ def build_index(
     if not texts:
         return 0
 
-    # Phase 2: embed all texts in one batch.
-    embeddings = embed_fn(texts)
+    # Phase 2: embed and insert via the shared helper.
+    return _embed_and_insert(
+        texts, metadatas, vector_store=vector_store, embed_fn=embed_fn
+    )
 
-    # Phase 3: build IndexChunks and insert.
-    index_chunks: list[IndexChunk] = []
-    for text, embedding, metadata in zip(texts, embeddings, metadatas, strict=True):
-        index_chunks.append(
-            IndexChunk(text=text, embedding=embedding, metadata=metadata)
-        )
 
-    vector_store.insert(index_chunks)
-    return len(index_chunks)
+def index_digest(
+    digest: Digest,
+    *,
+    vector_store: VectorStore,
+    embed_fn: Callable[[list[str]], list[list[float]]],
+) -> int:
+    """Index a single digest's source texts into the vector store.
+
+    Unlike `build_index`, this does **not** clear the store first — it adds
+    chunks incrementally so existing digests remain searchable.  Used by the
+    ``/digest/run`` endpoint so every newly generated digest is immediately
+    available for chat queries.
+
+    Returns the number of chunks indexed.  A return of 0 means the digest
+    had no source text to index (all sources were empty).
+    """
+    texts: list[str] = []
+    metadatas: list[dict[str, str | int]] = []
+
+    digest_date = digest.date.isoformat()
+    for topic in digest.topics:
+        for source in topic.sources:
+            text = source.clean_text.strip()
+            if not text:
+                continue
+            for chunk_idx, chunk in enumerate(chunk_text(text)):
+                texts.append(chunk)
+                metadatas.append({
+                    "digest_date": digest_date,
+                    "topic_label": topic.label,
+                    "source_id": source.id,
+                    "source_subject": source.subject,
+                    "chunk_index": chunk_idx,
+                })
+
+    if not texts:
+        return 0
+
+    count = _embed_and_insert(
+        texts, metadatas, vector_store=vector_store, embed_fn=embed_fn
+    )
+    _logger.info("Indexed %d chunks for digest dated %s", count, digest_date)
+    return count

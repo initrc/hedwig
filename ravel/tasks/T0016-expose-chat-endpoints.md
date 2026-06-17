@@ -1,7 +1,7 @@
 ---
 id: T0016
 title: Expose POST /chat and POST /chat with topic scope
-status: new
+status: done
 dependencies: []
 ---
 

@@ -13,9 +13,15 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 from app.pipeline.digest import Digest
-from app.routes.digest_routes import get_pipeline_runner, get_store
+from app.routes.digest_routes import (
+    get_embed_fn,
+    get_pipeline_runner,
+    get_store,
+    get_vector_store,
+)
 from app.storage.digest_store import DigestStore
 from tests.fakes import _digest, _digest_source, _digest_topic
+from tests.rag.fakes import StubStore, stub_embed
 
 
 def test_digest_run_returns_digest_and_persists(tmp_path: Path) -> None:
@@ -38,7 +44,7 @@ def test_digest_run_returns_digest_and_persists(tmp_path: Path) -> None:
         "<html><body><p>Test body content.</p></body></html>\r\n"
     )
 
-    # -- arrange: stub the store and the pipeline runner --------------------
+    # -- arrange: stub the store, pipeline runner, vector store, and embed fn
     mem_store = DigestStore(db_path=":memory:", check_same_thread=False)
     app.dependency_overrides[get_store] = lambda: mem_store
 
@@ -61,12 +67,17 @@ def test_digest_run_returns_digest_and_persists(tmp_path: Path) -> None:
             )
         ],
     )
+
     def _stub_pipeline(
         items: Any, *, date: Any = None, client: Any = None  # noqa: ARG001
     ) -> Digest:
         return expected
 
     app.dependency_overrides[get_pipeline_runner] = lambda: _stub_pipeline
+
+    stub_store = StubStore()
+    app.dependency_overrides[get_vector_store] = lambda: stub_store
+    app.dependency_overrides[get_embed_fn] = lambda: stub_embed
 
     client = TestClient(app)
 
@@ -103,6 +114,17 @@ def test_digest_run_returns_digest_and_persists(tmp_path: Path) -> None:
     loaded = mem_store.load("2026-06-15")
     assert loaded is not None
     assert loaded == expected
+
+    # -- assert: indexing ----------------------------------------------------
+    assert stub_store.insert_calls == 1
+    assert stub_store.chunk_count > 0
+    # The source text "Test body content." is short, so it produces one chunk.
+    indexed = stub_store.chunks[0]
+    assert indexed.metadata["digest_date"] == "2026-06-15"
+    assert indexed.metadata["topic_label"] == "Test Topic"
+    assert indexed.metadata["source_id"] == "test.eml"
+    assert indexed.metadata["source_subject"] == "Test Subject"
+    assert indexed.metadata["chunk_index"] == 0
 
     # -- clean up ------------------------------------------------------------
     app.dependency_overrides.clear()

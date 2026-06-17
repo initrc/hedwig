@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from datetime import date
 
-from app.rag.index import build_index
+from app.rag.index import build_index, index_digest
 from app.rag.store import IndexChunk
 from app.storage.digest_store import DigestStore
 from tests.fakes import _digest, _digest_source, _digest_topic
@@ -219,6 +219,142 @@ def test_build_index_indexes_multiple_digests_and_topics() -> None:
     assert dates == {"2026-06-15", "2026-06-16"}
     topics = {c.metadata["topic_label"] for c in fake_store.chunks}
     assert topics == {"Topic A", "Topic B", "Topic C"}
+
+
+# -- index_digest tests ----------------------------------------------------
+
+
+def test_index_digest_does_not_clear_store() -> None:
+    """index_digest adds chunks without calling delete_all, so existing
+    chunks from earlier digests remain in the store."""
+    fake_store = StubStore()
+
+    # Index a first digest.
+    index_digest(
+        _digest(
+            digest_date=date(2026, 6, 15),
+            topics=[
+                _digest_topic(
+                    label="Topic A",
+                    sources=[_digest_source(clean_text="First digest text.")],
+                )
+            ],
+        ),
+        vector_store=fake_store,
+        embed_fn=stub_embed,
+    )
+
+    assert fake_store.delete_all_calls == 0
+    first_count = fake_store.chunk_count
+    assert first_count == 1
+
+    # Index a second digest — should add without clearing.
+    index_digest(
+        _digest(
+            digest_date=date(2026, 6, 16),
+            topics=[
+                _digest_topic(
+                    label="Topic B",
+                    sources=[_digest_source(clean_text="Second digest text.")],
+                )
+            ],
+        ),
+        vector_store=fake_store,
+        embed_fn=stub_embed,
+    )
+
+    # Store was never cleared, and now has both digests' chunks.
+    assert fake_store.delete_all_calls == 0
+    assert fake_store.chunk_count == 2
+
+
+def test_index_digest_stores_expected_metadata() -> None:
+    """Each chunk from index_digest carries the same metadata fields as
+    build_index."""
+    fake_store = StubStore()
+
+    index_digest(
+        _digest(
+            digest_date=date(2026, 6, 15),
+            topics=[
+                _digest_topic(
+                    label="Rate Cuts",
+                    sources=[
+                        _digest_source(
+                            source_id="finance.eml",
+                            source="finance@news.com",
+                            subject="Daily Finance Brief",
+                            clean_text=(
+                                "The Fed signaled potential rate cuts in the "
+                                "upcoming September meeting."
+                            ),
+                        )
+                    ],
+                )
+            ],
+        ),
+        vector_store=fake_store,
+        embed_fn=stub_embed,
+    )
+
+    assert fake_store.chunk_count == 1
+    chunk = fake_store.chunks[0]
+    assert chunk.metadata["digest_date"] == "2026-06-15"
+    assert chunk.metadata["topic_label"] == "Rate Cuts"
+    assert chunk.metadata["source_id"] == "finance.eml"
+    assert chunk.metadata["source_subject"] == "Daily Finance Brief"
+    assert chunk.metadata["chunk_index"] == 0
+    assert "Fed signaled" in chunk.text
+
+
+def test_index_digest_skips_empty_source_text() -> None:
+    """Sources with whitespace-only clean_text produce no chunks."""
+    fake_store = StubStore()
+
+    count = index_digest(
+        _digest(
+            topics=[
+                _digest_topic(
+                    label="Empty",
+                    sources=[
+                        _digest_source(clean_text="   "),
+                        _digest_source(clean_text="Real content here."),
+                    ],
+                )
+            ]
+        ),
+        vector_store=fake_store,
+        embed_fn=stub_embed,
+    )
+
+    assert count == 1
+    assert fake_store.chunk_count == 1
+    assert "Real content" in fake_store.chunks[0].text
+
+
+def test_index_digest_returns_zero_for_digest_with_no_text() -> None:
+    """A digest whose sources all have empty text returns 0."""
+    fake_store = StubStore()
+
+    count = index_digest(
+        _digest(
+            topics=[
+                _digest_topic(
+                    label="All Empty",
+                    sources=[
+                        _digest_source(clean_text="   "),
+                        _digest_source(clean_text=""),
+                    ],
+                )
+            ]
+        ),
+        vector_store=fake_store,
+        embed_fn=stub_embed,
+    )
+
+    assert count == 0
+    assert fake_store.chunk_count == 0
+    assert fake_store.insert_calls == 0
 
 
 # -- StubStore.search tests (sanity check) ----------------------------

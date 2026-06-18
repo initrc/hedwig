@@ -25,6 +25,10 @@ dependencies:
 # Implementation Notes
 
 - Use shadcn `Button` with a loading state (e.g., disabled + spinner).
-- The `POST /digest/run` endpoint returns the full `Digest` object — you can use it directly to update state without a second fetch.
+- The `POST /digest/run` endpoint returns `list[Digest]` (one per day, per
+  T0026) — a single run can produce several digests, so do not treat the
+  response as one `Digest`. The simplest correct behavior is to refetch
+  `GET /digests` on success and let the list re-render, rather than reasoning
+  about which element of the returned list to show.
 - Add an empty-state message: "No digests yet. Generate one to get started."
 - Keep the grid responsive with Tailwind: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`.

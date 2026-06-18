@@ -28,8 +28,8 @@ uv run python -m app.ingest.dump -o foo.json --samples-dir samples
 ## Run a digest
 
 With the dev server running (`uv run fastapi dev`), POST to `/digest/run` to
-ingest the committed samples, run the pipeline against DeepSeek, persist the
-digest to `db/digests.db`, and index it into Chroma:
+ingest the committed samples, run the pipeline against DeepSeek, and persist +
+index one digest **per day** found in the samples:
 
 ```bash
 curl -X POST http://127.0.0.1:8000/digest/run \
@@ -37,10 +37,15 @@ curl -X POST http://127.0.0.1:8000/digest/run \
   -d '{}'
 ```
 
-The empty body runs against the committed samples (`DEFAULT_SAMPLES_DIR`,
-`<backend>/samples`) and today's date. Override `"date": "2026-06-18"` to pin
-a different digest date, or `"samples_dir"` to point at another folder.
-`GET /digests` lists the most recent persisted digests.
+The empty body parses every `samples/*.eml`, groups them by the UTC calendar
+day of their `Received` date, and runs the pipeline once per day. The response
+is a JSON array of `Digest` objects (one per day that had at least one email),
+each persisted to `db/hedwig.db` and indexed into Chroma. Emails with no
+parseable `Date` header are skipped with a logged warning.
+
+Override `"date": "2026-06-18"` to process only emails received on that one day
+(the response list then has zero or one entry), or `"samples_dir"` to point at
+another folder. `GET /digests` lists the most recent persisted digests.
 
 ## Develop
 

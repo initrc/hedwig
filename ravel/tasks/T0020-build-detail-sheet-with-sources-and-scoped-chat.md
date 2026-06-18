@@ -1,7 +1,7 @@
 ---
 id: T0020
 title: Build detail Sheet with sources and scoped chat
-status: new
+status: done
 dependencies:
   - T0019
 ---

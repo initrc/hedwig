@@ -1,7 +1,7 @@
 ---
 id: T0018
 title: Initialize Next.js frontend with shadcn
-status: in-progress
+status: done
 dependencies:
   - T0022
   - T0023

@@ -1,7 +1,7 @@
 ---
 id: T0022
 title: Add CORS middleware to FastAPI
-status: new
+status: done
 dependencies: []
 ---
 

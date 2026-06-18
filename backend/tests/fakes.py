@@ -12,7 +12,7 @@ Read the recorded request back through the same path the real code uses, e.g.
 from collections.abc import Iterable
 from datetime import UTC, datetime
 from datetime import date as date_type
-from typing import cast
+from typing import Any, cast
 
 from openai.types.chat import ChatCompletion, ChatCompletionMessageParam
 from openai.types.chat.chat_completion import Choice
@@ -107,6 +107,7 @@ class FakeCompletions:
         self.response_format: ResponseFormat | None = None
         self.reasoning_effort: ReasoningEffort | None = None
         self.max_tokens: int | None = None
+        self.extra_body: dict[str, Any] | None = None
 
     def create(
         self,
@@ -116,6 +117,7 @@ class FakeCompletions:
         response_format: ResponseFormat,
         reasoning_effort: ReasoningEffort,
         max_tokens: int,
+        extra_body: dict[str, Any] | None = None,
     ) -> ChatCompletion:
         self.call_count += 1
         self.messages = list(messages)
@@ -123,6 +125,7 @@ class FakeCompletions:
         self.response_format = response_format
         self.reasoning_effort = reasoning_effort
         self.max_tokens = max_tokens
+        self.extra_body = extra_body
         return self._response
 
 
@@ -141,6 +144,7 @@ class QueuedCompletions:
         self.response_format: ResponseFormat | None = None
         self.reasoning_effort: ReasoningEffort | None = None
         self.max_tokens: int | None = None
+        self.extra_body: dict[str, Any] | None = None
 
     def create(
         self,
@@ -150,6 +154,7 @@ class QueuedCompletions:
         response_format: ResponseFormat,
         reasoning_effort: ReasoningEffort,
         max_tokens: int,
+        extra_body: dict[str, Any] | None = None,
     ) -> ChatCompletion:
         self.call_count += 1
         self.messages = list(messages)
@@ -157,6 +162,7 @@ class QueuedCompletions:
         self.response_format = response_format
         self.reasoning_effort = reasoning_effort
         self.max_tokens = max_tokens
+        self.extra_body = extra_body
         response = self._responses[self._next]
         self._next += 1
         return response

@@ -84,8 +84,12 @@ def segment(item: ParsedEmail, *, client: LLMClient | None = None) -> list[Story
         {"role": "user", "content": _user_prompt(item)},
     ]
     # Keep the helper's default reply size: each story's text is a slice of this one
-    # email, so all the stories together never outrun it.
-    segmentation = parse_structured(messages=messages, schema=Segmentation, client=client)
+    # email, so all the stories together never outrun it. Thinking is off: splitting
+    # a newsletter into titled chunks is extraction, not reasoning, and skipping the
+    # chain-of-thought keeps this per-email call fast (it runs once per email).
+    segmentation = parse_structured(
+        messages=messages, schema=Segmentation, client=client, thinking=False
+    )
 
     # Number the drafts from 0 to build ids, so the first story of email "x.eml"
     # gets id "x.eml#0".

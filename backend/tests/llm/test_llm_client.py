@@ -135,6 +135,22 @@ def test_raises_clear_error_when_reply_truncated_by_max_tokens() -> None:
         parse_structured(messages=USER_MESSAGE, schema=Person, client=client)
 
 
+def test_default_passes_thinking_enabled() -> None:
+    client = FakeClient(model_reply('{"name": "Ada", "age": 36}'))
+
+    parse_structured(messages=USER_MESSAGE, schema=Person, client=client)
+
+    assert client.chat.completions.extra_body == {"thinking": {"type": "enabled"}}
+
+
+def test_thinking_false_passes_thinking_disabled() -> None:
+    client = FakeClient(model_reply('{"name": "Ada", "age": 36}'))
+
+    parse_structured(messages=USER_MESSAGE, schema=Person, client=client, thinking=False)
+
+    assert client.chat.completions.extra_body == {"thinking": {"type": "disabled"}}
+
+
 def test_injected_client_never_builds_the_real_client(monkeypatch: pytest.MonkeyPatch) -> None:
     """When you pass your own client, `parse_structured` must not build the real
     DeepSeek connection, so no real API call can happen. We prove it by making the

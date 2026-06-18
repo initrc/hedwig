@@ -22,16 +22,20 @@ Good to know:
 """
 
 import json
+import logging
 import os
+import time
 from collections.abc import Iterable
 from functools import lru_cache
-from typing import Literal, Protocol
+from typing import Any, Literal, Protocol
 
 from dotenv import load_dotenv
 from openai import OpenAI
 from openai.types.chat import ChatCompletion, ChatCompletionMessageParam
 from openai.types.chat.completion_create_params import ResponseFormat
 from pydantic import BaseModel
+
+_logger = logging.getLogger(__name__)
 
 # The model name lives here and nowhere else, so switching models is a one-line
 # change. `deepseek-v4-flash` is DeepSeek's fast, low-cost chat model — more than
@@ -91,6 +95,7 @@ class _Completions(Protocol):
         response_format: ResponseFormat,
         reasoning_effort: ReasoningEffort,
         max_tokens: int,
+        extra_body: dict[str, Any] | None,
     ) -> ChatCompletion: ...
 
 
@@ -133,6 +138,7 @@ def parse_structured[SchemaT: BaseModel](
     model: str = DEFAULT_MODEL,
     reasoning_effort: ReasoningEffort = DEFAULT_REASONING_EFFORT,
     max_tokens: int = DEFAULT_MAX_TOKENS,
+    thinking: bool = True,
 ) -> SchemaT:
     """Ask the model a question and return the answer as a checked `schema` object.
 
@@ -148,6 +154,15 @@ def parse_structured[SchemaT: BaseModel](
     a leading system message that tells the model exactly what shape to produce.
     The reply is still validated against `schema` afterwards, so a bad shape can
     never slip through.
+
+    `thinking` toggles DeepSeek's chain-of-thought mode (on by default). Disabling
+    it skips the internal reasoning tokens before the final answer, which is
+    faster and cheaper but trades quality on harder tasks. Use it for simple
+    extraction/labeling calls (segment, image) where the model just needs to pick
+    or split, not reason.
+
+    Each call is timed and logged at INFO with the schema name, wall-clock
+    seconds, and token usage, so a real run shows which stages cost the most.
 
     Pass `client` only in tests, to use a fake connection instead of the real one.
     """
@@ -167,12 +182,32 @@ def parse_structured[SchemaT: BaseModel](
         *messages,
     ]
 
+    # DeepSeek's thinking toggle travels in `extra_body`. The OpenAI SDK passes
+    # that dict through to the underlying request untouched.
+    extra_body: dict[str, Any] = {"thinking": {"type": "enabled" if thinking else "disabled"}}
+
+    start = time.perf_counter()
     completion = active_client.chat.completions.create(
         messages=augmented_messages,
         model=model,
         response_format={"type": "json_object"},
         reasoning_effort=reasoning_effort,
         max_tokens=max_tokens,
+        extra_body=extra_body,
+    )
+    elapsed = time.perf_counter() - start
+
+    usage = completion.usage
+    _logger.info(
+        "parse_structured schema=%s thinking=%s elapsed=%.1fs tokens=%s",
+        schema.__name__,
+        "on" if thinking else "off",
+        elapsed,
+        (
+            f"in={usage.prompt_tokens} out={usage.completion_tokens}"
+            if usage is not None
+            else "unknown"
+        ),
     )
 
     # The model can return several alternative answers (its "choices") if you ask

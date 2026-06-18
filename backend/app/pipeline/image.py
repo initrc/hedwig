@@ -144,7 +144,11 @@ def select_image(
         {"role": "system", "content": _SYSTEM_PROMPT},
         {"role": "user", "content": _user_prompt(topic, candidates)},
     ]
-    choice = parse_structured(messages=messages, schema=ImageChoice, client=client)
+    # Thinking is off: picking one index from a numbered list is a trivial choice,
+    # not reasoning, and skipping the chain-of-thought keeps this per-topic call fast.
+    choice = parse_structured(
+        messages=messages, schema=ImageChoice, client=client, thinking=False
+    )
 
     index = choice.index
     if index is None or not (0 <= index < len(candidates)):

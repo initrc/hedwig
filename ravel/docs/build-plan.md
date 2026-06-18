@@ -149,7 +149,7 @@ inspect the JSON, fix the prompts, repeat. This iteration *is* the skill.
    citation-grounded answer prompt. Return the answer plus which sources it used.
 3. **Guardrail:** if retrieval confidence is low, the agent says "I don't have that in your
    newsletters" rather than hallucinating. Small thing, big credibility.
-4. Expose `POST /chat` (global) and `POST /chat?topic_id=...` (scoped to one card's sources, for
+4. Expose `POST /chat` (global) and `POST /chat?topic_label=...` (scoped to one card's sources, for
    Day 4's detail panel).
 
 **End of day:** working RAG chat endpoint with citations and a low-confidence refusal path.
@@ -160,14 +160,22 @@ inspect the JSON, fix the prompts, repeat. This iteration *is* the skill.
 
 **Goal:** the product surface. Keep it clean and simple.
 
-1. **Card list**, filterable by category. Each card: title, description, subtle source label,
+1. **Initialize the frontend.** Scaffold `frontend/` with Next.js + shadcn using the Lyra preset:
+   ```
+   pnpm dlx shadcn@latest init --preset buFywKm --template next
+   ```
+   Add needed components (`card`, `sheet`, `button`, `input`, `badge`). Wire the
+   frontend to the backend at `http://localhost:8000`. Also add `GET /digests` to
+   the backend so the frontend can list recent digests, and configure CORS so the
+   frontend (port 3000) can reach the backend (port 8000).
+2. **Card list**, filterable by category. Each card: title, description, subtle source label,
    optional image (the LLM-selected one from Day 2).
-2. **Detail Sheet** on card click (shadcn `Sheet`): full summary, all source citations,
+3. **Detail Sheet** on card click (shadcn `Sheet`): full summary, all source citations,
    "view original" link. This is where clustering pays off visually — a topic
    synthesized from several newsletters, each claim cited.
-3. **Scoped chat** at the bottom of the Sheet, wired to `POST /chat?topic_id=...` — ask questions
-   about *that* topic, answered from its sources.
-4. A **"Generate digest"** button that calls `POST /digest/run` so you can run it on demand.
+4. **Scoped chat** at the bottom of the Sheet, wired to `POST /chat?topic_label=<label>` — ask questions
+   about *that* topic, answered from its sources. The topic id is the `label` string from the digest.
+5. A **"Generate digest"** button that calls `POST /digest/run` so you can run it on demand.
 
 **Timebox to one day.** shadcn makes this fast — hold the line and bank leftover time for Day 5.
 
@@ -229,6 +237,6 @@ inspect the JSON, fix the prompts, repeat. This iteration *is* the skill.
 - [ ] Python backend: FastAPI, Pydantic, an LLM SDK, BeautifulSoup, feedparser (RSS fallback)
 - [ ] Vector store: pgvector / Chroma / LanceDB (pick one)
 - [ ] DB: Postgres or SQLite for digest persistence
-- [ ] Frontend: Next.js, React, TypeScript, shadcn/ui
+- [ ] Frontend: Next.js, React, TypeScript, shadcn/ui (Lyra preset: `pnpm dlx shadcn@latest init --preset buFywKm --template next`)
 - [ ] Eval: a small harness script + labeled JSON fixtures
 - [ ] Throwaway inbox subscribed to a couple of newsletters (or RSS feeds as backup)

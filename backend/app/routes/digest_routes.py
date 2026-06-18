@@ -91,6 +91,15 @@ def get_llm_client() -> LLMClient:
     return get_client()
 
 
+@digest_router.get("/digests")
+def digests_list(
+    store: Annotated[DigestStore, Depends(get_store)],
+    limit: int = 10,
+) -> list[Digest]:
+    """Return the most recent digests, newest date first."""
+    return store.list_recent(limit=limit)
+
+
 @digest_router.post("/digest/run")
 def digest_run(
     body: DigestRunRequest,

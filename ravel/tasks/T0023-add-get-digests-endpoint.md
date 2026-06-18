@@ -1,7 +1,7 @@
 ---
 id: T0023
 title: Add GET /digests endpoint
-status: new
+status: done
 dependencies: []
 ---
 

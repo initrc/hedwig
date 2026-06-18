@@ -25,6 +25,23 @@ uv run python -m app.ingest.dump            # writes db/items.json (one item per
 uv run python -m app.ingest.dump -o foo.json --samples-dir samples
 ```
 
+## Run a digest
+
+With the dev server running (`uv run fastapi dev`), POST to `/digest/run` to
+ingest the committed samples, run the pipeline against DeepSeek, persist the
+digest to `db/digests.db`, and index it into Chroma:
+
+```bash
+curl -X POST http://127.0.0.1:8000/digest/run \
+  -H "Content-Type: application/json" \
+  -d '{}'
+```
+
+The empty body runs against the committed samples (`DEFAULT_SAMPLES_DIR`,
+`<backend>/samples`) and today's date. Override `"date": "2026-06-18"` to pin
+a different digest date, or `"samples_dir"` to point at another folder.
+`GET /digests` lists the most recent persisted digests.
+
 ## Develop
 
 ```bash

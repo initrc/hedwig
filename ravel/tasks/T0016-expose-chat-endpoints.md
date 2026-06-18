@@ -7,14 +7,14 @@ dependencies: []
 
 # Scope
 
-- Wire the RAG retrieval + generation from T0015 into FastAPI HTTP endpoints so Day 4's frontend can call them. Expose two routes: `POST /chat` for global search across all indexed newsletters, and `POST /chat?topic_id=...` for scoped chat pinned to one digest topic's sources (the detail-panel chat from the build plan).
+- Wire the RAG retrieval + generation from T0015 into FastAPI HTTP endpoints so Day 4's frontend can call them. Expose two routes: `POST /chat` for global search across all indexed newsletters, and `POST /chat?topic_label=...` for scoped chat pinned to one digest topic's sources (the detail-panel chat from the build plan).
 
 - Also hook indexing into the existing `POST /digest/run` flow so every newly generated digest is immediately searchable — the chat endpoints return up-to-date results with no separate indexing step.
 
 # Acceptance
 
 - `POST /chat` accepts a JSON body `{"query": "what did the finance newsletter say about rate cuts?"}` and returns a JSON response matching the `RagAnswer` schema from T0015 (`{answer, sources[], confident}`).
-- `POST /chat?topic_id=...` accepts the same body but scopes retrieval to chunks belonging to that topic. When `topic_id` does not match any indexed topic, the endpoint returns `confident=False` with an appropriate message (not a 404).
+- `POST /chat?topic_label=...` accepts the same body but scopes retrieval to chunks belonging to that topic. When `topic_label` does not match any indexed topic, the endpoint returns `confident=False` with an appropriate message (not a 404).
 - Indexing is wired into `POST /digest/run`: after persisting the new digest, the endpoint also indexes its source texts into the vector store. Existing digests are not re-indexed (only the new one). The `/digest/run` response is unchanged — indexing is a side effect.
 - The existing `GET /health` and `POST /digest/run` endpoints still work without regression.
 - Tests use FastAPI's `TestClient` with dependency overrides (fake embedding, fake LLM, in-memory vector store and SQLite store) and verify: a global query returns an answer with sources; a scoped query only draws from the matching topic; a query with no relevant content returns `confident=False`; indexing happens automatically after `/digest/run`. No real API calls.
@@ -22,7 +22,7 @@ dependencies: []
 
 # Implementation Notes
 
-- Build-plan reference: `ravel/docs/build-plan.md` Day 3 step 4 (lines 152–153): "Expose `POST /chat` (global) and `POST /chat?topic_id=...` (scoped to one card's sources, for Day 4's detail panel)."
+- Build-plan reference: `ravel/docs/build-plan.md` Day 3 step 4 (lines 152–153): "Expose `POST /chat` (global) and `POST /chat?topic_label=...` (scoped to one card's sources, for Day 4's detail panel)."
 
 - **Suggested module:** `backend/app/routes/chat_routes.py`, following the pattern established by `backend/app/routes/digest_routes.py`. Register the router in `backend/app/main.py` alongside the existing `digest_router`.
 
@@ -37,13 +37,13 @@ dependencies: []
   @chat_router.post("/chat")
   def chat(
       body: ChatRequest,
-      topic_id: str | None = None,  # query parameter
+      topic_label: str | None = None,  # query parameter
       rag: Annotated[..., Depends(get_rag)] = ...,
   ) -> RagAnswer:
-      return rag.ask(body.query, topic_id=topic_id)
+      return rag.ask(body.query, topic_label=topic_label)
   ```
 
-  The `topic_id` is a query parameter (`/chat?topic_id=...`), not a path segment, because it's optional — matching the build plan's notation.
+  The `topic_label` is a query parameter (`/chat?topic_label=...`), not a path segment, because it's optional — matching the build plan's notation.
 
 - **Dependency injection for testability:** Use FastAPI's `Depends()` to inject the RAG function (or a wrapper object), the digest store, and the LLM client — exactly as `digest_routes.py` does. This lets tests override them via `app.dependency_overrides` with fakes. The existing fake patterns are in `backend/tests/fakes.py`.
 

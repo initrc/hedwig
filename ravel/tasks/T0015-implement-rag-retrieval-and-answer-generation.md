@@ -9,7 +9,7 @@ dependencies: []
 
 - Build the retrieval + generation half of the RAG layer: given a user question, embed it, retrieve the top-k most relevant chunks from the vector store, format them into a prompt for the LLM, and return a citation-grounded answer. Add a low-confidence guardrail that refuses to answer when the retrieved chunks are too weak, rather than letting the model hallucinate.
 
-- The deliverable is a callable `ask(query: str, *, topic_id: str | None = None, vector_store: VectorStore, k: int = 5, client: LLMClient | None = None, embed_fn: ... = embed) -> AugmentedAnswer` that runs the full retrieve-then-generate flow and returns a typed result with the answer text, the sources it drew from, and a confidence signal.  Dependencies (`vector_store`, `embed_fn`, `client`) are injected so tests can pass fakes.
+- The deliverable is a callable `ask(query: str, *, topic_label: str | None = None, vector_store: VectorStore, k: int = 5, client: LLMClient | None = None, embed_fn: ... = embed) -> AugmentedAnswer` that runs the full retrieve-then-generate flow and returns a typed result with the answer text, the sources it drew from, and a confidence signal.  Dependencies (`vector_store`, `embed_fn`, `client`) are injected so tests can pass fakes.
 
 # Acceptance
 
@@ -17,7 +17,7 @@ dependencies: []
 - `ask(query, ...)` embeds the query, retrieves the top-k chunks (default k=5), formats them into an LLM prompt that instructs the model to answer only from the provided context and return a structured response (`_LLMAnswer`) with the answer text and which chunk labels it used.  The LLM's light chunk labels (`_LLMChunk`: `digest_date`, `topic_label`, `source_subject`, `chunk_index`) are resolved against the retrieved `ChunkResult` list to produce full `AugmentedChunk` objects with all fields the UI needs (`source_id`, `text`, `score`, plus the label fields).
 - The prompt to the LLM includes the chunk text and its source metadata (newsletter name, date, topic, chunk index) labelled as field/value pairs so the model can copy them exactly into its response.
 - **Guardrail:** when the highest retrieval similarity score is below a threshold, `ask()` returns immediately with `confident=False` and `answer="I don't have enough information in your newsletters to answer that question."` (or similar) — no LLM call is made. The threshold is a named constant with a comment explaining how it was chosen.
-- **Scoped retrieval:** when `topic_id` is passed, the retriever filters chunks to only those belonging to that topic (using the `topic_label` metadata stored in T0014). When `topic_id` is `None`, retrieval searches across all indexed digests.
+- **Scoped retrieval:** when `topic_label` is passed, the retriever filters chunks to only those belonging to that topic (using the `topic_label` metadata stored in T0014). When `topic_label` is `None`, retrieval searches across all indexed digests.
 - Tests stub the embedding function and the LLM call (fake vectors, fake completion) and verify: a query with strong matches returns a `confident=True` answer with sources; a query with weak matches returns `confident=False` and no LLM call was made; the scoped filter only returns chunks from the right topic. No real API calls.
 - `uv run pytest`, `uv run ruff check`, and `uv run mypy` all pass.
 
@@ -41,7 +41,7 @@ dependencies: []
 
 - **Similarity/distance convention:** The `VectorStore.search()` method returns a similarity score in each `ChunkResult`. The score direction is defined by the Protocol: higher = more similar (cosine similarity, range roughly 0 to 1 for normalized embeddings). The guardrail threshold compares against this score — a threshold of ~0.5 is a reasonable starting point. If the Chroma implementation returns cosine distance (lower = more similar), convert it inside the implementation so callers only see the "higher is better" convention.
 
-- **Scoped retrieval:** When `topic_id` is provided, pass it as the filter to `vector_store.search(query_vector, k=5, filter={"topic_label": topic_id})`. This relies on the metadata stored by T0014's `build_index()`. The `topic_id` in this context is the topic's `label` string (e.g., "Fed rate decision"), which matches `DigestTopic.label` from `backend/app/pipeline/digest.py:39`.
+- **Scoped retrieval:** When `topic_label` is provided, pass it as the filter to `vector_store.search(query_vector, k=5, filter={"topic_label": topic_label})`. This relies on the metadata stored by T0014's `build_index()`. The `topic_label` in this context is the topic's `label` string (e.g., "Fed rate decision"), which matches `DigestTopic.label` from `backend/app/pipeline/digest.py:39`.
 
 - **Types defined:**
   ```python

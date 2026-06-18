@@ -2,7 +2,7 @@
 
 Two flavours:
 - ``POST /chat`` — searches across all indexed digests.
-- ``POST /chat?topic_id=...`` — scopes the search to chunks from a single
+- ``POST /chat?topic_label=...`` — scopes the search to chunks from a single
   digest topic, for the detail-panel chat in the frontend.
 
 The RAG pipeline (embed, retrieve, generate) is injected via FastAPI
@@ -59,17 +59,17 @@ def chat(
     vector_store: Annotated[VectorStore, Depends(get_rag_vector_store)],
     embed_fn: Annotated[EmbedFn, Depends(get_rag_embed_fn)],
     client: Annotated[LLMClient, Depends(get_rag_llm_client)],
-    topic_id: Annotated[str | None, Query()] = None,
+    topic_label: Annotated[str | None, Query()] = None,
 ) -> AugmentedAnswer:
     """Answer a question using the indexed newsletter archive.
 
-    When ``topic_id`` is given, only chunks from that topic are searched —
+    When ``topic_label`` is given, only chunks from that topic are searched —
     the answer is scoped to one card's sources.  When omitted, the search
     covers every indexed digest.
     """
     return ask(
         query,
-        topic_id=topic_id,
+        topic_label=topic_label,
         vector_store=vector_store,
         embed_fn=embed_fn,
         client=client,

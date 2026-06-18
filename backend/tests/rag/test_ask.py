@@ -145,7 +145,7 @@ def test_ask_returns_not_confident_when_best_score_below_threshold() -> None:
 
 
 def test_ask_scoped_to_topic_only_returns_matching_chunks() -> None:
-    """When `topic_id` is passed, only chunks with that `topic_label` are
+    """When `topic_label` is passed, only chunks with that `topic_label` are
     searched, so the sources and prompt only include that topic."""
     store = StubStore()
     store.insert([
@@ -187,7 +187,7 @@ def test_ask_scoped_to_topic_only_returns_matching_chunks() -> None:
 
     result = ask(
         "Any finance news?",
-        topic_id="Finance",
+        topic_label="Finance",
         vector_store=store,
         embed_fn=_fixed_embed(value=[1.0, 0.0, 0.0]),
         client=fake_client,

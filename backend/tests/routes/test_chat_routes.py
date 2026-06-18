@@ -93,7 +93,7 @@ def _setup_dependency_overrides(
 
 
 def test_chat_global_returns_answer_with_sources() -> None:
-    """A global query (no topic_id) searches all chunks and returns an answer.
+    """A global query (no topic_label) searches all chunks and returns an answer.
 
     The store has one chunk; the fake LLM returns a valid answer that cites
     it.  The response should be confident with that answer and source.
@@ -129,7 +129,7 @@ def test_chat_global_returns_answer_with_sources() -> None:
 
 
 def test_chat_scoped_to_topic() -> None:
-    """A scoped query (with ?topic_id=Alpha) only draws from that topic.
+    """A scoped query (with ?topic_label=Alpha) only draws from that topic.
 
     The store has two chunks with different topics but identical text.  The
     ``where`` filter on the search should exclude the Beta chunk, so the LLM
@@ -144,7 +144,7 @@ def test_chat_scoped_to_topic() -> None:
     try:
         test_client = TestClient(app)
         response = test_client.post(
-            "/chat?topic_id=Alpha", json=_SHARED_TEXT
+            "/chat?topic_label=Alpha", json=_SHARED_TEXT
         )
 
         assert response.status_code == 200
@@ -180,8 +180,8 @@ def test_chat_no_relevant_content_returns_not_confident() -> None:
         app.dependency_overrides.clear()
 
 
-def test_chat_topic_id_not_matched_returns_not_confident() -> None:
-    """When topic_id doesn't match any indexed topic, return confident=False.
+def test_chat_topic_label_not_matched_returns_not_confident() -> None:
+    """When topic_label doesn't match any indexed topic, return confident=False.
 
     This is the same guardrail path as an empty store — the filtered search
     returns no results, so the best score is 0.0, which is below the threshold.
@@ -195,7 +195,7 @@ def test_chat_topic_id_not_matched_returns_not_confident() -> None:
     try:
         test_client = TestClient(app)
         response = test_client.post(
-            "/chat?topic_id=NonExistentTopic", json=_SHARED_TEXT
+            "/chat?topic_label=NonExistentTopic", json=_SHARED_TEXT
         )
 
         assert response.status_code == 200

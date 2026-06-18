@@ -110,7 +110,7 @@ class AugmentedAnswer(BaseModel):
 def ask(
     query: str,
     *,
-    topic_id: str | None = None,
+    topic_label: str | None = None,
     vector_store: VectorStore,
     k: int = _DEFAULT_TOP_K,
     client: LLMClient | None = None,
@@ -124,7 +124,7 @@ def ask(
     3. Otherwise, format the chunks into a prompt, ask the LLM to answer from
        the provided context with inline citations, and return the result.
 
-    When `topic_id` is given, only chunks whose `topic_label` metadata
+    When `topic_label` is given, only chunks whose `topic_label` metadata
     matches are searched — the answer is scoped to that topic.
 
     Pass `embed_fn` and `client` only in tests, to use fakes instead of
@@ -135,8 +135,8 @@ def ask(
 
     # 2. Search the vector store.
     where: dict[str, str | int] | None
-    if topic_id is not None:
-        where = {"topic_label": topic_id}
+    if topic_label is not None:
+        where = {"topic_label": topic_label}
     else:
         where = None
     results = vector_store.search(query_vector, k=k, where=where)

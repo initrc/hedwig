@@ -28,7 +28,7 @@ guess. Improving the empty-alt case means teaching the parser to remember where
 each image sat in the text, which is a separate change in the parser, not here.
 """
 
-from groq.types.chat import ChatCompletionMessageParam
+from openai.types.chat import ChatCompletionMessageParam
 from pydantic import BaseModel
 
 from app.ingest.parser import CandidateImage, ParsedEmail
@@ -134,7 +134,7 @@ def select_image(
     `None` — never an invented url, and "no good image" is a real outcome rather
     than a forced pick.
 
-    Pass `client` only in tests, to use a fake connection instead of the real Groq
+    Pass `client` only in tests, to use a fake connection instead of the real DeepSeek
     one.
     """
     if not candidates:

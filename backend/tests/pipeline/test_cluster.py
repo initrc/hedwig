@@ -1,7 +1,7 @@
 """Tests for `app.pipeline.cluster`, the story-grouping step.
 
 These never reach the network or spend money. Each test hands `cluster` a
-`FakeClient` (from `tests.fakes`) in place of the real Groq connection: the fake
+`FakeClient` (from `tests.fakes`) in place of the real DeepSeek connection: the fake
 remembers the request it was given and replies with a fixed answer. So we control
 what "the model returned" and check that `cluster` builds the right prompt, asks
 for the `Clustering` shape, and resolves the returned ids back into `Topic`
@@ -12,7 +12,7 @@ matter what the model says.
 from typing import cast
 
 from app.pipeline.cluster import Clustering, DraftTopic, cluster
-from tests.fakes import FakeClient, _story, model_reply
+from tests.fakes import FakeClient, _story, model_reply, schema_instruction
 
 
 def _fake_client(*drafts: DraftTopic) -> FakeClient:
@@ -159,25 +159,13 @@ def test_prompt_carries_each_story_id_title_and_snippet() -> None:
     assert "Intel rose 10% on Monday." in content
 
 
-def test_requests_the_clustering_schema() -> None:
+def test_requests_loose_json_object_mode() -> None:
     client = _fake_client(DraftTopic(label="t", story_ids=["a#0"]))
 
     cluster([_story("a#0")], client=client)
 
-    assert client.chat.completions.response_format == {
-        "type": "json_schema",
-        "json_schema": {
-            "name": "Clustering",
-            "schema": Clustering.model_json_schema(),
-        },
-    }
-
-
-def test_clustering_uses_raised_reasoning_effort() -> None:
-    client = _fake_client(DraftTopic(label="t", story_ids=["a#0"]))
-
-    cluster([_story("a#0")], client=client)
-
-    # Grouping weighs every story against every other, so this call turns the
-    # model's reasoning up from the helper's "low" default.
-    assert client.chat.completions.reasoning_effort == "high"
+    # DeepSeek only supports loose JSON mode; the Clustering shape lives in the
+    # prepended schema-instruction system message, not an API-enforced schema.
+    assert client.chat.completions.response_format == {"type": "json_object"}
+    instruction = schema_instruction(client.chat.completions.messages)
+    assert "Clustering" in instruction

@@ -2,7 +2,7 @@
 
     uv run python -m app.ingest.dump [--samples-dir DIR] [--output PATH]
 
-Writes one JSON object per `.eml` file (default `out/items.json`) so the
+Writes one JSON object per `.eml` file (default `db/items.json`) so the
 downstream steps have a stable, offline input to work against.
 """
 
@@ -16,7 +16,7 @@ from app.ingest.source import LocalEmlSource
 # dump.py lives at backend/app/ingest/dump.py; the backend root is two levels up,
 # and the committed samples sit beside this package at backend/samples.
 DEFAULT_SAMPLES_DIR = Path(__file__).resolve().parents[2] / "samples"
-DEFAULT_OUTPUT = Path("out/items.json")
+DEFAULT_OUTPUT = Path("db/items.json")
 
 
 def dump_items(samples_dir: Path, output: Path) -> list[ParsedEmail]:
@@ -41,7 +41,7 @@ def main() -> None:
         "-o",
         type=Path,
         default=DEFAULT_OUTPUT,
-        help="JSON file to write (default: out/items.json)",
+        help="JSON file to write (default: db/items.json)",
     )
     args = parser.parse_args()
     items = dump_items(args.samples_dir, args.output)

@@ -1,7 +1,7 @@
 """Tests for `app.pipeline.image`, the per-topic image-selection step.
 
 These never reach the network or spend money. Each test that calls `select_image`
-hands it a `FakeClient` (from `tests.fakes`) in place of the real Groq connection:
+hands it a `FakeClient` (from `tests.fakes`) in place of the real DeepSeek connection:
 the fake remembers the request it was given and replies with a fixed answer. So we
 control which index "the model returned" and check that `select_image` resolves
 that index back to a real candidate, never invents a url, and treats null or an
@@ -12,7 +12,15 @@ just unions images the parser already attached to the source emails.
 from typing import cast
 
 from app.pipeline.image import ImageChoice, gather_candidates, select_image
-from tests.fakes import FakeClient, _image, _parsed_email, _story, _topic, model_reply
+from tests.fakes import (
+    FakeClient,
+    _image,
+    _parsed_email,
+    _story,
+    _topic,
+    model_reply,
+    schema_instruction,
+)
 
 
 def _fake_client(index: int | None) -> FakeClient:
@@ -107,7 +115,7 @@ def test_negative_index_becomes_no_image() -> None:
     assert chosen is None
 
 
-def test_requests_the_image_choice_schema() -> None:
+def test_requests_loose_json_object_mode() -> None:
     client = _fake_client(0)
 
     select_image(
@@ -116,13 +124,11 @@ def test_requests_the_image_choice_schema() -> None:
         client=client,
     )
 
-    assert client.chat.completions.response_format == {
-        "type": "json_schema",
-        "json_schema": {
-            "name": "ImageChoice",
-            "schema": ImageChoice.model_json_schema(),
-        },
-    }
+    # DeepSeek only supports loose JSON mode; the ImageChoice shape lives in the
+    # prepended schema-instruction system message, not an API-enforced schema.
+    assert client.chat.completions.response_format == {"type": "json_object"}
+    instruction = schema_instruction(client.chat.completions.messages)
+    assert "ImageChoice" in instruction
 
 
 def test_prompt_carries_the_topic_label_and_each_candidate() -> None:

@@ -82,7 +82,7 @@ def get_embed_fn() -> EmbedFn:
 
 
 def get_llm_client() -> LLMClient:
-    """Return the shared Groq client for pipeline stages.
+    """Return the shared DeepSeek client for pipeline stages.
 
     Returns the real client so a reader can trace from the route parameter
     straight to the implementation in one hop.  Override this dependency

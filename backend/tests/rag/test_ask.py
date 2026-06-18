@@ -7,8 +7,9 @@ and `FakeClient` for the LLM.  No real API calls are made.
 from __future__ import annotations
 
 import json
+from typing import cast
 
-from groq.types.chat import ChatCompletionMessageParam
+from openai.types.chat import ChatCompletionMessageParam
 
 from app.rag.ask import AugmentedAnswer, ask
 from app.rag.embed import EmbedFn
@@ -21,9 +22,33 @@ from tests.rag.fakes import StubStore
 # ---------------------------------------------------------------------------
 
 
-def _content(msg: ChatCompletionMessageParam) -> str:
-    """Extract the `content` field from a chat message as a string."""
-    return str(msg["content"])
+def _user_message(messages: list[ChatCompletionMessageParam]) -> str:
+    """Return the content of the single user turn in the recorded messages.
+
+    `parse_structured` prepends a schema-instruction system message, so the
+    caller's user turn is no longer at a fixed index — select it by role.
+    """
+    users = [
+        m for m in cast(list[dict[str, object]], messages) if m.get("role") == "user"
+    ]
+    assert len(users) == 1
+    return str(users[0]["content"])
+
+
+def _task_system_message(messages: list[ChatCompletionMessageParam]) -> str:
+    """Return the caller's system prompt, not the schema instruction.
+
+    `parse_structured` prepends a schema-instruction system message; the caller's
+    own system prompt is the other system turn. We pick it by its content.
+    """
+    systems = [
+        str(m["content"])
+        for m in cast(list[dict[str, object]], messages)
+        if m.get("role") == "system"
+    ]
+    task = [s for s in systems if "newsletter archive" in s.lower()]
+    assert len(task) == 1
+    return task[0]
 
 
 def _json_reply(obj: object) -> FakeClient:
@@ -199,8 +224,7 @@ def test_ask_scoped_to_topic_only_returns_matching_chunks() -> None:
     assert result.sources[0].source_id == "finance.eml"
 
     # Also verify the prompt only includes the Finance chunk, not the Tech one.
-    messages = fake_client.chat.completions.messages
-    user_content = _content(messages[1])
+    user_content = _user_message(fake_client.chat.completions.messages)
     assert "Fed held rates steady" in user_content
     assert "Apple announced" not in user_content
 
@@ -245,8 +269,8 @@ def test_ask_prompt_includes_chunk_metadata_for_citations() -> None:
 
     # Inspect the prompt that was sent to the LLM.
     messages = fake_client.chat.completions.messages
-    system_msg = _content(messages[0])
-    user_msg = _content(messages[1])
+    system_msg = _task_system_message(messages)
+    user_msg = _user_message(messages)
 
     # System prompt tells the model its role and citation rules.
     assert "newsletter archive" in system_msg.lower()

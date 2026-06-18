@@ -17,7 +17,7 @@ from app.pipeline.digest import Digest
 # Relative to the current working directory, matching how dump.py's
 # DEFAULT_OUTPUT works.  The caller (e.g., a CLI or the test suite) is
 # expected to run from the backend/ directory or pass an explicit path.
-DEFAULT_DB_PATH = Path("out/hedwig.db")
+DEFAULT_DB_PATH = Path("db/hedwig.db")
 
 
 class DigestStore:
@@ -40,6 +40,7 @@ class DigestStore:
         check_same_thread: bool = True,
     ) -> None:
         db_path = Path(db_path) if isinstance(db_path, str) else db_path
+        db_path.parent.mkdir(parents=True, exist_ok=True)
         self._conn = sqlite3.connect(str(db_path), check_same_thread=check_same_thread)
         self._conn.row_factory = sqlite3.Row
         self._conn.execute(

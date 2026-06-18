@@ -1,7 +1,7 @@
 """Tests for `app.pipeline.summarize`, the per-topic write-up step.
 
 These never reach the network or spend money. Each test hands `summarize_topic` a
-`FakeClient` (from `tests.fakes`) in place of the real Groq connection: the fake
+`FakeClient` (from `tests.fakes`) in place of the real DeepSeek connection: the fake
 remembers the request it was given and replies with a fixed answer. So we control
 what "the model returned" and check that `summarize_topic` builds the right
 prompt, asks for the `DraftSummary` shape, and — most of all — checks the model's
@@ -17,7 +17,7 @@ from app.pipeline.summarize import (
     summarize_topic,
     summarize_topics,
 )
-from tests.fakes import FakeClient, _story, _topic, model_reply
+from tests.fakes import FakeClient, _story, _topic, model_reply, schema_instruction
 
 
 def _fake_client(draft: DraftSummary) -> FakeClient:
@@ -118,7 +118,7 @@ def test_prompt_carries_the_label_and_each_story_source_title_and_text() -> None
 
     summarize_topic(topic, client=client)
 
-    # The Groq message type is a union of TypedDicts, so inspect the recorded
+    # The OpenAI-compatible message type is a union of TypedDicts, so inspect the recorded
     # messages as the plain dicts they are at runtime.
     messages = cast(list[dict[str, object]], client.chat.completions.messages)
     user_turns = [m for m in messages if m.get("role") == "user"]
@@ -133,7 +133,7 @@ def test_prompt_carries_the_label_and_each_story_source_title_and_text() -> None
     assert "Intel rose 10% on Monday." in content
 
 
-def test_requests_the_draft_summary_schema() -> None:
+def test_requests_loose_json_object_mode() -> None:
     topic = _topic(
         "Topic", stories=[_story("a#0", source_item_id="alpha.eml")]
     )
@@ -141,13 +141,11 @@ def test_requests_the_draft_summary_schema() -> None:
 
     summarize_topic(topic, client=client)
 
-    assert client.chat.completions.response_format == {
-        "type": "json_schema",
-        "json_schema": {
-            "name": "DraftSummary",
-            "schema": DraftSummary.model_json_schema(),
-        },
-    }
+    # DeepSeek only supports loose JSON mode; the DraftSummary shape lives in the
+    # prepended schema-instruction system message, not an API-enforced schema.
+    assert client.chat.completions.response_format == {"type": "json_object"}
+    instruction = schema_instruction(client.chat.completions.messages)
+    assert "DraftSummary" in instruction
 
 
 def test_summarize_topics_maps_over_a_list_in_order() -> None:

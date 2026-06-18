@@ -45,7 +45,7 @@ def get_rag_embed_fn() -> EmbedFn:
 def get_rag_llm_client() -> LLMClient:
     """Return the LLM client for answer generation.
 
-    Returns the shared Groq client so a reader can trace from the route
+    Returns the shared DeepSeek client so a reader can trace from the route
     parameter straight to the real implementation in one hop.  Override
     this dependency in tests with a ``FakeClient`` to keep tests off the
     network.

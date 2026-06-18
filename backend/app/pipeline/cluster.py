@@ -14,10 +14,10 @@ nothing: it becomes its own one-story topic, so every input story lands in exact
 one topic and nothing is silently lost.
 """
 
-from groq.types.chat import ChatCompletionMessageParam
+from openai.types.chat import ChatCompletionMessageParam
 from pydantic import BaseModel
 
-from app.llm.client import LLMClient, ReasoningEffort, parse_structured
+from app.llm.client import LLMClient, parse_structured
 from app.pipeline.segment import Story
 
 # How many characters of each story's text to show the model. The id and title
@@ -25,11 +25,6 @@ from app.pipeline.segment import Story
 # with similar titles, and keeping it short keeps the whole prompt well within the
 # model's context even with a few dozen stories.
 _SNIPPET_CHARS = 300
-
-# Grouping needs the model to weigh every story against every other one at once, so
-# we turn its reasoning up for this call (the helper defaults to "low", which suits
-# the simpler per-email split in `segment.py`).
-_REASONING_EFFORT: ReasoningEffort = "high"
 
 
 class Topic(BaseModel):
@@ -105,7 +100,7 @@ def cluster(stories: list[Story], *, client: LLMClient | None = None) -> list[To
     returned topic references real input stories, and every input story lands in
     exactly one topic.
 
-    Pass `client` only in tests, to use a fake connection instead of the real Groq
+    Pass `client` only in tests, to use a fake connection instead of the real DeepSeek
     one.
     """
     if not stories:
@@ -123,7 +118,6 @@ def cluster(stories: list[Story], *, client: LLMClient | None = None) -> list[To
         messages=messages,
         schema=Clustering,
         client=client,
-        reasoning_effort=_REASONING_EFFORT,
     )
 
     topics: list[Topic] = []

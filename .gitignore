@@ -8,5 +8,5 @@
 __pycache__/
 *.pyc
 
-# Parsed-item dumps from app.ingest.dump
-out/
+# Generated runtime artifacts: SQLite db, Chroma index, parsed-item dumps
+db/

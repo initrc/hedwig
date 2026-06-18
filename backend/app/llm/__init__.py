@@ -1,1 +1,1 @@
-"""LLM plumbing: a configured Groq client and a structured-output helper."""
+"""LLM plumbing: a configured DeepSeek client and a structured-output helper."""

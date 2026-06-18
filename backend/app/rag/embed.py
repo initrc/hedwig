@@ -1,7 +1,7 @@
 """Turn text into embedding vectors via OpenAI `text-embedding-3-small`.
 
 The rest of the RAG layer calls `embed()` — it doesn't care which provider is
-behind it.  The client is built once and reused (like the Groq client in
+behind it.  The client is built once and reused (like the DeepSeek client in
 `app.llm.client`), and the API key is read from the environment so it never
 appears in code.
 
@@ -24,7 +24,7 @@ class EmbedFn(Protocol):
     Each output vector is a list of floats (1536-dimensional for the default
     ``text-embedding-3-small`` model).  The Protocol lets tests pass a
     deterministic stub, the same way ``LLMClient`` lets tests pass a fake
-    Groq connection.
+    DeepSeek connection.
     """
 
     def __call__(self, texts: list[str]) -> list[list[float]]: ...

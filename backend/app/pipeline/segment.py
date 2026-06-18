@@ -11,7 +11,7 @@ ids, which it would not get right.
 
 from collections.abc import Iterable
 
-from groq.types.chat import ChatCompletionMessageParam
+from openai.types.chat import ChatCompletionMessageParam
 from pydantic import BaseModel
 
 from app.ingest.parser import ParsedEmail
@@ -74,7 +74,7 @@ def segment(item: ParsedEmail, *, client: LLMClient | None = None) -> list[Story
     """Split one email into its stories.
 
     Empty or whitespace-only text yields no stories, with no model call. Pass
-    `client` only in tests, to use a fake connection instead of the real Groq one.
+    `client` only in tests, to use a fake connection instead of the real DeepSeek one.
     """
     if not item.clean_text.strip():
         return []

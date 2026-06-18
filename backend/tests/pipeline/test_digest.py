@@ -1,7 +1,7 @@
 """Tests for `app.pipeline.digest`, the pipeline-composition step.
 
 These never reach the network or spend money. Each test hands `run_pipeline` a
-`QueuedFakeClient` (from `tests.fakes`) in place of the real Groq connection, so
+`QueuedFakeClient` (from `tests.fakes`) in place of the real DeepSeek connection, so
 the pipeline runs through all four stages with controlled LLM replies — no stage
 is patched or skipped. The assertions cover wiring and assembly, not prompt
 behavior; the per-stage prompt behavior is already covered by each stage's own

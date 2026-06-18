@@ -1,6 +1,6 @@
 """Chroma implementation of the `VectorStore` Protocol.
 
-Stores chunk embeddings on disk under `backend/out/chroma/` (or a
+Stores chunk embeddings on disk under `backend/db/chroma/` (or a
 caller-chosen directory) so the index survives process restarts.  No separate
 server needed — Chroma runs in the same Python process.
 
@@ -21,7 +21,7 @@ from chromadb.api.types import Metadata, Where
 from app.rag.store import ChunkResult, IndexChunk
 
 # Where the Chroma data lives on disk, relative to the backend directory.
-DEFAULT_CHROMA_DIR = "out/chroma"
+DEFAULT_CHROMA_DIR = "db/chroma"
 
 # The single Chroma collection name.  A collection is Chroma's unit of
 # isolation — like a table in SQL.  One collection for all newsletter chunks

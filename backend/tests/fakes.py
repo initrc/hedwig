@@ -1,4 +1,4 @@
-"""Shared test doubles for the Groq connection.
+"""Shared test doubles for the DeepSeek connection.
 
 `parse_structured` only ever calls `client.chat.completions.create(...)`, so these
 fakes reproduce just that path and nothing else. They never touch the network: each
@@ -12,11 +12,12 @@ Read the recorded request back through the same path the real code uses, e.g.
 from collections.abc import Iterable
 from datetime import UTC, datetime
 from datetime import date as date_type
+from typing import cast
 
-from groq.types.chat import ChatCompletion, ChatCompletionMessageParam
-from groq.types.chat.chat_completion import Choice
-from groq.types.chat.chat_completion_message import ChatCompletionMessage
-from groq.types.chat.completion_create_params import ResponseFormat
+from openai.types.chat import ChatCompletion, ChatCompletionMessageParam
+from openai.types.chat.chat_completion import Choice
+from openai.types.chat.chat_completion_message import ChatCompletionMessage
+from openai.types.chat.completion_create_params import ResponseFormat
 
 from app.ingest.parser import CandidateImage, ParsedEmail
 from app.llm.client import ReasoningEffort
@@ -28,9 +29,9 @@ from app.pipeline.segment import Story
 def model_reply(content: str | None) -> ChatCompletion:
     """Build the model's reply, with `content` as the assistant's answer text.
 
-    A `ChatCompletion` is what Groq returns *from* a call (the reply, not the
-    request), so handing one to `FakeClient` is how a test says "pretend the model
-    answered with this".
+    A `ChatCompletion` is what the OpenAI-compatible client returns *from* a call
+    (the reply, not the request), so handing one to `FakeClient` is how a test
+    says "pretend the model answered with this".
     """
     return ChatCompletion(
         id="test",
@@ -56,6 +57,43 @@ def model_reply_without_choices() -> ChatCompletion:
         object="chat.completion",
         choices=[],
     )
+
+
+def model_reply_truncated(content: str) -> ChatCompletion:
+    """Build a reply whose `finish_reason` is `"length"` — it hit `max_tokens`.
+
+    The content is whatever partial text the model managed to emit before the cap.
+    `parse_structured` checks `finish_reason` and raises a clear truncation error
+    rather than letting pydantic fail with a confusing "EOF while parsing".
+    """
+    return ChatCompletion(
+        id="test",
+        created=0,
+        model="test-model",
+        object="chat.completion",
+        choices=[
+            Choice(
+                finish_reason="length",
+                index=0,
+                message=ChatCompletionMessage(role="assistant", content=content),
+            )
+        ],
+    )
+
+
+def schema_instruction(messages: list[ChatCompletionMessageParam]) -> str:
+    """Return the schema-instruction system message `parse_structured` prepends.
+
+    `parse_structured` always inserts a system message describing the JSON shape
+    ahead of the caller's messages. Selecting it by role (rather than by a fixed
+    index) keeps these assertions stable if the prepending order ever changes, and
+    avoids indexing the union of `ChatCompletionMessageParam` TypedDicts directly.
+    """
+    systems = [
+        m for m in cast(list[dict[str, object]], messages) if m.get("role") == "system"
+    ]
+    assert len(systems) >= 1
+    return str(systems[0]["content"])
 
 
 class FakeCompletions:
@@ -132,7 +170,7 @@ class FakeChat:
 
 
 class FakeClient:
-    """A fake Groq connection shaped like `client.chat.completions.create`."""
+    """A fake DeepSeek connection shaped like `client.chat.completions.create`."""
 
     def __init__(self, response: ChatCompletion) -> None:
         self.chat = FakeChat(FakeCompletions(response))

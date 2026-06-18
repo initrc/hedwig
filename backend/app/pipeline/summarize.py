@@ -11,17 +11,12 @@ and drops any the model made up, so every citation points to a real source.
 
 from collections.abc import Iterable
 
-from groq.types.chat import ChatCompletionMessageParam
+from openai.types.chat import ChatCompletionMessageParam
 from pydantic import BaseModel
 
-from app.llm.client import LLMClient, ReasoningEffort, parse_structured
+from app.llm.client import LLMClient, parse_structured
 from app.pipeline.cluster import Topic
 from app.pipeline.segment import Story
-
-# Combining several stories into one faithful summary is harder than the per-email
-# split or the grouping step, so we turn the model's reasoning up for this call
-# (the helper defaults to "low").
-_REASONING_EFFORT: ReasoningEffort = "high"
 
 
 class Source(BaseModel):
@@ -121,7 +116,6 @@ def summarize_topic(topic: Topic, *, client: LLMClient | None = None) -> TopicSu
         messages=messages,
         schema=DraftSummary,
         client=client,
-        reasoning_effort=_REASONING_EFFORT,
     )
 
     return TopicSummary(

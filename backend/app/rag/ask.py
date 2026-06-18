@@ -17,7 +17,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Iterable
 
-from groq.types.chat import ChatCompletionMessageParam
+from openai.types.chat import ChatCompletionMessageParam
 from pydantic import BaseModel
 
 from app.llm.client import LLMClient, parse_structured

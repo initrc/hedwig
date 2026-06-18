@@ -1,7 +1,7 @@
 """Tests for `app.pipeline.segment`, the per-story segmentation step.
 
 These never reach the network or spend money. Each test hands `segment` a
-`FakeClient` (from `tests.fakes`) in place of the real Groq connection: the fake
+`FakeClient` (from `tests.fakes`) in place of the real DeepSeek connection: the fake
 remembers the request it was given and replies with a fixed answer. So we control
 what "the model returned" and check that `segment` builds the right prompt, asks
 for the `Segmentation` shape, and turns the reply into `Story` objects with stable,
@@ -20,7 +20,7 @@ from app.pipeline.segment import (
     segment,
     segment_items,
 )
-from tests.fakes import FakeClient, _parsed_email, model_reply
+from tests.fakes import FakeClient, _parsed_email, model_reply, schema_instruction
 
 SAMPLES_DIR = Path(__file__).resolve().parents[2] / "samples"
 
@@ -117,7 +117,7 @@ def test_prompt_carries_the_subject_and_body() -> None:
 
     segment(item, client=client)
 
-    # The Groq message type is a union of TypedDicts, so inspect the recorded
+    # The OpenAI-compatible message type is a union of TypedDicts, so inspect the recorded
     # messages as the plain dicts they are at runtime: the user turn must carry both
     # the subject and the body so the model can split them.
     messages = cast(list[dict[str, object]], client.chat.completions.messages)
@@ -129,18 +129,16 @@ def test_prompt_carries_the_subject_and_body() -> None:
     assert "Intel rose 10% on Monday." in content
 
 
-def test_requests_the_segmentation_schema() -> None:
+def test_requests_loose_json_object_mode() -> None:
     client = _fake_client(DraftStory(title="t", text="x"))
 
     segment(_parsed_email(), client=client)
 
-    assert client.chat.completions.response_format == {
-        "type": "json_schema",
-        "json_schema": {
-            "name": "Segmentation",
-            "schema": Segmentation.model_json_schema(),
-        },
-    }
+    # DeepSeek only supports loose JSON mode; the Segmentation shape lives in the
+    # prepended schema-instruction system message, not an API-enforced schema.
+    assert client.chat.completions.response_format == {"type": "json_object"}
+    instruction = schema_instruction(client.chat.completions.messages)
+    assert "Segmentation" in instruction
 
 
 def test_segment_items_flattens_stories_across_emails() -> None:

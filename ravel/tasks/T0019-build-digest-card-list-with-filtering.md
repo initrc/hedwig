@@ -1,7 +1,7 @@
 ---
 id: T0019
 title: Build digest card list with filtering
-status: new
+status: done
 dependencies:
   - T0018
 ---

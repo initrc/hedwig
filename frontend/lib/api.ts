@@ -10,3 +10,30 @@ export const fetcher = (path: string) =>
 export type Health = {
   status: string;
 };
+
+export type CandidateImage = {
+  url: string;
+  alt: string;
+  width?: number | null;
+  height?: number | null;
+};
+
+export type DigestSource = {
+  id: string;
+  source: string;
+  subject: string;
+  original_url: string | null;
+  clean_text: string;
+};
+
+export type DigestTopic = {
+  label: string;
+  summary: string;
+  sources: DigestSource[];
+  image: CandidateImage | null;
+};
+
+export type Digest = {
+  date: string;
+  topics: DigestTopic[];
+};

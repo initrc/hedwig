@@ -60,7 +60,7 @@ export function DigestCardList() {
         </div>
         <div className="flex items-baseline justify-between gap-4">
           <p className="text-xs text-muted-foreground">
-            AI-powered newsletter intelligence
+            Your newsletter subscriptions, distilled by AI into a daily briefing
           </p>
           <p className="text-xs text-muted-foreground">
             <StatusText

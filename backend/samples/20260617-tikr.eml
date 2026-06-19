@@ -1,0 +1,841 @@
+Delivered-To: reader@example.com
+Received: by 2002:a02:bb92:0:b0:5e2:39d1:6244 with SMTP id g18csp2788960jan;
+        Wed, 17 Jun 2026 09:22:07 -0700 (PDT)
+X-Received: by 2002:a05:622a:1148:b0:517:5f11:b353 with SMTP id d75a77b69052e-519c4f5680bmr1919561cf.41.1781713326713;
+        Wed, 17 Jun 2026 09:22:06 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781713326; cv=none;
+        d=google.com; s=arc-20240605;
+        b=W9eWYZh6vNNMW1e9G2iUeAaVzK0vlLaaCKIQKpjIc01ad6N1txIKy/WeL5oTFpI/OX
+         zjd0IFLBNEWVk2tGCmy5v1Fd31Ro2knK2dj4Ke3kNs+ijeG2UaE61mGJ6xnKiQxfTLZU
+         +s+enhUbsQNQqBHowsOvq27YSaUoc3F+cLYi/B1tF+LxathmCrbg+7S9qhFwCd00spu6
+         TZhE3lzsOa8SE5vTUSk/hCj/0WS50ci4KCqPC2L/yNCjAQJK/SkAQ0DVMI3+zNdy2UQM
+         UAcEe1gFXVtHZ1B67/Y+6qYRAHTEm0fRt3zzWMW+ssUF+0/rf0I10Fzaeh0ydYAcfCMT
+         5JUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=message-id:list-unsubscribe-post:list-unsubscribe:feedback-id
+         :content-transfer-encoding:mime-version:date:subject:reply-to:from
+         :to:cfbl-address:dkim-signature:dkim-signature;
+        bh=+SdscULOwHaZF9gLfuVvPnI33zkh28jwWZCjMumNZ+U=;
+        fh=KVjXwg7Ug+h8aHsnCVWcPG/5ER2YU06xtSNnZDTOw8k=;
+        b=P5vJ2RzQQDg9BNwPaoBCX5qmO0Rl1x9OQIabD2H4ZG0XUqtXMr/9NBxwvv9b4aelJq
+         VJVuCUfPA+Pn2gI6xtDFeU6IQpgOZXKSwTITUzYHFxqLuwHOSguGTYG0HCx9C7p5CpOj
+         JE4KJjb16rk4LrPv0ahHJaB+btqa52nzLBwS8QKP4GhmPv7X/YBJv3NCiaK6V+0sfScP
+         KOTLD59cbuJMXjo7OObiVfBe84sO5yiL29RpgiAZa1KrGGj3jAa0Pn+mwsnXMaIQgMVd
+         PWkIU3mYcePsvjOL8YWtzFfSXUsf/icWgEMeWagFPNss/PXU4qmkPotX/JFcalO+0n2i
+         /9iQ==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@tikr.com header.s=acdkim1 header.b=mFG8sUmo;
+       dkim=pass header.i=@acems1.com header.s=acdkim1 header.b=TWFuwtb3;
+       spf=pass (google.com: domain of bounce-3787869-2289-530980-reader=example.com@em-3787869.tikr.com designates 52.128.42.240 as permitted sender) smtp.mailfrom="bounce-3787869-2289-530980-reader=example.com@em-3787869.tikr.com";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=tikr.com
+Return-Path: <bounce-3787869-2289-530980-reader=example.com@em-3787869.tikr.com>
+Received: from mail-42-240.acems1.com (mail-42-240.acems1.com. [52.128.42.240])
+        by mx.google.com with ESMTPS id 6a1803df08f44-8d9f54c9fbdsi76042126d6.309.2026.06.17.09.22.06
+        for <reader@example.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2026 09:22:06 -0700 (PDT)
+Received-SPF: pass (google.com: domain of bounce-3787869-2289-530980-reader=example.com@em-3787869.tikr.com designates 52.128.42.240 as permitted sender) client-ip=52.128.42.240;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@tikr.com header.s=acdkim1 header.b=mFG8sUmo;
+       dkim=pass header.i=@acems1.com header.s=acdkim1 header.b=TWFuwtb3;
+       spf=pass (google.com: domain of bounce-3787869-2289-530980-reader=example.com@em-3787869.tikr.com designates 52.128.42.240 as permitted sender) smtp.mailfrom="bounce-3787869-2289-530980-reader=example.com@em-3787869.tikr.com";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=tikr.com
+X-KumoRef: eyJfQF8iOiJcXF8vIiwicmVjaXBpZW50IjoiZHNoaS5uZXdzQGdtYWlsLmNvbSJ9
+DKIM-Signature: v=1; a=rsa-sha256; d=tikr.com; s=acdkim1; c=relaxed/relaxed;
+	bh=+SdscULOwHaZF9gLfuVvPnI33zkh28jwWZCjMumNZ+U=;
+	h=from:to:subject:date:mime-version:content-type:sender:cc:date:message-id:
+		list-unsubscribe:list-unsubscribe-post; t=1781713326; x=1782318126;
+	b=mFG8sUmoUC1W5TG3wx0tFMHmkUJ2b4EiNhmVmBATLot5aF8Wlz/Gm+yld+kV4xegzcU54BzaG
+	pwKL4tQvLC+jYUAHu+g3+Mju9aG1FJW0okjsn4ON83VuzIuWhkkZU5owT1JsXU60Y+KjZwk5xAR
+	D2KuubPV0dVk1hqQKl+Dfp/4wOqhp1uH1PljubsV4qlnoEKWUvN/V/jD11AQ7g78APhQKGg9V/2
+	6RppzBrBBw6yCXjF6evklgFRAU1Cx6eJ4W7HQKr76/+e1NYJQ5/n562fD73Sn7vk7hwXVM5afzp
+	c3+8aP+spaIZyV58II6Vgq0W753U6TcosUs7D5qfvnTA==;
+DKIM-Signature: v=1; a=rsa-sha256; d=acems1.com; s=acdkim1; c=relaxed/relaxed;
+	bh=+SdscULOwHaZF9gLfuVvPnI33zkh28jwWZCjMumNZ+U=;
+	h=from:to:subject:date:mime-version:content-type:sender:cc:date:message-id:
+		list-unsubscribe:list-unsubscribe-post; t=1781713326; x=1782318126;
+	b=TWFuwtb3Y6PRvsXhP73URQcgXR38wi57qk3q93nacHPzPIUEkV6qdgjP/hO6bTSPITLmwTaD/
+	4/4PnQFQSP659qhZftL4Qf1uy72LiRPQTsHw4WTlo4g8JaTFdjCSeLU9hFUhSflUw1M0ZjIJkVT
+	3lp9kU5EdnsbePeYvFLoSD4YgK8r9oCIm+UyfOAYRToFRgsDE51cphmK1YpzyvVld8cbKgeTGnc
+	y8ZJUUmdN9g8Bpt1hJPzhT4HuKpy3y5eNqIk75CXAfT6grtTiumSm6AeQQsGhbpBty7s3xqvWvf
+	yBWKSpTXA41MiIMuq4skSS9wdp6Po7TzApude/qyHuSA==;
+CFBL-Address: fbl-report@acems1.com; report=arf
+X-Mailer: ActiveCampaign Mailer
+Received: from localhost.localdomain (10.0.6.63)
+  by acems1.com (KumoMTA 10.13.179.61) 
+  with ESMTP id aeae6c7a6a6811f190f30affdb8d7a0b for <reader@example.com>;
+  Wed, 17 Jun 2026 16:22:06 +0000
+Return-Path: <bounce-3787869-2289-530980-reader=example.com@em-3787869.tikr.com>
+To: reader@example.com
+From: "TIKR" <sk@tikr.com>
+Reply-To: upgrade@tikr.com
+Subject: See 10x More Data and Find Better Ideas.
+Date: Wed, 17 Jun 2026 11:13:18 -0500
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="_=_swift-695203986a32c79e1d11c9.47969742_=_"
+Content-Transfer-Encoding: 7bit
+X-Report-Abuse: Please report abuse here: abuse@acemserv.com
+X-mid: ZHNoaS5uZXdzQGdtYWlsLmNvbSAsIGMyMjg5ICwgbTI2MTYgLCBzMTEzMTA4
+X-lid: ZHNoaS5uZXdzQGdtYWlsLmNvbSAsIGMyMjg5ICwgbTI2MTYgLCBzMTEzMTA4ICwgbDY
+x-virtual-mta: camp-use1-a-c1-42-236
+Feedback-ID: 3787869:3787869.2289:camp-use1-a-c1-42-236:activecampaign
+X-250ok-CID: 3787869-2289
+List-Unsubscribe: <https://tikr.activehosted.com/box.php?nl=6&c=2289&m=2616&s=99eb8a97ddc9435baaff4038467ea32b&funcml=unsub2&luha=1&runid=0>,<mailto:unsubscribe-9f9470bad6b51462118b851fa85dc4b6-2289-99eb8a97ddc9435baaff4038467ea32b-0@mail-42-236.acems1.com>
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+X-DKIM-Options: s=acdkim1
+Message-ID: <20260617162206.895266.879991259.swift@tikr.activehosted.com>
+
+
+
+
+--_=_swift-695203986a32c79e1d11c9.47969742_=_
+Content-Type: text/plain; charset=utf-8
+
+100,‌000 Stocks.‌ 30 Years of History.‌ One Platform.‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+
+https://tikr.acemlna.com/lt.php?x=4lZy~GDMKqXL7s3Azw-7gulv13FSuQAkw-kvXnjHJ3fOD5_7-ky.0OJt3HVzidTvk_Y1bHPEJnaaT8DvyNxIUOBzPbKRia 
+
+**For investors who want every edge in their research**
+
+Go from 3 years of U.S. data to 
+
+**30 years of global coverage**, with the deepest toolkit we've ever
+built
+
+Dear TIKR user,
+
+Back in March, we launched a new tier of service at TIKR called Ultimate. It was designed as our most comprehensive level of access, built for serious investors who wanted the deepest data, the broadest screening, and a fully customizable research workspace.
+
+We 
+
+**closed** Ultimate to new subscribers in late March to make sure our charter members got the experience they signed up for before we expanded access. Three months in, their feedback has shaped the product in real ways, and it speaks for itself:
+
+* 
+
+**"I just upgraded to Ultimate and have to say, I really do enjoy it. I went through the dashboard tutorial and it's powerful."**
+
+* 
+
+**"I recently upgraded to Ultimate. I love the product, especially the ability to look back 30 years."**
+
+* 
+
+**"This is amazing and will save me so much time. I've been running about 80 processes a week surfacing similar catalysts - so I'm thrilled about this."**
+
+That encouraging feedback, combined with
+continued requests from subscribers who missed the original window, is why we're reopening Ultimate today.
+
+**Starting today, for a brief window only, we're extending the same pricing structure our charter members received in March.**
+
+Here is what that means for you:
+
+* A 20% discount on the upgrade cost (the prorated amount for the remainder of your current Plus term), 
+
+****and**** 20% off your first renewal.
+
+* A 14-day money-back guarantee. If Ultimate is not the right fit, we will return your subscription to Plus and restore your existing pricing.
+
+Log In and Access Your TIKR Ultimate Invitation! https://tikr.acemlna.com/lt.php?x=4lZy~GDMKqXL7s3Azw-7gulv13FSuQAkw-kvXnjHJ3fOD5_7-ky.0OJt3HVzidTvk_Y1bHPEJnabT8DvyNxIUOBzPbKRia
+
+Here's what Ultimate unlocks beyond your current free access:
+
+* 
+
+**Coverage expands from roughly 15,000 U.S. stocks to 100,000+ globally**: Many of the best fundamental opportunities sit across global markets where fewer analysts are looking and
+mispricings persist longer.
+
+* 
+
+**Financial history jumps from 3 years to 30 years:** Instead of a snapshot, you can study how businesses performed through the early '90s recession, the dot-com bubble, the 2008 financial crisis, and COVID.
+
+* 
+
+**Analyst estimates extend from 1 year to 5 years forward:**See further into what the market expects, and identify where your own analysis diverges from consensus. That divergence is where investment returns come from.
+
+* 
+
+**Transcript access goes from 90 days to 15 years, with search, audio, and slides:** Search any keyword across a decade and a half of earnings calls, listen to the actual call audio, and review the presentation slides. You can hear the conviction in a CEO's voice during a tough Q&A, not only read the words.
+
+* 
+
+**Unlock Excel export, segmented financials, management guidance, and beats/misses tracking**: These are the tools that turn surface-level analysis into institutional-quality research. Break down revenue
+by segment, export clean data into your own models, track guidance accuracy, and see how the market reacts to earnings surprises quarter by quarter.
+
+* 
+
+**Custom Dashboard with 300+ column options**: Replace the standard 25-column watchlist with a fully personalized command center. Unlimited stocks, unlimited views, and total control over the data you see.
+
+* 
+
+**Catalyst Tracker**: An entirely new workflow. Screen for corporate actions across 120+ event categories, including M&A activity, activist involvement, spin-offs, guidance changes, and red flags. Find companies undergoing transformative events before the market fully prices them in.
+
+* 
+
+**100+ new screening factors**: Go beyond the standard screener with factors like P/NCAV, Altman Z-Score, FCF ex-SBC per Share, 10-Year Average ROIC, PEG ratio, and implied multi-year future valuations.
+
+And while Ultimate has been closed to new subscribers, we have not been sitting still. Charter member feedback has shaped what we
+have shipped over the past three months. A few of the most meaningful additions:
+
+* 
+
+**Estimates Revisions**: See how Wall Street consensus is moving on the names you follow, and how quickly sentiment is shifting, before it shows up in price.
+
+* 
+
+**Portfolio Tracking**: Monitor your holdings directly inside the same workspace where you do your research, so your portfolio sits alongside the financials, models, and transcripts you are already working with.
+
+If you spent any time looking at Ultimate in March, the product you would log into today is meaningfully deeper than the one we first launched.
+
+****Backed by a 14-day money-back guarantee!****
+
+If Ultimate isn't the right fit, we'll refund your payment in full and your account simply returns to your free plan. We're confident you'll feel the difference, but we want you to experience it for yourself with zero risk.
+
+We built Ultimate for investors like you: serious, long-term focused, and always looking for an edge in
+the quality of your research process. We think you'll feel the difference immediately.
+
+Log In and Access Your TIKR Ultimate Invitation! https://tikr.acemlna.com/lt.php?x=4lZy~GDMKqXL7s3Azw-7gulv13FSuQAkw-kvXnjHJ3fOD5_7-ky.0OJt3HVzidTvk_Y1bHPEJnabT8DvyNxIUOBzPbKRia
+
+Best regards,
+
+David Hanson
+TIKR
+
+P.S. The 20% discount on your first year and the 20% off your first renewal are only available through June 30 at 5 PM ET. After that, the window closes. If you've been considering a serious upgrade to your research toolkit, this is the best price you'll see. Log in to learn more! https://tikr.acemlna.com/lt.php?x=4lZy~GDMKqXL7s3Azw-7gulv13FSuQAkw-kvXnjHJ3fOD5_7-ky.0OJt3HVzidTvk_Y1bHPEJnabT8DvyNxIUOBzPbKRia
+
+Unsubscribe https://tikr.acemlna.com/proc.php?nl=6&c=2289&m=2616&s=99eb8a97ddc9435baaff4038467ea32b&act=unsub&ALL
+
+** **    Manage Preferences
+https://tikr.acemlna.com/f/1?t=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5OWViOGE5N2RkYzk0MzViYWFmZjQwMzg0NjdlYTMyYiIsImF1ZCI6IlByZWZlcmVuY2UgQ2VudGVycyIsImV4cCI6MTc4MTc5OTcyNiwiaWF0IjoxNzgxNzEzMzI2LCJpc3MiOiJzZW5kaW5nLXJlbGlhYmlsaXR5IiwibmJmIjoxNzgxNzEzMzI2fQ.Idl159uBBQO2naNK83K2TurOLjH2Wu4vp-FUP0IU9eQ
+
+https://tikr.acemlna.com/lt.php?x=4lZy~GDMKqXL7s3Azw-7gulv13FSuQAkw-kvXnjHJ3fOD5_7-ky.0OJt3HVzidTvk_Y1bHPEJnacT8DvyNxIUOBzPbKRia 
+
+TIKR, 3003 Maple Ave, Dallas, TX 75201, United States
+
+https://tikr.acemlna.com/lt.php?x=4lZy~GDMKqXL7s3Azw-7gulv13FSuQAkw-kvXnjHJ3fOD5_7-ky.0OJt3HVzidTvk_Y1bHPEJnadT8DvyNxIUOBzPbKRia 
+
+https://tikr.acemlna.com/lt.php?x=4lZy~GDMKqXL7s3Azw-7gulv13FSuQAkw-kvXnjHJ3fOD5_7-ky.0OJt3HVzidTvk_Y1bHPEJnaeT8DvyNxIUOBzPbKRia 
+
+https://tikr.acemlna.com/lt.php?x=4lZy~GDMKqXL7s3Azw-7gulv13FSuQAkw-kvXnjHJ3fOD5_7-ky.0OJt3HVzidTvk_Y1bHPEJnafT8DvyNxIUOBzPbKRia
+
+
+https://tikr.acemlna.com/lt.php?x=4lZy~GDMKqXL7s3Azw-7gulv13FSuQAkw-kvXnjHJ3fOD5_7-ky.0OJt3HVzidTvk_Y1bHPEJnagT8DvyNxIUOBzPbKRia
+--_=_swift-695203986a32c79e1d11c9.47969742_=_
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html><html>=0A<head><meta http-equiv=3D"Content-Type" content=3D"=
+text/html; charset=3Dutf-8"><meta name=3D"viewport" content=3D"width=3Ddevi=
+ce-width, minimal-ui, initial-scale=3D1.0, maximum-scale=3D1.0, user-scalab=
+le=3D0;"><meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge"><meta n=
+ame=3D"format-detection" content=3D"telephone=3Dno, date=3Dno, email=3Dno, =
+address=3Dno"><meta name=3D"x-apple-disable-message-reformatting">=0A <!--[=
+if (mso 16)]><style type=3D"text/css"> a { text-decoration: none; } </style=
+><![endif]--><!--[if gte mso 9]><style> sup { font-size: 100% !important; }=
+ </style><![endif]--><!--[if gte mso 9]><noscript>=0A         <xml>=0A     =
+      <o:OfficeDocumentSettings>=0A           <o:AllowPNG></o:AllowPNG>=0A =
+          <o:PixelsPerInch>96</o:PixelsPerInch>=0A           </o:OfficeDocu=
+mentSettings>=0A         </xml>=0A      </noscript><![endif]--><!--[if gte =
+mso 9]><style>sup { font-size: 100% !important; }</style><![endif]--><!--[i=
+f mso]><xml>=0A    <w:WordDocument xmlns:w=3D"urn:schemas-microsoft-com:off=
+ice:word">=0A      <w:DontUseAdvancedTypographyReadingMail/>=0A    </w:Word=
+Document>=0A    </xml>=0A<![endif]--><!--[if !mso]><!-- --><link href=3D"ht=
+tps://fonts.googleapis.com/css?family=3DOpen+Sans:400,400i,700,700i" rel=3D=
+"stylesheet"><link href=3D"https://fonts.googleapis.com/css?family=3DRoboto=
+:400,400i,700,700i" rel=3D"stylesheet"><!--<![endif]--><style type=3D"text/=
+css">#outlook a { padding:0;}.es-button { mso-style-priority:100!important;=
+ text-decoration:none!important;}a[x-apple-data-detectors] { color:inherit!=
+important; text-decoration:none!important; font-size:inherit!important; fon=
+t-family:inherit!important; font-weight:inherit!important; line-height:inhe=
+rit!important;}.es-desk-hidden { display:none; float:left; overflow:hidden;=
+ width:0; max-height:0; line-height:0; mso-hide:all;}@media only screen and=
+ (max-width:600px) {p, ul li, ol li, a { line-height:150%!important } h1, h=
+2, h3, h1 a, h2 a, h3 a { line-height:120%!important } h1 { font-size:24px!=
+important; text-align:inherit } h2 { font-size:20px!important; text-align:i=
+nherit }=0A h3 { font-size:13px!important; text-align:inherit } .es-header-=
+body h1 a, .es-content-body h1 a, .es-footer-body h1 a { font-size:24px!imp=
+ortant } .es-header-body h2 a, .es-content-body h2 a, .es-footer-body h2 a =
+{ font-size:20px!important } .es-header-body h3 a, .es-content-body h3 a, .=
+es-footer-body h3 a { font-size:13px!important } .es-menu td a { font-size:=
+13px!important } .es-header-body p, .es-header-body ul li, .es-header-body =
+ol li, .es-header-body a { font-size:16px!important } .es-content-body p, .=
+es-content-body ul li, .es-content-body ol li, .es-content-body a { font-si=
+ze:16px!important } .es-footer-body p, .es-footer-body ul li, .es-footer-bo=
+dy ol li, .es-footer-body a { font-size:16px!important } .es-infoblock p, .=
+es-infoblock ul li, .es-infoblock ol li, .es-infoblock a { font-size:12px!i=
+mportant } *[class=3D"gmail-fix"] { display:none!important }=0A .es-m-txt-c=
+, .es-m-txt-c h1, .es-m-txt-c h2, .es-m-txt-c h3 { text-align:center!import=
+ant } .es-m-txt-r, .es-m-txt-r h1, .es-m-txt-r h2, .es-m-txt-r h3 { text-al=
+ign:right!important } .es-m-txt-l, .es-m-txt-l h1, .es-m-txt-l h2, .es-m-tx=
+t-l h3 { text-align:left!important } .es-m-txt-r img, .es-m-txt-c img, .es-=
+m-txt-l img { display:inline!important } .es-button-border { display:inline=
+-block!important } a.es-button, button.es-button { display:inline-block!imp=
+ortant; font-size:16px!important } .es-adaptive table, .es-left, .es-right =
+{ width:100%!important } .ac-footer, .es-content table, .es-header table, .=
+es-footer table, .es-content, .es-footer, .es-header { width:100%!important=
+; max-width:600px!important } .ac-footer td, .ac-footer p, .es-adapt-td { d=
+isplay:block!important; width:100%!important } .adapt-img { width:100%!impo=
+rtant; height:auto!important } .es-m-p0 { padding:0!important } .es-m-p0r {=
+ padding-right:0!important }=0A .es-m-p0l { padding-left:0!important } .es-=
+m-p0t { padding-top:0!important } .es-m-p0b { padding-bottom:0!important } =
+.es-m-p20b { padding-bottom:20px!important } .es-mobile-hidden, .es-hidden =
+{ display:none!important } tr.es-desk-hidden, td.es-desk-hidden, table.es-d=
+esk-hidden { width:auto!important; overflow:visible!important; float:none!i=
+mportant; max-height:inherit!important; line-height:inherit!important } tr.=
+es-desk-hidden { display:table-row!important } table.es-desk-hidden { displ=
+ay:table!important } td.es-desk-menu-hidden { display:table-cell!important =
+} .es-menu td { width:1%!important } .es-adapt-td { display:block!important=
+; width:100%!important } table.es-table-not-adapt, .esd-block-html table { =
+width:auto!important } table.es-social { display:inline-block!important } t=
+able.es-social td { display:inline-block!important }=0A .es-desk-hidden { d=
+isplay:table-row!important; width:auto!important; overflow:visible!importan=
+t; max-height:inherit!important } .es-m-p5 { padding:5px!important } .es-m-=
+p5t { padding-top:5px!important } .es-m-p5b { padding-bottom:5px!important =
+} .es-m-p5r { padding-right:5px!important } .es-m-p5l { padding-left:5px!im=
+portant } .es-m-p10 { padding:10px!important } .es-m-p10t { padding-top:10p=
+x!important } .es-m-p10b { padding-bottom:10px!important } .es-m-p10r { pad=
+ding-right:10px!important } .es-m-p10l { padding-left:10px!important } .es-=
+m-p15 { padding:15px!important } .es-m-p15t { padding-top:15px!important } =
+.es-m-p15b { padding-bottom:15px!important } .es-m-p15r { padding-right:15p=
+x!important } .es-m-p15l { padding-left:15px!important } .es-m-p20 { paddin=
+g:20px!important } .es-m-p20t { padding-top:20px!important } .es-m-p20r { p=
+adding-right:20px!important } .es-m-p20l { padding-left:20px!important }=0A=
+ .es-m-p25 { padding:25px!important } .es-m-p25t { padding-top:25px!importa=
+nt } .es-m-p25b { padding-bottom:25px!important } .es-m-p25r { padding-righ=
+t:25px!important } .es-m-p25l { padding-left:25px!important } .es-m-p30 { p=
+adding:30px!important } .es-m-p30t { padding-top:30px!important } .es-m-p30=
+b { padding-bottom:30px!important } .es-m-p30r { padding-right:30px!importa=
+nt } .es-m-p30l { padding-left:30px!important } .es-m-p35 { padding:35px!im=
+portant } .es-m-p35t { padding-top:35px!important } .es-m-p35b { padding-bo=
+ttom:35px!important } .es-m-p35r { padding-right:35px!important } .es-m-p35=
+l { padding-left:35px!important } .es-m-p40 { padding:40px!important } .es-=
+m-p40t { padding-top:40px!important } .es-m-p40b { padding-bottom:40px!impo=
+rtant } .es-m-p40r { padding-right:40px!important } .es-m-p40l { padding-le=
+ft:40px!important }=0A .es-m-margin { padding-left:15px!important; padding-=
+right:15px!important; padding-top:15px!important; padding-bottom:15px!impor=
+tant } }@media screen and (max-width:384px) {.mail-message-content { width:=
+414px!important } }</style>=0A </head>=0A <body class=3D"es-wrapper-color" =
+data-new-gr-c-s-loaded=3D"14.1249.0" lang=3D"und" style=3D"font-family:robo=
+to, 'helvetica neue', helvetica, arial, sans-serif;width:100%;-webkit-text-=
+size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0;background-co=
+lor:inherit">        <div style=3D"display: none !important; padding: 0; he=
+ight: 1px; font-size: 1px; background-color: inherit !important; opacity: 0=
+; color: transparent; mso-line-height-rule: exactly; line-height:1px; mso-h=
+ide:all;">=0A            100,&zwnj;000 Stocks.&zwnj; 30 Years of History.&z=
+wnj; One Platform.&zwnj;=0A            <div style=3D"display: none; max-hei=
+ght: 0px; overflow: hidden;">=0A               =0A&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=0A   =
+         </div>=0A=0A        </div>=0A<table class=3D"es-wrapper" width=3D"=
+100%" cellspacing=3D"0" cellpadding=3D"0" role=3D"none" style=3D"mso-table-=
+lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px=
+;padding:0;Margin:0;width:100%;background-repeat:repeat;background-position=
+:center top;height:100%;background-color:inherit"><tr><td class=3D"es-m-mar=
+gin" valign=3D"top" style=3D"padding:0;Margin:0"><table cellpadding=3D"0" c=
+ellspacing=3D"0" class=3D"es-header" align=3D"center" role=3D"none" style=
+=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;bord=
+er-spacing:0px;table-layout:fixed !important;width:100%;background-color:tr=
+ansparent;background-repeat:repeat;background-position:center top"><tr><td =
+align=3D"center" bgcolor=3D"#ffffff" style=3D"padding:0;Margin:0;background=
+-color:#ffffff"><table bgcolor=3D"#00000000" class=3D"es-header-body" align=
+=3D"center" cellpadding=3D"0" cellspacing=3D"0" role=3D"none"=0Astyle=3D"ms=
+o-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spa=
+cing:0px;background-color:transparent;width:600px"><tr><td align=3D"left" s=
+tyle=3D"padding:0;Margin:0"><table cellpadding=3D"0" cellspacing=3D"0" widt=
+h=3D"100%" role=3D"none" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt=
+;border-collapse:collapse;border-spacing:0px"><tr><td align=3D"center" vali=
+gn=3D"top" style=3D"padding:0;Margin:0;width:600px"><table cellpadding=3D"0=
+" cellspacing=3D"0" width=3D"100%" role=3D"presentation" style=3D"mso-table=
+-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0p=
+x"><tr><td align=3D"center" class=3D"es-m-txt-c" style=3D"padding:0;Margin:=
+0;padding-bottom:5px;font-size:0px"><a target=3D"_blank" href=3D"https://ti=
+kr.acemlna.com/lt.php?x=3D4lZy~GDMKqXL7s3Azw-7gulv13FSuQAkw-kvXnjHJ3fOD5_7-=
+ky.0OJt3HVzidTvk_Y1bHPEJnaaT8DvyNxIUOBzPbKRia" style=3D"-webkit-text-size-a=
+djust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-deco=
+ration:underline;color:#333333;font-size:16px"><img=0Asrc=3D"https://conten=
+t.app-us1.com/cdn-cgi/image/fit=3Dscale-down,width=3D650,dpr=3D2,format=3Da=
+uto,onerror=3Dredirect/bKeZPE/2024/10/14/e68e0e02-b79a-41e8-b318-afcaf9971b=
+f3.png" alt=3D"TIKR.com Logo" style=3D"display:block;border:0;outline:none;=
+text-decoration:none;-ms-interpolation-mode:bicubic" data-cf-ir-is-resized=
+=3D"true" width=3D"125" title=3D"TIKR.com Logo"></a>=0A</td>=0A</tr>=0A<tr>=
+<td align=3D"center" style=3D"padding:0;Margin:0;padding-top:15px;padding-b=
+ottom:15px;font-size:0"><table border=3D"0" width=3D"100%" height=3D"100%" =
+cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"mso-tabl=
+e-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0=
+px"><tr><td style=3D"padding:0;Margin:0;border-bottom:1px solid #cccccc;bac=
+kground:unset;height:0px;width:100%;margin:0px"></td>=0A</tr>=0A</table>=0A=
+</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</tab=
+le>=0A</td>=0A</tr>=0A</table>=0A=0A <table cellpadding=3D"0" cellspacing=
+=3D"0" class=3D"es-content" align=3D"center" role=3D"none" style=3D"mso-tab=
+le-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:=
+0px;table-layout:fixed !important;width:100%"><tr><td align=3D"center" styl=
+e=3D"padding:0;Margin:0"><table bgcolor=3D"#ffffff" class=3D"es-content-bod=
+y" align=3D"center" cellpadding=3D"0" cellspacing=3D"0" role=3D"none" style=
+=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;bord=
+er-spacing:0px;background-color:transparent;width:600px"><tr><td align=3D"l=
+eft" style=3D"padding:0;Margin:0"><table cellpadding=3D"0" cellspacing=3D"0=
+" width=3D"100%" role=3D"none" style=3D"mso-table-lspace:0pt;mso-table-rspa=
+ce:0pt;border-collapse:collapse;border-spacing:0px"><tr><td align=3D"center=
+" valign=3D"top" style=3D"padding:0;Margin:0;width:600px"><table cellpaddin=
+g=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation" style=3D"mso=
+-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spac=
+ing:0px"><tr><td=0Aalign=3D"center" style=3D"padding:5px;Margin:0"><p style=
+=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-li=
+ne-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, ari=
+al, sans-serif;line-height:24px;color:#eb512e;font-size:16px"><strong></str=
+ong><strong>For investors who want every edge in their research</strong><st=
+rong></strong></p>=0A=0A</td>=0A</tr>=0A<tr><td align=3D"left" style=3D"pad=
+ding:5px;Margin:0"><h1 style=3D"Margin:0;line-height:36px;mso-line-height-r=
+ule:exactly;font-family:'open sans', 'helvetica neue', helvetica, arial, sa=
+ns-serif;font-size:30px;font-style:normal;font-weight:normal;color:#333333;=
+text-align:center"><strong>Go from 3 years of U.S. data to <u>30 years of g=
+lobal coverage</u>, with the deepest toolkit we've ever built</strong></h1>=
+</td>=0A</tr>=0A<tr><td align=3D"left" spellcheck=3D"false" aria-label=3D"T=
+o enrich screen reader interactions, please activate Accessibility in Gramm=
+arly extension settings" style=3D"Margin:0;padding-bottom:5px;padding-left:=
+5px;padding-right:5px;padding-top:10px"><p style=3D"Margin:0;-webkit-text-s=
+ize-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font=
+-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:=
+24px;color:#333333;font-size:16px">Dear TIKR user,</p>=0A=0A<p style=3D"Mar=
+gin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-heig=
+ht-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, san=
+s-serif;line-height:24px;color:#333333;font-size:16px"><br></p>=0A<p style=
+=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-li=
+ne-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, ari=
+al, sans-serif;line-height:24px;color:#333333;font-size:16px">Back in March=
+, we launched a new tier of service at TIKR called Ultimate. It was designe=
+d as our most comprehensive level of access, built for serious investors wh=
+o wanted the deepest data, the broadest screening, and a fully customizable=
+ research workspace.</p>=0A<p style=3D"Margin:0;-webkit-text-size-adjust:no=
+ne;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:robot=
+o, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;color:#3=
+33333;font-size:16px"><br></p>=0A=0A<p style=3D"Margin:0;-webkit-text-size-=
+adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-fam=
+ily:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px=
+;color:#333333;font-size:16px">We <em>closed</em>=C2=A0Ultimate to new subs=
+cribers in late March to make sure our charter members got the experience t=
+hey signed up for before we expanded access. Three months in, their feedbac=
+k has shaped the product in real ways, and it speaks for itself:</p>=0A<ul>=
+ =0A<li style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;ms=
+o-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica,=
+ arial, sans-serif;line-height:24px;color:#333333;margin-left:0;margin-bott=
+om:15px;font-size:16px"><p style=3D"Margin:0;-webkit-text-size-adjust:none;=
+-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:roboto, =
+'helvetica neue', helvetica, arial, sans-serif;line-height:24px;color:#3333=
+33;font-size:16px"><em>"I just upgraded to Ultimate and have to say, I real=
+ly do enjoy it. I went through the dashboard tutorial and it=E2=80=99s powe=
+rful."</em></p>=0A</li> =0A<li style=3D"-webkit-text-size-adjust:none;-ms-t=
+ext-size-adjust:none;mso-line-height-rule:exactly;font-family:roboto, 'helv=
+etica neue', helvetica, arial, sans-serif;line-height:24px;color:#333333;ma=
+rgin-left:0;margin-bottom:15px;font-size:16px"><p style=3D"Margin:0;-webkit=
+-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exact=
+ly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-=
+height:24px;color:#333333;font-size:16px"><em>"I recently upgraded to Ultim=
+ate. I love the product, especially the ability to look back 30 years."</em=
+></p>=0A</li> =0A<li style=3D"-webkit-text-size-adjust:none;-ms-text-size-a=
+djust:none;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue=
+', helvetica, arial, sans-serif;line-height:24px;color:#333333;margin-left:=
+0;margin-bottom:15px;font-size:16px"><p style=3D"Margin:0;-webkit-text-size=
+-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-fa=
+mily:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24p=
+x;color:#333333;font-size:16px"><em>"This is amazing and will save me so mu=
+ch time. I=E2=80=99ve been running about 80 processes a week surfacing simi=
+lar catalysts =E2=80=93 so I=E2=80=99m thrilled about this."</em></p>=0A</l=
+i> </ul>=0A<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size=
+-adjust:none;mso-line-height-rule:exactly;font-family:roboto, 'helvetica ne=
+ue', helvetica, arial, sans-serif;line-height:24px;color:#333333;font-size:=
+16px">That encouraging feedback, combined with continued requests from subs=
+cribers who missed the original window, is why we're reopening Ultimate tod=
+ay.</p>=0A<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-=
+adjust:none;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neu=
+e', helvetica, arial, sans-serif;line-height:24px;color:#333333;font-size:1=
+6px"><br></p>=0A=0A<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-t=
+ext-size-adjust:none;mso-line-height-rule:exactly;font-family:roboto, 'helv=
+etica neue', helvetica, arial, sans-serif;line-height:24px;color:#333333;fo=
+nt-size:16px"><strong>Starting today, for a brief window only, we're extend=
+ing the same pricing structure our charter members received in March.</stro=
+ng></p>=0A<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-=
+adjust:none;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neu=
+e', helvetica, arial, sans-serif;line-height:24px;color:#333333;font-size:1=
+6px"><br></p>=0A<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text=
+-size-adjust:none;mso-line-height-rule:exactly;font-family:roboto, 'helveti=
+ca neue', helvetica, arial, sans-serif;line-height:24px;color:#333333;font-=
+size:16px">Here is what that means for you:</p>=0A<ul> =0A<li style=3D"-web=
+kit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:ex=
+actly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;li=
+ne-height:24px;color:#333333;margin-left:0;margin-bottom:15px;font-size:16p=
+x"><p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:=
+none;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', hel=
+vetica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px">A =
+20% discount on the upgrade cost (the prorated amount for the remainder of =
+your current Plus term), <u><strong>and</strong></u> 20% off your first ren=
+ewal.</p>=0A</li> =0A<li style=3D"-webkit-text-size-adjust:none;-ms-text-si=
+ze-adjust:none;mso-line-height-rule:exactly;font-family:roboto, 'helvetica =
+neue', helvetica, arial, sans-serif;line-height:24px;color:#333333;margin-l=
+eft:0;margin-bottom:15px;font-size:16px"><p style=3D"Margin:0;-webkit-text-=
+size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;fon=
+t-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height=
+:24px;color:#333333;font-size:16px">A 14-day money-back guarantee. If Ultim=
+ate is not the right fit, we will return your subscription to Plus and rest=
+ore your existing pricing.</p>=0A</li> </ul></td>=0A</tr>=0A=0A <tr><td ali=
+gn=3D"center" style=3D"padding:20px;Margin:0"><!--[if mso]><a href=3D"https=
+://tikr.acemlna.com/lt.php?x=3D4lZy~GDMKqXL7s3Azw-7gulv13FSuQAkw-kvXnjHJ3fO=
+D5_7-ky.0OJt3HVzidTvk_Y1bHPEJnabT8DvyNxIUOBzPbKRia" target=3D"_blank" hidde=
+n>=0A=09<v:roundrect xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:w=3D"u=
+rn:schemas-microsoft-com:office:word" esdevVmlButton href=3D"https://tikr.a=
+cemlna.com/lt.php?x=3D4lZy~GDMKqXL7s3Azw-7gulv13FSuQAkw-kvXnjHJ3fOD5_7-ky.0=
+OJt3HVzidTvk_Y1bHPEJnabT8DvyNxIUOBzPbKRia" =0A                style=3D"heig=
+ht:43px; v-text-anchor:middle; width:514px" arcsize=3D"7%" stroke=3D"f"  fi=
+llcolor=3D"#ff9900">=0A=09=09<w:anchorlock></w:anchorlock>=0A=09=09<center =
+style=3D'color:#0d1a26; font-family:roboto, "helvetica neue", helvetica, ar=
+ial, sans-serif; font-size:17px; font-weight:700; line-height:17px;  mso-te=
+xt-raise:1px'>Log In and Access Your TIKR Ultimate Invitation!</center>=0A=
+=09</v:roundrect></a>=0A<![endif]--><!--[if !mso]><!-- --><span class=3D"ms=
+ohide es-button-border" style=3D"border-style:solid;border-color:#004CFF;ba=
+ckground:#ff9900;border-width:0px;display:inline-block;border-radius:3px;wi=
+dth:auto;mso-hide:all"><a href=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~=
+GDMKqXL7s3Azw-7gulv13FSuQAkw-kvXnjHJ3fOD5_7-ky.0OJt3HVzidTvk_Y1bHPEJnabT8Dv=
+yNxIUOBzPbKRia" class=3D"es-button" target=3D"_blank" style=3D"mso-style-pr=
+iority:100 !important;text-decoration:none;-webkit-text-size-adjust:none;-m=
+s-text-size-adjust:none;mso-line-height-rule:exactly;color:#0d1a26;font-siz=
+e:20px;display:inline-block;background:#ff9900;border-radius:3px;font-famil=
+y:roboto, 'helvetica neue', helvetica, arial, sans-serif;font-weight:bold;f=
+ont-style:normal;line-height:24px;width:auto;text-align:center;padding:10px=
+ 15px 10px 15px;mso-padding-alt:0;mso-border-alt:10px solid #ff9900">Log In=
+ and Access Your TIKR Ultimate Invitation!</a>=0A</span><!--<![endif]--></t=
+d>=0A</tr>=0A<tr><td align=3D"left" spellcheck=3D"false" aria-label=3D"To e=
+nrich screen reader interactions, please activate Accessibility in Grammarl=
+y extension settings" style=3D"Margin:0;padding-bottom:5px;padding-left:5px=
+;padding-right:5px;padding-top:10px"><p style=3D"Margin:0;-webkit-text-size=
+-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-fa=
+mily:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24p=
+x;color:#333333;font-size:16px">Here's what Ultimate unlocks beyond your cu=
+rrent free access:</p>=0A<ul> =0A<li style=3D"-webkit-text-size-adjust:none=
+;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:roboto,=
+ 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;color:#333=
+333;margin-left:0;margin-bottom:15px;font-size:16px"><p style=3D"Margin:0;-=
+webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule=
+:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif=
+;line-height:24px;color:#333333;font-size:16px"><strong></strong><strong>Co=
+verage expands from roughly 15,000 U.S. stocks to 100,000+ globally</strong=
+>: Many of the best fundamental opportunities sit across global markets whe=
+re fewer analysts are looking and mispricings persist longer.<br></p>=0A</l=
+i> =0A<li style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;=
+mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetic=
+a, arial, sans-serif;line-height:24px;color:#333333;margin-left:0;margin-bo=
+ttom:15px;font-size:16px"><p style=3D"Margin:0;-webkit-text-size-adjust:non=
+e;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:roboto=
+, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;color:#33=
+3333;font-size:16px"><strong>Financial history jumps from 3 years to 30 yea=
+rs:</strong> Instead of a snapshot, you can study how businesses performed =
+through the early '90s recession, the dot-com bubble, the 2008 financial cr=
+isis, and COVID.</p>=0A</li> =0A<li style=3D"-webkit-text-size-adjust:none;=
+-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:roboto, =
+'helvetica neue', helvetica, arial, sans-serif;line-height:24px;color:#3333=
+33;margin-left:0;margin-bottom:15px;font-size:16px"><p style=3D"Margin:0;-w=
+ebkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:=
+exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;=
+line-height:24px;color:#333333;font-size:16px"><strong>Analyst estimates ex=
+tend from 1 year to 5 years forward: </strong>See further into what the mar=
+ket expects, and identify where your own analysis diverges from consensus. =
+That divergence is where investment returns come from.</p>=0A</li> =0A<li s=
+tyle=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-he=
+ight-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, s=
+ans-serif;line-height:24px;color:#333333;margin-left:0;margin-bottom:15px;f=
+ont-size:16px"><p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-=
+size-adjust:none;mso-line-height-rule:exactly;font-family:roboto, 'helvetic=
+a neue', helvetica, arial, sans-serif;line-height:24px;color:#333333;font-s=
+ize:16px"><strong>Transcript access goes from 90 days to 15 years, with sea=
+rch, audio, and slides:</strong> Search any keyword across a decade and a h=
+alf of earnings calls, listen to the actual call audio, and review the pres=
+entation slides. You can hear the conviction in a CEO's voice during a toug=
+h Q&A, not only read the words.<br></p>=0A</li> =0A<li style=3D"-webkit-tex=
+t-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;f=
+ont-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-heig=
+ht:24px;color:#333333;margin-left:0;margin-bottom:15px;font-size:16px"><p s=
+tyle=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;ms=
+o-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica,=
+ arial, sans-serif;line-height:24px;color:#333333;font-size:16px"><strong>U=
+nlock Excel export, segmented financials, management guidance, and beats/mi=
+sses tracking</strong>: These are the tools that turn surface-level analysi=
+s into institutional-quality research. Break down revenue by segment, expor=
+t clean data into your own models, track guidance accuracy, and see how the=
+ market reacts to earnings surprises quarter by quarter.</p>=0A</li> =0A<li=
+ style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-=
+height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial,=
+ sans-serif;line-height:24px;color:#333333;margin-left:0;margin-bottom:15px=
+;font-size:16px"><p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-tex=
+t-size-adjust:none;mso-line-height-rule:exactly;font-family:roboto, 'helvet=
+ica neue', helvetica, arial, sans-serif;line-height:24px;color:#333333;font=
+-size:16px"><strong>Custom Dashboard with 300+ column options</strong>: Rep=
+lace the standard 25-column watchlist with a fully personalized command cen=
+ter. Unlimited stocks, unlimited views, and total control over the data you=
+ see.</p>=0A</li> =0A<li style=3D"-webkit-text-size-adjust:none;-ms-text-si=
+ze-adjust:none;mso-line-height-rule:exactly;font-family:roboto, 'helvetica =
+neue', helvetica, arial, sans-serif;line-height:24px;color:#333333;margin-l=
+eft:0;margin-bottom:15px;font-size:16px"><p style=3D"Margin:0;-webkit-text-=
+size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;fon=
+t-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height=
+:24px;color:#333333;font-size:16px"><strong>Catalyst Tracker</strong>: An e=
+ntirely new workflow. Screen for corporate actions across 120+ event catego=
+ries, including M&A activity, activist involvement, spin-offs, guidance cha=
+nges, and red flags. Find companies undergoing transformative events before=
+ the market fully prices them in.</p>=0A</li> =0A<li style=3D"-webkit-text-=
+size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;fon=
+t-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height=
+:24px;color:#333333;margin-left:0;margin-bottom:15px;font-size:16px"><p sty=
+le=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-=
+line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, a=
+rial, sans-serif;line-height:24px;color:#333333;font-size:16px"><strong>100=
++ new screening factors</strong>: Go beyond the standard screener with fact=
+ors like P/NCAV, Altman Z-Score, FCF ex-SBC per Share, 10-Year Average ROIC=
+, PEG ratio, and implied multi-year future valuations.</p>=0A</li> </ul>=0A=
+<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:non=
+e;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvet=
+ica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px">And w=
+hile Ultimate has been closed to new subscribers, we have not been sitting =
+still. Charter member feedback has shaped what we have shipped over the pas=
+t three months. A few of the most meaningful additions:</p>=0A<ul> =0A<li s=
+tyle=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-he=
+ight-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, s=
+ans-serif;line-height:24px;color:#333333;margin-left:0;margin-bottom:15px;f=
+ont-size:16px"><p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-=
+size-adjust:none;mso-line-height-rule:exactly;font-family:roboto, 'helvetic=
+a neue', helvetica, arial, sans-serif;line-height:24px;color:#333333;font-s=
+ize:16px"><strong>Estimates Revisions</strong>: See how Wall Street consens=
+us is moving on the names you follow, and how quickly sentiment is shifting=
+, before it shows up in price.</p>=0A</li> =0A<li style=3D"-webkit-text-siz=
+e-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-f=
+amily:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24=
+px;color:#333333;margin-left:0;margin-bottom:15px;font-size:16px"><p style=
+=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-li=
+ne-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, ari=
+al, sans-serif;line-height:24px;color:#333333;font-size:16px"><strong>Portf=
+olio Tracking</strong>: Monitor your holdings directly inside the same work=
+space where you do your research, so your portfolio sits alongside the fina=
+ncials, models, and transcripts you are already working with.</p>=0A</li> <=
+/ul>=0A<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adj=
+ust:none;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue',=
+ helvetica, arial, sans-serif;line-height:24px;color:#333333;font-size:16px=
+">If you spent any time looking at Ultimate in March, the product you would=
+ log into today is meaningfully deeper than the one we first launched.</p>=
+=0A</td>=0A</tr>=0A<tr><td align=3D"left" spellcheck=3D"false" aria-label=
+=3D"To enrich screen reader interactions, please activate Accessibility in =
+Grammarly extension settings" style=3D"Margin:0;padding-bottom:5px;padding-=
+left:5px;padding-right:5px;padding-top:10px"><h2 style=3D"Margin:0;line-hei=
+ght:28.8px;mso-line-height-rule:exactly;font-family:'open sans', 'helvetica=
+ neue', helvetica, arial, sans-serif;font-size:24px;font-style:normal;font-=
+weight:normal;color:#333333"><strong>Backed by a 14-day money-back guarante=
+e!</strong></h2>=0A<p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-t=
+ext-size-adjust:none;mso-line-height-rule:exactly;font-family:roboto, 'helv=
+etica neue', helvetica, arial, sans-serif;line-height:24px;color:#333333;fo=
+nt-size:16px"><br></p>=0A<p style=3D"Margin:0;-webkit-text-size-adjust:none=
+;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:roboto,=
+ 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;color:#333=
+333;font-size:16px">If Ultimate isn't the right fit, we'll refund your paym=
+ent in full and your account simply returns to your free plan. We're confid=
+ent you'll feel the difference, but we want you to experience it for yourse=
+lf with zero risk.</p>=0A<p style=3D"Margin:0;-webkit-text-size-adjust:none=
+;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:roboto,=
+ 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;color:#333=
+333;font-size:16px"><br></p>=0A=0A<p style=3D"Margin:0;-webkit-text-size-ad=
+just:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-famil=
+y:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;c=
+olor:#333333;font-size:16px">We built Ultimate for investors like you: seri=
+ous, long-term focused, and always looking for an edge in the quality of yo=
+ur research process. We think you'll feel the difference immediately.</p>=
+=0A</td>=0A</tr>=0A=0A <tr><td align=3D"center" style=3D"padding:20px;Margi=
+n:0"><!--[if mso]><a href=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GDMKq=
+XL7s3Azw-7gulv13FSuQAkw-kvXnjHJ3fOD5_7-ky.0OJt3HVzidTvk_Y1bHPEJnabT8DvyNxIU=
+OBzPbKRia" target=3D"_blank" hidden>=0A=09<v:roundrect xmlns:v=3D"urn:schem=
+as-microsoft-com:vml" xmlns:w=3D"urn:schemas-microsoft-com:office:word" esd=
+evVmlButton href=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GDMKqXL7s3Azw-=
+7gulv13FSuQAkw-kvXnjHJ3fOD5_7-ky.0OJt3HVzidTvk_Y1bHPEJnabT8DvyNxIUOBzPbKRia=
+" =0A                style=3D"height:43px; v-text-anchor:middle; width:514p=
+x" arcsize=3D"7%" stroke=3D"f"  fillcolor=3D"#ff9900">=0A=09=09<w:anchorloc=
+k></w:anchorlock>=0A=09=09<center style=3D'color:#0d1a26; font-family:robot=
+o, "helvetica neue", helvetica, arial, sans-serif; font-size:17px; font-wei=
+ght:700; line-height:17px;  mso-text-raise:1px'>Log In and Access Your TIKR=
+ Ultimate Invitation!</center>=0A=09</v:roundrect></a>=0A<![endif]--><!--[i=
+f !mso]><!-- --><span class=3D"msohide es-button-border" style=3D"border-st=
+yle:solid;border-color:#004CFF;background:#ff9900;border-width:0px;display:=
+inline-block;border-radius:3px;width:auto;mso-hide:all"><a href=3D"https://=
+tikr.acemlna.com/lt.php?x=3D4lZy~GDMKqXL7s3Azw-7gulv13FSuQAkw-kvXnjHJ3fOD5_=
+7-ky.0OJt3HVzidTvk_Y1bHPEJnabT8DvyNxIUOBzPbKRia" class=3D"es-button" target=
+=3D"_blank" style=3D"mso-style-priority:100 !important;text-decoration:none=
+;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-ru=
+le:exactly;color:#0d1a26;font-size:20px;display:inline-block;background:#ff=
+9900;border-radius:3px;font-family:roboto, 'helvetica neue', helvetica, ari=
+al, sans-serif;font-weight:bold;font-style:normal;line-height:24px;width:au=
+to;text-align:center;padding:10px 15px 10px 15px;mso-padding-alt:0;mso-bord=
+er-alt:10px solid #ff9900">Log In and Access Your TIKR Ultimate Invitation!=
+</a>=0A</span><!--<![endif]--></td>=0A</tr>=0A<tr><td align=3D"left" style=
+=3D"Margin:0;padding-bottom:5px;padding-left:5px;padding-right:5px;padding-=
+top:10px"><p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-=
+adjust:none;mso-line-height-rule:exactly;font-family:helvetica, 'helvetica =
+neue', arial, verdana, sans-serif;line-height:24px;color:#333333;font-size:=
+16px">Best regards,</p>=0A<p style=3D"Margin:0;-webkit-text-size-adjust:non=
+e;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:helvet=
+ica, 'helvetica neue', arial, verdana, sans-serif;line-height:24px;color:#3=
+33333;font-size:16px"><br></p>=0A<p style=3D"Margin:0;-webkit-text-size-adj=
+ust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family=
+:helvetica, 'helvetica neue', arial, verdana, sans-serif;line-height:24px;c=
+olor:#333333;font-size:16px">David Hanson<br>TIKR</p>=0A</td>=0A</tr>=0A=0A=
+ <tr><td align=3D"left" spellcheck=3D"false" aria-label=3D"To enrich screen=
+ reader interactions, please activate Accessibility in Grammarly extension =
+settings" style=3D"Margin:0;padding-left:5px;padding-right:5px;padding-bott=
+om:10px;padding-top:20px"><p style=3D"Margin:0;-webkit-text-size-adjust:non=
+e;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:roboto=
+, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;color:#33=
+3333;font-size:16px">P.S. The 20% discount on your first year and the 20% o=
+ff your first renewal are only available through June 30 at 5 PM ET. After =
+that, the window closes. If you've been considering a serious upgrade to yo=
+ur research toolkit, this is the best price you'll see. <strong><a target=
+=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GDMKqXL7s3Azw-=
+7gulv13FSuQAkw-kvXnjHJ3fOD5_7-ky.0OJt3HVzidTvk_Y1bHPEJnabT8DvyNxIUOBzPbKRia=
+" style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line=
+-height-rule:exactly;text-decoration:underline;color:#2660f5;font-size:16px=
+">Log in to learn more!</a></strong></p>=0A=0A</td>=0A</tr>=0A</table>=0A</=
+td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table=
+>=0A=0A <table cellpadding=3D"0" cellspacing=3D"0" class=3D"es-content" ali=
+gn=3D"center" role=3D"none" style=3D"mso-table-lspace:0pt;mso-table-rspace:=
+0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !importa=
+nt;width:100%"><tr><td align=3D"center" style=3D"padding:0;Margin:0"><table=
+ bgcolor=3D"#ffffff" class=3D"es-content-body" align=3D"center" cellpadding=
+=3D"0" cellspacing=3D"0" role=3D"none" style=3D"mso-table-lspace:0pt;mso-ta=
+ble-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color=
+:transparent;width:600px"><tr><td align=3D"left" style=3D"padding:0;Margin:=
+0"><table cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"none" =
+style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse=
+;border-spacing:0px"><tr><td align=3D"center" valign=3D"top" style=3D"paddi=
+ng:0;Margin:0;width:600px"><table cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"100%" role=3D"presentation" style=3D"mso-table-lspace:0pt;mso-table-rsp=
+ace:0pt;border-collapse:collapse;border-spacing:0px"><tr><td=0Aalign=3D"cen=
+ter" class=3D"es-m-p15t es-m-p15b" style=3D"padding:0;Margin:0;padding-top:=
+20px;padding-bottom:20px;font-size:0"><table border=3D"0" width=3D"100%" he=
+ight=3D"100%" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" sty=
+le=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;bo=
+rder-spacing:0px"><tr><td style=3D"padding:0;Margin:0;border-bottom:1px sol=
+id #e8e8e8;background:unset;height:0px;width:100%;margin:0px"></td>=0A=0A <=
+/tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</t=
+d>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A=0A <table cellpadding=
+=3D"0" cellspacing=3D"0" class=3D"es-content" align=3D"center" role=3D"none=
+" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collap=
+se;border-spacing:0px;table-layout:fixed !important;width:100%"><tr><td ali=
+gn=3D"center" style=3D"padding:0;Margin:0"><table bgcolor=3D"#ffffff" class=
+=3D"es-content-body" align=3D"center" cellpadding=3D"0" cellspacing=3D"0" r=
+ole=3D"none" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-coll=
+apse:collapse;border-spacing:0px;background-color:transparent;width:600px">=
+<tr><td align=3D"left" style=3D"padding:0;Margin:0"><table cellpadding=3D"0=
+" cellspacing=3D"0" width=3D"100%" role=3D"none" style=3D"mso-table-lspace:=
+0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px"><tr><=
+td align=3D"center" valign=3D"top" style=3D"padding:0;Margin:0;width:600px"=
+><table cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presenta=
+tion" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:co=
+llapse;border-spacing:0px"><tr><td=0Aalign=3D"center" class=3D"es-m-txt-c" =
+style=3D"padding:0;Margin:0;padding-bottom:5px;padding-left:15px"><p style=
+=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-li=
+ne-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, ari=
+al, sans-serif;line-height:18px;color:#333333;font-size:12px"><a target=3D"=
+_blank" href=3D"https://tikr.acemlna.com/proc.php?nl=3D6&c=3D2289&m=3D2616&=
+s=3D99eb8a97ddc9435baaff4038467ea32b&act=3Dunsub&ALL" style=3D"-webkit-text=
+-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;te=
+xt-decoration:underline;color:#2660f5;font-size:12px">Unsubscribe</a><stron=
+g>=C2=A0</strong>=C2=A0 =C2=A0=C2=A0<a target=3D"_blank" style=3D"-webkit-t=
+ext-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly=
+;text-decoration:underline;color:#2660f5;font-size:12px" href=3D"https://ti=
+kr.acemlna.com/f/1?t=3DeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5OWV=
+iOGE5N2RkYzk0MzViYWFmZjQwMzg0NjdlYTMyYiIsImF1ZCI6IlByZWZlcmVuY2UgQ2VudGVycy=
+IsImV4cCI6MTc4MTc5OTcyNiwiaWF0IjoxNzgxNzEzMzI2LCJpc3MiOiJzZW5kaW5nLXJlbGlhY=
+mlsaXR5IiwibmJmIjoxNzgxNzEzMzI2fQ.Idl159uBBQO2naNK83K2TurOLjH2Wu4vp-FUP0IU9=
+eQ">Manage Preferences</a></p>=0A=0A</td>=0A</tr>=0A=0A <tr><td align=3D"ce=
+nter" class=3D"es-m-txt-c" style=3D"padding:0;Margin:0;font-size:0px"><a ta=
+rget=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GDMKqXL7s3=
+Azw-7gulv13FSuQAkw-kvXnjHJ3fOD5_7-ky.0OJt3HVzidTvk_Y1bHPEJnacT8DvyNxIUOBzPb=
+KRia" style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-=
+line-height-rule:exactly;text-decoration:underline;color:#333333;font-size:=
+16px"><img src=3D"https://content.app-us1.com/cdn-cgi/image/fit=3Dscale-dow=
+n,width=3D650,dpr=3D2,format=3Dauto,onerror=3Dredirect/bKeZPE/2024/10/14/e6=
+8e0e02-b79a-41e8-b318-afcaf9971bf3.png" alt=3D"" style=3D"display:block;bor=
+der:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" dat=
+a-cf-ir-is-resized=3D"true" height=3D"42"></a>=0A</td>=0A</tr>=0A<tr><td al=
+ign=3D"center" class=3D"es-m-txt-c" style=3D"padding:0;Margin:0"><p style=
+=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-li=
+ne-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, ari=
+al, sans-serif;line-height:18px;color:#696969;font-size:12px">TIKR, 3003 Ma=
+ple Ave, Dallas, TX 75201, United States</p>=0A</td>=0A</tr>=0A=0A <tr><td =
+align=3D"center" class=3D"es-m-txt-c" style=3D"padding:0;Margin:0;padding-t=
+op:10px;padding-bottom:25px;font-size:0"><table cellpadding=3D"0" cellspaci=
+ng=3D"0" class=3D"es-table-not-adapt es-social" dir=3D"ltr" role=3D"present=
+ation" style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:c=
+ollapse;border-spacing:0px"><tr><td align=3D"center" valign=3D"top" style=
+=3D"padding:0;Margin:0;padding-right:10px"><a target=3D"_blank" href=3D"htt=
+ps://tikr.acemlna.com/lt.php?x=3D4lZy~GDMKqXL7s3Azw-7gulv13FSuQAkw-kvXnjHJ3=
+fOD5_7-ky.0OJt3HVzidTvk_Y1bHPEJnadT8DvyNxIUOBzPbKRia" style=3D"-webkit-text=
+-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;te=
+xt-decoration:underline;color:#333333;font-size:16px"><img src=3D"https://s=
+tripo.app-us1.com/static/assets/img/social-icons/logo-black/x-logo-black.pn=
+g" alt=3D"X" title=3D"X" width=3D"32" height=3D"32" style=3D"display:block;=
+border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic">=
+</a></td>=0A=0A <td align=3D"center" valign=3D"top" style=3D"padding:0;Marg=
+in:0;padding-right:10px"><a target=3D"_blank" href=3D"https://tikr.acemlna.=
+com/lt.php?x=3D4lZy~GDMKqXL7s3Azw-7gulv13FSuQAkw-kvXnjHJ3fOD5_7-ky.0OJt3HVz=
+idTvk_Y1bHPEJnaeT8DvyNxIUOBzPbKRia" style=3D"-webkit-text-size-adjust:none;=
+-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:unde=
+rline;color:#333333;font-size:16px"><img src=3D"https://stripo.app-us1.com/=
+static/assets/img/social-icons/logo-black/linkedin-logo-black.png" alt=3D"I=
+n" title=3D"LinkedIn" width=3D"32" height=3D"32" style=3D"display:block;bor=
+der:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"></a=
+></td>=0A=0A <td align=3D"center" valign=3D"top" style=3D"padding:0;Margin:=
+0;padding-right:10px"><a target=3D"_blank" href=3D"https://tikr.acemlna.com=
+/lt.php?x=3D4lZy~GDMKqXL7s3Azw-7gulv13FSuQAkw-kvXnjHJ3fOD5_7-ky.0OJt3HVzidT=
+vk_Y1bHPEJnafT8DvyNxIUOBzPbKRia" style=3D"-webkit-text-size-adjust:none;-ms=
+-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underli=
+ne;color:#333333;font-size:16px"><img src=3D"https://stripo.app-us1.com/sta=
+tic/assets/img/social-icons/logo-black/youtube-logo-black.png" alt=3D"Yt" t=
+itle=3D"YouTube" width=3D"32" height=3D"32" style=3D"display:block;border:0=
+;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"></a></td=
+>=0A=0A <td align=3D"center" valign=3D"top" style=3D"padding:0;Margin:0"><a=
+ target=3D"_blank" href=3D"https://tikr.acemlna.com/lt.php?x=3D4lZy~GDMKqXL=
+7s3Azw-7gulv13FSuQAkw-kvXnjHJ3fOD5_7-ky.0OJt3HVzidTvk_Y1bHPEJnagT8DvyNxIUOB=
+zPbKRia" style=3D"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;m=
+so-line-height-rule:exactly;text-decoration:underline;color:#333333;font-si=
+ze:16px"><img src=3D"https://stripo.app-us1.com/static/assets/img/social-ic=
+ons/logo-black/facebook-logo-black.png" alt=3D"Fb" title=3D"Facebook" width=
+=3D"32" height=3D"32" style=3D"display:block;border:0;outline:none;text-dec=
+oration:none;-ms-interpolation-mode:bicubic"></a></td>=0A</tr>=0A</table>=
+=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</=
+table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A<img src=3D"=
+https://tikr.acemlna.com/lteo?x=3D5DZy~GDMKqXL7s3Azw-7gulv13FSuQAkw-kvXnjHJ=
+3fOD5_7-k2DjFFxPa.UidD2l1Zs05LJIncKEwJ6yN5GU.jcCOBfyAQs_PZok.fGJFig7pJAMx6.=
+hFZw13ypk__fw2hjnqk-H67OIb.J_wg4iRxp~6td-RVfj7" border=3D"0" width=3D"1" he=
+ight=3D"1" alt=3D"" style=3D"display:block;width:1px!important;min-width:1p=
+x!important;max-width:1px!important;height:1px!important;border:0;overflow:=
+hidden;" /><br clear=3D"all" /></body>=0A</html>
+--_=_swift-695203986a32c79e1d11c9.47969742_=_--
+
+

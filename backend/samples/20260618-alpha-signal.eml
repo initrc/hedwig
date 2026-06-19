@@ -1,88 +1,88 @@
 Delivered-To: reader@example.com
-Received: by 2002:a05:7000:788e:b0:868:4dae:afed with SMTP id d14csp441225max;
-        Thu, 11 Jun 2026 10:33:16 -0700 (PDT)
-X-Received: by 2002:a05:620a:bd6:b0:915:688b:aba with SMTP id af79cd13be357-9160adcd08cmr590885185a.35.1781199195848;
-        Thu, 11 Jun 2026 10:33:15 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781199195; cv=none;
+Received: by 2002:a02:bb92:0:b0:5e2:39d1:6244 with SMTP id g18csp3640080jan;
+        Thu, 18 Jun 2026 12:51:13 -0700 (PDT)
+X-Received: by 2002:ac8:7fc5:0:b0:516:d955:ea6 with SMTP id d75a77b69052e-519e4a5863emr9935001cf.14.1781812272978;
+        Thu, 18 Jun 2026 12:51:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781812272; cv=none;
         d=google.com; s=arc-20240605;
-        b=k43BvhqoJkNySc3cUJ+ulTvH5X/DiBOqu5Nffc6gdpH+uRD9SmIFNEsinhSMg/xcQ9
-         hovRUuHIQvPmthUCqgZoHKBOmSxqdRp/PsNjd/OUUhb2LkRtanEGPx4aSASncjP+LAJu
-         Df0NmF6MKsCvFeDIiAY8gKbYvZWBZZqIUNx9MfG19nefNELy2SBStFdDv+4Apf/hS0tU
-         s+H23OjML0C4KL2dnu5BK7CXCHkRq5Fi0bo2RclQ0SnL909nJsiY0kguFAr8lrOfu4b1
-         JhArdEhic4bs8YHINqRVgWVxRzNXP8difPnBkzC4LUmi5EPVju+a/zCIRs1YL06yseLq
-         Csug==
+        b=MPuvAx6DJxOQEtW337sVPtFUba4+gljiBQkKkKG3YTKx11FNTbEKp1F9zvRpXdycU+
+         /O6tUW65Ey2G+/m/qEugQQETJAAALH37V3iurP37S2XusRBGH2TggLHS5O/oyeDXhprR
+         8vgO4OmbE1SI9p35lME4ZuYFNob4SmYlIWe/OODjuaY2t3DL53iRPX3efqs3idFnXGXn
+         KW5F0AWIazkL1SyOQ8OgL/6IjWJVA1MpnQ16YCjZy6vY7izT3U5ggC+cQ5hq4MQwl6Dt
+         btffkfzg5fkevHbr9H28HrW6NU9f/vNAQChjgIp2U3D21C9cHWSLgSt2PVlymLvJU2lf
+         2qrw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=date:message-id:list-help:abuse-reports-to:archived-at:organization
          :auto-submitted:precedence:feedback-id:list-id:list-unsubscribe-post
          :list-unsubscribe:mime-version:subject:to:from:dkim-signature
          :dkim-signature;
-        bh=d+QscMk9r5G8FeS6ITLhMBnol2Iv60vSZR43JPfrCPY=;
-        fh=Y0U3DcH6mAU0UABO/ziMIjMdtk1YqlY2rjY9Rt0/fxM=;
-        b=UDEi0qa/F/RFiTyRdcri+aB/UI+ukptJKLRO819sfSKAUiMpMVqURrnkZxBbBxfr8D
-         5LNVkUg7BOcUThtw/2dBUGkwnxlBaV5gBdSURTCO4uVP0k/bLNNSa1ju92UWqTGnVqfY
-         3Jur2k2sXR+flauqQL/xWI3uudBav67CUcM51avo9unyo/GpVAONKiGeMDqFit2HseIA
-         794E7IYzWLoyQHeF9KIhohvY3uKWwFiibBOIqfhryDvrv44dzenzebfJMxksLHQj1Lp+
-         GeL9seWQ6jCwKme+55nVzI2wi+Gp3uF9DhgfQoUSQPv57sO5Ms8gxEHhe+8+vig+y41D
-         Iuhg==;
+        bh=UHjXOvyGRon/luyYwFByDBMR6NRIYvDoCMZZ7VSDuyE=;
+        fh=KVjXwg7Ug+h8aHsnCVWcPG/5ER2YU06xtSNnZDTOw8k=;
+        b=irf5H7iBQnTnWQXRxPePAfWY8sRvze2XFNPEmvlHLKMIpYw50Hslw3PsRCBkT9CiZx
+         c+jGEV/kLT3PvZKxrBqR8SIe1xqJska4AgMk8yaaOl2/28sdlCCffAobcYXFeujh0e0n
+         e6ZVYgSd9aV3pho3YWPl8ve4u/dEyx+kmBBH0zsRgEDCtA02kgWTeWetslmwUPYjPR8i
+         494xPS4htU9CyUj4ONg/IPYkTZwCzR1ikRdSe0C0QJnp/BQX9wU0M9+54SPS3ljxab4/
+         MYsBnPv9noEtJrDIvYeI81Cg4aaYHUC6VJIwsIZH/iBPvLOrkGzkLTSp0/1jnGJnrGac
+         DBsQ==;
         dara=google.com
 ARC-Authentication-Results: i=1; mx.google.com;
-       dkim=pass header.i=@alphasignal.ai header.s=6t4xwwgfigb46q3fzae2xqfpgghp2ub3 header.b=Pl53aOZZ;
-       dkim=pass header.i=@amazonses.com header.s=kra23psoka5qyyh6gdejiiuof3nluwuz header.b=DLv0egGX;
-       spf=pass (google.com: domain of 010f019eb7becbdc-ffedb442-8c08-4b79-addd-2ae063c55468-000000@news.alphasignal.ai designates 54.240.115.225 as permitted sender) smtp.mailfrom=010f019eb7becbdc-ffedb442-8c08-4b79-addd-2ae063c55468-000000@news.alphasignal.ai;
+       dkim=pass header.i=@alphasignal.ai header.s=6t4xwwgfigb46q3fzae2xqfpgghp2ub3 header.b=SMGOK7u4;
+       dkim=pass header.i=@amazonses.com header.s=kra23psoka5qyyh6gdejiiuof3nluwuz header.b=pTaRgIfF;
+       spf=pass (google.com: domain of 010f019edc499d31-9f147a45-146d-4d13-a194-9b3c978f07df-000000@news.alphasignal.ai designates 54.240.115.229 as permitted sender) smtp.mailfrom=010f019edc499d31-9f147a45-146d-4d13-a194-9b3c978f07df-000000@news.alphasignal.ai;
        dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=alphasignal.ai
-Return-Path: <010f019eb7becbdc-ffedb442-8c08-4b79-addd-2ae063c55468-000000@news.alphasignal.ai>
-Received: from a115-225.smtp-out.us-east-2.amazonses.com (a115-225.smtp-out.us-east-2.amazonses.com. [54.240.115.225])
-        by mx.google.com with ESMTPS id af79cd13be357-9160ac6cf00si271141685a.16.2026.06.11.10.33.15
+Return-Path: <010f019edc499d31-9f147a45-146d-4d13-a194-9b3c978f07df-000000@news.alphasignal.ai>
+Received: from a115-229.smtp-out.us-east-2.amazonses.com (a115-229.smtp-out.us-east-2.amazonses.com. [54.240.115.229])
+        by mx.google.com with ESMTPS id d75a77b69052e-519e612784dsi4775251cf.223.2026.06.18.12.51.12
         for <reader@example.com>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jun 2026 10:33:15 -0700 (PDT)
-Received-SPF: pass (google.com: domain of 010f019eb7becbdc-ffedb442-8c08-4b79-addd-2ae063c55468-000000@news.alphasignal.ai designates 54.240.115.225 as permitted sender) client-ip=54.240.115.225;
+        Thu, 18 Jun 2026 12:51:12 -0700 (PDT)
+Received-SPF: pass (google.com: domain of 010f019edc499d31-9f147a45-146d-4d13-a194-9b3c978f07df-000000@news.alphasignal.ai designates 54.240.115.229 as permitted sender) client-ip=54.240.115.229;
 Authentication-Results: mx.google.com;
-       dkim=pass header.i=@alphasignal.ai header.s=6t4xwwgfigb46q3fzae2xqfpgghp2ub3 header.b=Pl53aOZZ;
-       dkim=pass header.i=@amazonses.com header.s=kra23psoka5qyyh6gdejiiuof3nluwuz header.b=DLv0egGX;
-       spf=pass (google.com: domain of 010f019eb7becbdc-ffedb442-8c08-4b79-addd-2ae063c55468-000000@news.alphasignal.ai designates 54.240.115.225 as permitted sender) smtp.mailfrom=010f019eb7becbdc-ffedb442-8c08-4b79-addd-2ae063c55468-000000@news.alphasignal.ai;
+       dkim=pass header.i=@alphasignal.ai header.s=6t4xwwgfigb46q3fzae2xqfpgghp2ub3 header.b=SMGOK7u4;
+       dkim=pass header.i=@amazonses.com header.s=kra23psoka5qyyh6gdejiiuof3nluwuz header.b=pTaRgIfF;
+       spf=pass (google.com: domain of 010f019edc499d31-9f147a45-146d-4d13-a194-9b3c978f07df-000000@news.alphasignal.ai designates 54.240.115.229 as permitted sender) smtp.mailfrom=010f019edc499d31-9f147a45-146d-4d13-a194-9b3c978f07df-000000@news.alphasignal.ai;
        dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=alphasignal.ai
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=6t4xwwgfigb46q3fzae2xqfpgghp2ub3; d=alphasignal.ai; t=1781199195;
+	s=6t4xwwgfigb46q3fzae2xqfpgghp2ub3; d=alphasignal.ai; t=1781812272;
 	h=From:To:Subject:MIME-Version:Content-Type:List-Unsubscribe:List-Unsubscribe-Post:List-Id:List-Help:Message-ID:Date;
-	bh=voDb16lv3RJi5BYw1O6Rzyfbn8RVg5YcEAnWVUgfO6k=;
-	b=Pl53aOZZ3A76nWTHaRK9K2Ce0Zs8jFwSp4HFEbLKMfEVVeNwjbAaq2WRUM3x/Uzo
-	wSqKasSVXslhzX6zp0/mXBEBMm8xIW+mPOCHHFdA4lIKjzGZNzYR7cOXa1rHEt4Obey
-	swoSca70VVbUqfmt7aabeohQn0TU8JIokMSxko78/HFaTgcps5Iyn+YIjCUgSTGoTwW
-	4UG1Pk3cH+aqUlHLOzxF+M4R/5ONc86iCdKeKbJgT6EOCQeQOt1SGu37LzBd/MfY3rS
-	kDi67aPV7FHHDdZdEYK1FE5n1JUvYyZ2kr4KGsrTuVQJ5a4SqqbnWmP3skcVUsMXvy2
-	QubUSz/iOQ==
+	bh=sZlHvyO6fDFGk+yUikgjhJF4NthPTURQlULImDTcJLU=;
+	b=SMGOK7u4p/CqdKRPE5R0Q52PPaOOKigw3zR84yQO7OQdR1ki5TJISwSllYyYRtB1
+	BXOaRC6I1msTkoAkFiisTbEbYr5DDTxnGSYkbUfH/7NW3I59QuXJkMBn5VTQ8aDvryV
+	9Z7Kw/dj45Ld80eclsGY5qYDHuHY6sb0zv2xgr8hlFqnFgZBcH9prFSo1i8x5Gwsstl
+	Pkpa/dVTd5Ce/rFpNuEEwyam28jmIppZuFlPwzHMvM9VXBt1CTysSPZH1zTQ63F55bC
+	r2YMpmW5KZ92NtF12ofo+jPVtMz78IcKEGwad7vXJVndeWV8zzbiKqKGOLJ3zV3Ccru
+	uaFWbxjfRA==
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=kra23psoka5qyyh6gdejiiuof3nluwuz; d=amazonses.com; t=1781199195;
+	s=kra23psoka5qyyh6gdejiiuof3nluwuz; d=amazonses.com; t=1781812272;
 	h=From:To:Subject:MIME-Version:Content-Type:List-Unsubscribe:List-Unsubscribe-Post:List-Id:Feedback-ID:List-Help:Message-ID:Date;
-	bh=voDb16lv3RJi5BYw1O6Rzyfbn8RVg5YcEAnWVUgfO6k=;
-	b=DLv0egGXFjy9+T4CDnGMAYGiDHumD7tsTJSj80369uOI1q3YEcOemCLxuWh8iirm
-	egQYKrE8Z+qRZWRPyBFSoT/fEUI4JEDFD96D/PQiJjl4yV+yx5+3/xOtMc6+iiZYQH/
-	uZSt+Z6TP3QmugeqfJUSDE8r0LiWvJED9h3VvH1c=
+	bh=sZlHvyO6fDFGk+yUikgjhJF4NthPTURQlULImDTcJLU=;
+	b=pTaRgIfFy4w5SGEHPuKJX/lTjwkbNZNTffAKs9Voz2mdlIRGTm2vvS8X/21AZzot
+	ENkvbgNrsDQULpHJVm6rMBwugpJs4ZPHlrh2fyzCqrOlrVgRRMb5cfJ4xl95r7GPMmY
+	Nhh1737fseh6G82Cy6rSSKD5VR97baYer0Lomekc=
 From: AlphaSignal <news@alphasignal.ai>
 To: reader@example.com
-Subject: Claude Fable 5 leaked prompts reveal new Mythos tier + persistent
- stor
+Subject: Midjourney skips imaging giants: 500K sensors, 60-sec body scan,
+ $few
 MIME-Version: 1.0
 Content-Type: multipart/alternative; 
-	boundary="----=_Part_1905123_1953859381.1781199195100"
-List-Unsubscribe: <mailto:news@alphasignal.ai?subject=unsubscribe%205cae0dc847eb915d>, <https://alphasignal.ai/us?uid=1rbQTN73dcamvOrOO&cid=5cae0dc847eb915d>
+	boundary="----=_Part_441169_2136910891.1781812272433"
+List-Unsubscribe: <mailto:news@alphasignal.ai?subject=unsubscribe%205a512074041fb2d4>, <https://alphasignal.ai/us?uid=62BeSDVQ4qzjV6ZE&cid=5a512074041fb2d4>
 List-Unsubscribe-Post: List-Unsubscribe=One-Click
 List-Id: AlphaSignal Newsletter <news.alphasignal.ai>
 Feedback-ID: ::1.us-east-2.jAR5U7QBOAP7Zz6aQYGcElD40cTATkRIc5pck9uHLa4=:AmazonSES
 Precedence: bulk
 Auto-Submitted: auto-generated
 Organization: AlphaSignal
-Archived-At: https://alphasignal.ai/email/5cae0dc847eb915d
+Archived-At: https://alphasignal.ai/email/5a512074041fb2d4
 X-Report-Abuse: mailto:news@alphasignal.ai
 X-Report-Spam: mailto:news@alphasignal.ai
 Abuse-Reports-To: mailto:news@alphasignal.ai
 List-Help: <mailto:news@alphasignal.ai?subject=help>
-Message-ID: <010f019eb7becbdc-ffedb442-8c08-4b79-addd-2ae063c55468-000000@us-east-2.amazonses.com>
-Date: Thu, 11 Jun 2026 17:33:15 +0000
-X-SES-Outgoing: 2026.06.11-54.240.115.225
+Message-ID: <010f019edc499d31-9f147a45-146d-4d13-a194-9b3c978f07df-000000@us-east-2.amazonses.com>
+Date: Thu, 18 Jun 2026 19:51:12 +0000
+X-SES-Outgoing: 2026.06.18-54.240.115.229
 
-------=_Part_1905123_1953859381.1781199195100
+------=_Part_441169_2136910891.1781812272433
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
@@ -95,252 +95,250 @@ Work With Us
 Follow on X
 |
 Archive
-Hey David,
-Two stories today that feel like opposite ends of the same bet.
-Google ships real-time audio translation across 70+ languages, and the safe=
-ty researchers at Sequent launch a nonprofit to make sure the AI doing all =
-this actually does what we want. One team is shipping, the other is asking =
-if we should.
-Both are right to move fast.
+Hey,
+AI companies are quietly rewriting what kind of company they are. Midjourne=
+y went from text-to-image to
+full-body medical scanner
+overnight. Anthropic went from chatbot to
+design system enforcer
+.
+The pattern? AI labs are eating adjacent industries whole, not just augment=
+ing them. We're past "AI features" and into full product pivots.
+The real question isn't whether these bets work. It's whether anyone outsid=
+e AI can keep up.
 In Partnership with
 =C2=B7
 Today's Author
 Lior Alexander. Founder of AlphaSignal and former ML Engineer. Previously b=
 uilt ML systems at Iguazio, Guesty, Enphase, Mila.
 Summary
-Read time: 6 min 20 sec
-Top Repo
-=E2=96=B8 Open-source tool with 13K GitHub stars
-auto-generates short-form videos
-end-to-end
-Encord
-=E2=96=B8
-Y
-o
-u
-r
-d
-a
-t
-a
-s
-h
-o
-u
-l
-d
-w
-o
-r
-k
-f
-o
-r
-y
-o
-u
-.
-W
-h
-e
-r
-e
-v
-e
-r
-y
-o
-u
-w
-o
-r
-k
-.
-Top Repo
-=E2=96=B8 Claude builds a
-playable Minecraft clone
-in HTML with background music for $30
-Teleport
+Read time: 6 min 33 sec
+Top News
+=E2=96=B8 Midjourney launches a new
+medical imaging division
+Vanta
 =E2=96=B8
 T
 h
+e
+e
+n
+t
+e
+r
+p
+r
 i
 s
+e
 d
 e
-c
+a
+l
+i
+s
 r
 e
 a
-s
-e
-s
-A
+d
+y
+.
 I
 s
-e
-c
+y
+o
 u
 r
-i
-t
-y
-i
-n
-c
-i
+S
+O
+C
+2
+?
+Top Repo
+=E2=96=B8 OpenCut is a
+free open-source video
+editor with 55K GitHub stars and no watermarks
+AWS
+=E2=96=B8
+T
+w
+o
 d
+a
+y
+s
+o
+f
+a
+g
 e
 n
 t
-s
-b
-y
-4
-.
-5
-x
-Top Repo
-=E2=96=B8 Leaked Anthropic system prompt reveals
-Claude Fable 5
-and new Mythos model tier
+i
+c
+A
+I
+a
+t
+A
+W
+S
+S
+u
+m
+m
+i
+t
+D
+C
+Top News
+=E2=96=B8 Anthropic launches
+Claude Design
+to build UIs using your real design system
 Signals
-1. Claude designs a full
-humanoid robot CAD
-model using 1.4M tokens
+1. xAI ships
+image-to-video model
+with sharper realism and better physics
 2.
-Presented by Sentry:
-Bring your Sentry issues into Cursor and let Seer trace the root cause
-3. Microsoft opens free 12-week
-machine learning course
-with 26 lessons and 52 quizzes
-4. New distributed algorithm steers
-multi-agent networks
-to equilibrium without a central coordinator
-5. Cohere releases
-open-weight 30B coding
-model with only 3B active parameters
-6. Google ships
-real-time audio translation
-model covering 70+ languages
-Top Repo
-Open-source tool with 13K GitHub stars auto-generates short-form videos end=
--to-end
-10,187 Likes
-MoneyPrinterTurbo
-is an open-source tool that turns a single topic or keyword into a fully ed=
-ited short video, no timeline, no manual cuts, no subscriptions.
-The problem it solves is real. Making a short video normally means juggling=
- five separate tools: one for scripting, one for voiceover, one for subtitl=
-es, one for stock footage, one for editing. This project collapses all of t=
-hat into one self-hosted pipeline.
-Here is what it handles automatically:
-Script generation
-using your LLM of choice (GPT, DeepSeek, Gemini, Ollama)
-AI voiceover via Edge TTS, free by default
-Stock footage pulled from Pexels or Pixabay, royalty-free
-Subtitles with custom font, color, and position
-Background music, then a rendered HD video ready to post
-You can run it via
-Web UI, Docker, or CLI
-. The repo has over 62K stars on GitHub. The code is free. A 60-second scri=
-pt costs under $0.001 with GPT-4o-mini, Edge TTS is free, and Pexels is fre=
-e at normal volumes.
+Presented by Tiger Data:
+Stale data is a silent agent killer. TimescaleDB keeps your data fresh for =
+real-time Al decisions
+3. Zero to Mastery releases
+free open-source ML
+course with 10 hours on YouTube
+4. MIT method trains RNNs in parallel without backpropagation through time
+5. LocalAI ships ByteDance depth model as a fast,
+CPU-only C++ tool
+6. Zhipu AI ships
+GLM-5.2 for Go
+with 1M token context at no extra cost
+Top News
+Midjourney launches a new medical imaging division
+26,349 Likes
+Midjourney, the company you know for turning text into images, just announc=
+ed
+Midjourney Medical
+, a full-body scanner. Nobody saw this coming.
+Here is what it actually is. You step into a pool of water. Sound waves pas=
+s through your body from every angle.
+60 seconds later
+, you have a 3D map of your entire body. No radiation, no magnets, just ult=
+rasound.
+The specs are wild:
+500,000 transducers
+(tiny sensors) firing sound waves through you simultaneously
+17 gigabytes of data processed every second
+A few dollars per scan, not hundreds
+First location opens in a San Francisco spa in 2027
+The goal is catching health problems early, before symptoms show up. Think =
+of it like version control for your body , scan regularly, spot changes ove=
+r time.
+They are starting with body composition data (fat, muscle, bone density) wh=
+ile working toward FDA approval for full diagnostics. Midjourney has never =
+shipped a physical product before, so the 2027 timeline is the real test.
 READ MORE
 forward =E2=86=92
-Presented by Encord
-Your data should work for you. Wherever you work.
-Encord,
-the Data Layer for Physical AI
-, is launching an MCP for Claude and Slack that lets you build, observe, an=
-d optimise your data infrastructure in a single conversation.
-Configure projects from a prompt, surface coverage gaps, and find edge case=
-s to fix faster than ever.
-Join the waitlist for early access to the Agentic Intelligence Layer for En=
-cord.
-JOIN THE WAITLIST
+Presented by Vanta
+The enterprise deal is ready. Is your SOC 2?
+The fastest-growing startups know that when customers ask for a SOC 2 repor=
+t, they need to have it ready to go.
+That's where Vanta comes in. Used by over 16,000 global companies like Ramp=
+, Cursor, and Harvey, Vanta helps you audit-ready quickly =E2=80=94 and sta=
+y that way.
+The Vanta Agent runs in your background like a 24/7 GRC engineer, pulling e=
+vidence, drafting fixes, and answering questionnaires.
+Don't let compliance be the reason a deal slips.
+Watch the on-demand demo
+to see how Vanta works.
+SEE IT NOW
 partner with us =E2=86=92
 Top Repo
-Claude builds a playable Minecraft clone in HTML with background music for =
-$30
-5,131 Likes
-Someone just asked
-Claude Fable 5
-to build Minecraft. In a browser. From scratch. And it delivered.
-The result runs entirely in HTML using Three.js, a 3D graphics library for =
-the browser. No assets, no images, no pre-made sounds. Everything is genera=
-ted on the fly, including the background music.
-Here is what got built in
-one shot for ~$30
-:
-Infinite terrain with biomes: plains, forests, deserts, snowy tundra, ocean=
-s
-Caves, ore veins, day/night cycle, dynamic lighting, and torches
-TNT with chain reactions, block physics, and a full inventory system
-Procedurally synthesized audio, including a generative ambient music system
-The code is public on GitHub. You can clone it and run it locally with
-npm start
-, no build step needed.
-What this shows: Fable 5 can hold an entire complex codebase in its head an=
-d ship it coherently. That opens up rapid prototyping of games, simulations=
-, and interactive tools from a single prompt.
+OpenCut is a free open-source video editor with 55K GitHub stars and no wat=
+ermarks
+23,605 Likes
+CapCut locks basic features behind a paywall, slaps watermarks on your expo=
+rts, and uploads your footage to their servers. A group of devs got fed up =
+and built
+OpenCut
+, a fully open-source alternative that just hit
+55,000 GitHub stars
+.
+Here's what you actually get:
+Multi-track timeline editor with real-time preview, no watermarks, no subsc=
+riptions
+Runs in your browser, on desktop, and on mobile, all from one codebase
+Your files never leave your device, everything is stored locally
+MCP Server
+built in, meaning you can connect AI agents to automate editing tasks
+MIT license, so you can fork it, modify it, ship it in your own product
+The current version works today. A full rewrite in
+Rust
+(a faster, lower-level language) is in progress, adding a plugin system and=
+ scripting support.
+To try it: clone the repo, run
+bun
+install
+, then
+bun
+run
+dev
+. Done.
 READ MORE
 forward =E2=86=92
-Presented by Teleport
-This decreases AI security incidents by 4.5x
-Organizations see 4.5x fewer security incidents when agents operate with le=
-ast-privileged access.
-Teleport
-gives every AI agent a cryptographic identity with short-lived, least-privi=
-leged access and full auditability, eliminating the risks of shared account=
-s and standing privileges.
-READY TO TELEPORT?
+Presented by AWS
+Two days of agentic AI at AWS Summit DC
+AWS Summit Washington
+, DC runs June 30=E2=80=93July 1 at Walter E. Washington Convention Center:
+350+ sessions across agentic AI, AI infrastructure, and modernization.
+Real production builds, not slideware.
+Keynote from Dave Levy, VP, Worldwide Public Sector.
+Hands-on labs and direct access to AWS engineers.
+REGISTER HERE
 partner with us =E2=86=92
-Top Repo
-Leaked Anthropic system prompt reveals Claude Fable 5 and new Mythos model =
-tier
-4,492 Likes
-Someone just leaked the internal system prompt for
-Claude Fable 5
-, Anthropic's newest model, and it reveals a lot about how the product actu=
-ally works under the hood.
-Here's what's actually interesting for you:
-New model tier called Mythos-class
-sits above Opus. Fable 5 and Mythos 5 share the same base model, but Mythos=
- drops safety restrictions for approved orgs only.
-Artifacts now have persistent storage
-across sessions using a key-value API. You can build journals, leaderboards=
-, and trackers that actually remember data between chats.
-Claude Code, Claude Cowork, and browser/Excel/PowerPoint agents
-are all listed as real products you can use today.
-The model can switch mid-conversation, so previous messages from a differen=
-t model version are still valid.
-The storage API is the most useful thing here. You can now build stateful m=
-ini-apps inside Claude artifacts without any backend. That opens up real li=
-ghtweight tooling without spinning up a server.
+Top News
+Anthropic launches Claude Design to build UIs using your real design system
+13,223 Likes
+Claude Design
+just got a big update, and the core idea is simple: stop letting AI invent =
+your brand from scratch every time.
+The old problem? You'd prompt Claude Design to build a UI, and it would mak=
+e up its own buttons, colors, and spacing. Every project looked slightly di=
+fferent. Now you can import your actual design system from a GitHub repo, a=
+ design file, or a raw upload.
+Claude builds with your real components
+, then checks its own output against your system before you even see it.
+Here's what's new and worth knowing:
+Import your design system once, stay on brand across every project
+Edit directly on the canvas by dragging, resizing, and aligning elements
+Use
+/design-sync
+in Claude Code to pull your design system into your terminal workflow
+Export to PDF, PowerPoint, Canva, Vercel, and more
+Shared usage limits with Claude Code, so less quota burn
+Find it at claude.ai/design on any paid plan.
 READ MORE
 forward =E2=86=92
 Signals
 1
-Claude designs a full humanoid robot CAD model using 1.4M tokens
-3,375 Likes
+xAI ships image-to-video model with sharper realism and better physics
+11,631 Likes
 2
-Bring your Sentry issues into Cursor and let Seer trace the root cause
-Presented by Sentry
+Stale data is a silent agent killer. TimescaleDB keeps your data fresh for =
+real-time Al decisions
+Presented by Tiger Data
 3
-Microsoft opens free 12-week machine learning course with 26 lessons and 52=
- quizzes
-86,627 Stars
+Zero to Mastery releases free open-source ML course with 10 hours on YouTub=
+e
+5,681 Stars
 4
-New distributed algorithm steers multi-agent networks to equilibrium withou=
-t a central coordinator
-Must Read
+MIT method trains RNNs in parallel without backpropagation through time
+759 Likes
 5
-Cohere releases open-weight 30B coding model with only 3B active parameters
-29 Downloads
+LocalAI ships ByteDance depth model as a fast, CPU-only C++ tool
+144 Downloads
 6
-Google ships real-time audio translation model covering 70+ languages
-3,121 Likes
+Zhipu AI ships GLM-5.2 for Go with 1M token context at no extra cost
+5,976 Likes
 At Alpha Signal, our mission is to build a sharp, engaged community focused=
  on AI, machine learning, and cutting-edge language models, helping over 20=
 0,000 developers stay informed and ahead. We're passionate about curating t=
@@ -369,9 +367,9 @@ Not Great
 unsubscribe_me(): return True
 {"AlphaSignal": "214 Barton Springs Rd, Austin, USA"}
 
-Stop receiving emails here: https://app.alphasignal.ai/unsubscribe/u/1rbQTN=
-73dcamvOrOO?cid=3D5cae0dc847eb915d
-------=_Part_1905123_1953859381.1781199195100
+Stop receiving emails here: https://app.alphasignal.ai/unsubscribe/u/62BeSD=
+VQ4qzjV6ZE?cid=3D5a512074041fb2d4
+------=_Part_441169_2136910891.1781812272433
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
@@ -542,16 +540,16 @@ e */
       }
     </style>
     <![endif]-->
-</head><img src=3D"https://app.alphasignal.ai/o?uid=3D1rbQTN73dcamvOrOO&cid=
-=3D5cae0dc847eb915d&mid=3D915021ea-4ba6-4ce9-a865-cbade02d2e5a&s=3DClaude%2=
-0Fable%205%20leaked%20prompts%20reveal%20new%20Mythos%20tier%20%2B%20persis=
-tent%20stor&t=3D1781199183" width=3D"1" height=3D"1" alt=3D"" aria-hidden=
+</head><img src=3D"https://app.alphasignal.ai/o?uid=3D62BeSDVQ4qzjV6ZE&cid=
+=3D5a512074041fb2d4&mid=3Da19f7faa-eed4-401f-964d-5ed5ef610187&s=3DMidjourn=
+ey%20skips%20imaging%20giants%3A%20500K%20sensors%2C%2060-sec%20body%20scan=
+%2C%20%24few&t=3D1781812256" width=3D"1" height=3D"1" alt=3D"" aria-hidden=
 =3D"true" role=3D"presentation" style=3D"display:block;border:0;outline:non=
 e;text-decoration:none;opacity:0;"><div style=3D"display:none!important;max=
 -height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;opacit=
-y:0;color:transparent;">Google&#x27;s 70-language translator ships, leaked =
-prompts show Mythos tier above Opus, Cohere&#x27;s 30B model architecture</=
-div>
+y:0;color:transparent;">Claude Design imports your GitHub design system, Op=
+enCut runs locally with MCP built in, MIT trains RNNs without backpropagati=
+on.</div>
 <body bgcolor=3D"#fcfcfc" style=3D"margin:0; padding:0; background-color:#f=
 cfcfc;">
 <table bgcolor=3D"#fcfcfc" border=3D"0" cellpadding=3D"0" cellspacing=3D"0"=
@@ -588,9 +586,9 @@ k">
                          font-family:Helvetica, Arial, sans-serif;">|</td>
 <td style=3D"font-size:12px;line-height:18px;font-family:Helvetica, Arial, =
 sans-serif;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3D9ZRzg9ekRWKidcP4&amp;mid=3D915021ea-4ba6-4ce9-a86=
-5-cbade02d2e5a" style=3D"text-decoration:none;color:#000000 !important;
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3D1g8zfwqkS9VrhV96L&amp;mid=3Da19f7faa-eed4-401f-964=
+d-5ed5ef610187" style=3D"text-decoration:none;color:#000000 !important;
                           font-family:Helvetica, Arial, sans-serif;
                           font-size:12px;line-height:18px;" target=3D"_blan=
 k">
@@ -601,9 +599,9 @@ k">
                          font-family:Helvetica, Arial, sans-serif;">|</td>
 <td style=3D"font-size:12px;line-height:18px;font-family:Helvetica, Arial, =
 sans-serif;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3D86yqaweZpbFEg2Ye&amp;mid=3D915021ea-4ba6-4ce9-a86=
-5-cbade02d2e5a" style=3D"text-decoration:none;color:#000000 !important;
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3D13Uq3SzPX3Eyra9Jf&amp;mid=3Da19f7faa-eed4-401f-964=
+d-5ed5ef610187" style=3D"text-decoration:none;color:#000000 !important;
                           font-family:Helvetica, Arial, sans-serif;
                           font-size:12px;line-height:18px;" target=3D"_blan=
 k">
@@ -656,7 +654,7 @@ n" width=3D"100%">
                    font-weight:bold;
                    color:#000000;
                    padding:0 0 10px 0;">
-<p style=3D"margin:0;">Hey David,</p>
+<p style=3D"margin:0;">Hey,</p>
 </td>
 </tr>
 </table>
@@ -669,11 +667,13 @@ n" width=3D"100%">
                    line-height:22px;
                    font-weight:400;
                    color:#000000;">
-          Two stories today that feel like opposite ends of the same bet.<b=
-r/><br/>Google ships real-time audio translation across 70+ languages, and =
-the safety researchers at Sequent launch a nonprofit to make sure the AI do=
-ing all this actually does what we want. One team is shipping, the other is=
- asking if we should.<br/><br/>Both are right to move fast.
+          AI companies are quietly rewriting what kind of company they are.=
+ Midjourney went from text-to-image to <b>full-body medical scanner</b> ove=
+rnight. Anthropic went from chatbot to <b>design system enforcer</b>.<br/><=
+br/>The pattern? AI labs are eating adjacent industries whole, not just aug=
+menting them. We're past "AI features" and into full product pivots.<br/><b=
+r/>The real question isn't whether these bets work. It's whether anyone out=
+side AI can keep up.
         </td>
 </tr>
 </table>
@@ -703,10 +703,10 @@ In Partnership with
                 =C2=B7
               </td>
 <td style=3D"vertical-align:middle;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3D1DLHdn7lsFH25HCqD&amp;mid=3D915021ea-4ba6-4ce9-a8=
-65-cbade02d2e5a" style=3D"text-decoration:none;" target=3D"_blank"><img alt=
-=3D"partner_image" src=3D"https://alphasignal.ai/image/1781194243781-mt9oh1=
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3DfQ4yarLlX3yMF5Ql&amp;mid=3Da19f7faa-eed4-401f-964d=
+-5ed5ef610187" style=3D"text-decoration:none;" target=3D"_blank"><img alt=
+=3D"partner_image" src=3D"https://alphasignal.ai/image/1781804579807-rbzls4=
 .png" style=3D"max-height:100%;width:150px;max-width:150px;vertical-align:m=
 iddle;"/></a>
 </td>
@@ -775,7 +775,7 @@ eight:normal;
             margin:0;padding:0;
             color:#000000 !important;mso-color-alt:windowtext;mso-style-tex=
 tfill-fill-color:#000000;">
-    Read time: 6 min 20 sec
+    Read time: 6 min 33 sec
   </p>
 </td>
 </tr>
@@ -794,165 +794,23 @@ ld;line-height:22.5px;
             margin:0;padding:0;
             color:#000000 !important;mso-color-alt:windowtext;
             mso-style-textfill-fill-color:#000000;">
-<u>Top Repo</u>
+<u>Top News</u>
 </p>
 </td>
 </tr>
 <tr>
 <td style=3D"padding:10px 0;color:#000000 !important;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3DWozEiL92XtfZVpnj&amp;mid=3D915021ea-4ba6-4ce9-a86=
-5-cbade02d2e5a" style=3D"font-family:Helvetica, sans-serif;font-size:15px;l=
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3D1iXpXBWweYeDoIg5E&amp;mid=3Da19f7faa-eed4-401f-964=
+d-5ed5ef610187" style=3D"font-family:Helvetica, sans-serif;font-size:15px;l=
 ine-height:22.5px;
                      color:#000000 !important;text-decoration:none;display:=
 block;
                      mso-color-alt:windowtext;mso-style-textfill-fill-color=
 :#000000;">
-    =E2=96=B8 Open-source tool with 13K GitHub stars <span style=3D"backgro=
-und-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-=
-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;">auto-generates short-fo=
-rm videos</span> end-to-end
-  </a>
-</td>
-</tr>
-<tr>
-<td style=3D"padding:10px 0;color:#000000 !important;">
-<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
-n" width=3D"100%">
-<tr><td style=3D"border-top:1px solid #6B6B6B;"></td></tr>
-</table>
-</td>
-</tr>
-<tr>
-<td style=3D"padding:5px 0 0 0;color:#000000 !important;">
-<p style=3D"font-family:Helvetica, sans-serif;font-size:15px;font-weight:bo=
-ld;line-height:22.5px;
-            margin:0;padding:0;
-            color:#000000 !important;mso-color-alt:windowtext;
-            mso-style-textfill-fill-color:#000000;">
-<u>Encord</u>
-</p>
-</td>
-</tr>
-<tr>
-<td style=3D"padding:10px 0;color:#000000 !important;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3D1DLHdn7lsFH25HCqD&amp;mid=3D915021ea-4ba6-4ce9-a8=
-65-cbade02d2e5a" style=3D"font-family:Helvetica, sans-serif;font-size:15px;=
-line-height:22.5px;
-                     color:#000000 !important;text-decoration:none;display:=
-block;
-                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
-:#000000;">
-<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-=
-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"><=
-/span>=E2=96=B8<span style=3D"background-color:#FBEDE7;color:#f74904 !impor=
-tant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highli=
-ght:#FBEDE7;"></span> <span style=3D"background-color:#FBEDE7;color:#f74904=
- !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso=
--highlight:#FBEDE7;"></span>Y<span style=3D"background-color:#FBEDE7;color:=
-#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74=
-904;mso-highlight:#FBEDE7;"></span>o<span style=3D"background-color:#FBEDE7=
-;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-col=
-or:#f74904;mso-highlight:#FBEDE7;"></span>u<span style=3D"background-color:=
-#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-f=
-ill-color:#f74904;mso-highlight:#FBEDE7;"></span>r<span style=3D"background=
--color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-tex=
-tfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span> <span style=3D"bac=
-kground-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-st=
-yle-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>d<span style=
-=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904=
-;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>a<spa=
-n style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:=
-#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></spa=
-n>t<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-col=
-or-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;=
-"></span>a<span style=3D"background-color:#FBEDE7;color:#f74904 !important;=
-mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#=
-FBEDE7;"></span> <span style=3D"background-color:#FBEDE7;color:#f74904 !imp=
-ortant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-high=
-light:#FBEDE7;"></span>s<span style=3D"background-color:#FBEDE7;color:#f749=
-04 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;m=
-so-highlight:#FBEDE7;"></span>h<span style=3D"background-color:#FBEDE7;colo=
-r:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f=
-74904;mso-highlight:#FBEDE7;"></span>o<span style=3D"background-color:#FBED=
-E7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-c=
-olor:#f74904;mso-highlight:#FBEDE7;"></span>u<span style=3D"background-colo=
-r:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill=
--fill-color:#f74904;mso-highlight:#FBEDE7;"></span>l<span style=3D"backgrou=
-nd-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-t=
-extfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>d<span style=3D"b=
-ackground-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-=
-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span> <span sty=
-le=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f749=
-04;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>w<s=
-pan style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-al=
-t:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></s=
-pan>o<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-c=
-olor-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE=
-7;"></span>r<span style=3D"background-color:#FBEDE7;color:#f74904 !importan=
-t;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight=
-:#FBEDE7;"></span>k<span style=3D"background-color:#FBEDE7;color:#f74904 !i=
-mportant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-hi=
-ghlight:#FBEDE7;"></span> <span style=3D"background-color:#FBEDE7;color:#f7=
-4904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904=
-;mso-highlight:#FBEDE7;"></span>f<span style=3D"background-color:#FBEDE7;co=
-lor:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:=
-#f74904;mso-highlight:#FBEDE7;"></span>o<span style=3D"background-color:#FB=
+    =E2=96=B8 Midjourney launches a new <span style=3D"background-color:#FB=
 EDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill=
--color:#f74904;mso-highlight:#FBEDE7;"></span>r<span style=3D"background-co=
-lor:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfi=
-ll-fill-color:#f74904;mso-highlight:#FBEDE7;"></span> <span style=3D"backgr=
-ound-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style=
--textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>y<span style=3D=
-"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;ms=
-o-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>o<span s=
-tyle=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f7=
-4904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>u=
-<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-=
-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"><=
-/span>.<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso=
--color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBE=
-DE7;"></span> <span style=3D"background-color:#FBEDE7;color:#f74904 !import=
-ant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlig=
-ht:#FBEDE7;"></span>W<span style=3D"background-color:#FBEDE7;color:#f74904 =
-!important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-=
-highlight:#FBEDE7;"></span>h<span style=3D"background-color:#FBEDE7;color:#=
-f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f749=
-04;mso-highlight:#FBEDE7;"></span>e<span style=3D"background-color:#FBEDE7;=
-color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-colo=
-r:#f74904;mso-highlight:#FBEDE7;"></span>r<span style=3D"background-color:#=
-FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fi=
-ll-color:#f74904;mso-highlight:#FBEDE7;"></span>e<span style=3D"background-=
-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-text=
-fill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>v<span style=3D"back=
-ground-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-sty=
-le-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>e<span style=
-=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904=
-;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>r<spa=
-n style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:=
-#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></spa=
-n> <span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-col=
-or-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;=
-"></span>y<span style=3D"background-color:#FBEDE7;color:#f74904 !important;=
-mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#=
-FBEDE7;"></span>o<span style=3D"background-color:#FBEDE7;color:#f74904 !imp=
-ortant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-high=
-light:#FBEDE7;"></span>u<span style=3D"background-color:#FBEDE7;color:#f749=
-04 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;m=
-so-highlight:#FBEDE7;"></span> <span style=3D"background-color:#FBEDE7;colo=
-r:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f=
-74904;mso-highlight:#FBEDE7;"></span>w<span style=3D"background-color:#FBED=
-E7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-c=
-olor:#f74904;mso-highlight:#FBEDE7;"></span>o<span style=3D"background-colo=
-r:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill=
--fill-color:#f74904;mso-highlight:#FBEDE7;"></span>r<span style=3D"backgrou=
-nd-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-t=
-extfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>k<span style=3D"b=
-ackground-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-=
-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>.<span sty=
-le=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f749=
-04;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>
+-color:#f74904;mso-highlight:#FBEDE7;">medical imaging division</span>
 </a>
 </td>
 </tr>
@@ -971,52 +829,16 @@ ld;line-height:22.5px;
             margin:0;padding:0;
             color:#000000 !important;mso-color-alt:windowtext;
             mso-style-textfill-fill-color:#000000;">
-<u>Top Repo</u>
+<u>Vanta</u>
 </p>
 </td>
 </tr>
 <tr>
 <td style=3D"padding:10px 0;color:#000000 !important;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3D1fGQ4ScuIxSw0viOo&amp;mid=3D915021ea-4ba6-4ce9-a8=
-65-cbade02d2e5a" style=3D"font-family:Helvetica, sans-serif;font-size:15px;=
-line-height:22.5px;
-                     color:#000000 !important;text-decoration:none;display:=
-block;
-                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
-:#000000;">
-    =E2=96=B8 Claude builds a <span style=3D"background-color:#FBEDE7;color=
-:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f7=
-4904;mso-highlight:#FBEDE7;">playable Minecraft clone</span> in HTML with b=
-ackground music for $30
-  </a>
-</td>
-</tr>
-<tr>
-<td style=3D"padding:10px 0;color:#000000 !important;">
-<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
-n" width=3D"100%">
-<tr><td style=3D"border-top:1px solid #6B6B6B;"></td></tr>
-</table>
-</td>
-</tr>
-<tr>
-<td style=3D"padding:5px 0 0 0;color:#000000 !important;">
-<p style=3D"font-family:Helvetica, sans-serif;font-size:15px;font-weight:bo=
-ld;line-height:22.5px;
-            margin:0;padding:0;
-            color:#000000 !important;mso-color-alt:windowtext;
-            mso-style-textfill-fill-color:#000000;">
-<u>Teleport</u>
-</p>
-</td>
-</tr>
-<tr>
-<td style=3D"padding:10px 0;color:#000000 !important;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3DzGtIt28WhwqVz2I3&amp;mid=3D915021ea-4ba6-4ce9-a86=
-5-cbade02d2e5a" style=3D"font-family:Helvetica, sans-serif;font-size:15px;l=
-ine-height:22.5px;
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3DfQ4yarLlX3yMF5Ql&amp;mid=3Da19f7faa-eed4-401f-964d=
+-5ed5ef610187" style=3D"font-family:Helvetica, sans-serif;font-size:15px;li=
+ne-height:22.5px;
                      color:#000000 !important;text-decoration:none;display:=
 block;
                      mso-color-alt:windowtext;mso-style-textfill-fill-color=
@@ -1031,93 +853,93 @@ ght:#FBEDE7;"></span> <span style=3D"background-color:#FBEDE7;color:#f74904=
 #f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74=
 904;mso-highlight:#FBEDE7;"></span>h<span style=3D"background-color:#FBEDE7=
 ;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-col=
-or:#f74904;mso-highlight:#FBEDE7;"></span>i<span style=3D"background-color:=
+or:#f74904;mso-highlight:#FBEDE7;"></span>e<span style=3D"background-color:=
 #FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-f=
-ill-color:#f74904;mso-highlight:#FBEDE7;"></span>s<span style=3D"background=
+ill-color:#f74904;mso-highlight:#FBEDE7;"></span> <span style=3D"background=
 -color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-tex=
-tfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span> <span style=3D"bac=
+tfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>e<span style=3D"bac=
 kground-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-st=
-yle-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>d<span style=
+yle-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>n<span style=
 =3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904=
-;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>e<spa=
+;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>t<spa=
 n style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:=
 #f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></spa=
-n>c<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-col=
+n>e<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-col=
 or-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;=
 "></span>r<span style=3D"background-color:#FBEDE7;color:#f74904 !important;=
 mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#=
-FBEDE7;"></span>e<span style=3D"background-color:#FBEDE7;color:#f74904 !imp=
+FBEDE7;"></span>p<span style=3D"background-color:#FBEDE7;color:#f74904 !imp=
 ortant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-high=
-light:#FBEDE7;"></span>a<span style=3D"background-color:#FBEDE7;color:#f749=
+light:#FBEDE7;"></span>r<span style=3D"background-color:#FBEDE7;color:#f749=
 04 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;m=
-so-highlight:#FBEDE7;"></span>s<span style=3D"background-color:#FBEDE7;colo=
+so-highlight:#FBEDE7;"></span>i<span style=3D"background-color:#FBEDE7;colo=
 r:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f=
-74904;mso-highlight:#FBEDE7;"></span>e<span style=3D"background-color:#FBED=
+74904;mso-highlight:#FBEDE7;"></span>s<span style=3D"background-color:#FBED=
 E7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-c=
-olor:#f74904;mso-highlight:#FBEDE7;"></span>s<span style=3D"background-colo=
+olor:#f74904;mso-highlight:#FBEDE7;"></span>e<span style=3D"background-colo=
 r:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill=
 -fill-color:#f74904;mso-highlight:#FBEDE7;"></span> <span style=3D"backgrou=
 nd-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-t=
-extfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>A<span style=3D"b=
+extfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>d<span style=3D"b=
 ackground-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-=
-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>I<span sty=
+style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>e<span sty=
 le=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f749=
-04;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span> <s=
+04;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>a<s=
 pan style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-al=
 t:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></s=
-pan>s<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-c=
+pan>l<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-c=
 olor-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE=
-7;"></span>e<span style=3D"background-color:#FBEDE7;color:#f74904 !importan=
+7;"></span> <span style=3D"background-color:#FBEDE7;color:#f74904 !importan=
 t;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight=
-:#FBEDE7;"></span>c<span style=3D"background-color:#FBEDE7;color:#f74904 !i=
+:#FBEDE7;"></span>i<span style=3D"background-color:#FBEDE7;color:#f74904 !i=
 mportant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-hi=
-ghlight:#FBEDE7;"></span>u<span style=3D"background-color:#FBEDE7;color:#f7=
+ghlight:#FBEDE7;"></span>s<span style=3D"background-color:#FBEDE7;color:#f7=
 4904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904=
-;mso-highlight:#FBEDE7;"></span>r<span style=3D"background-color:#FBEDE7;co=
+;mso-highlight:#FBEDE7;"></span> <span style=3D"background-color:#FBEDE7;co=
 lor:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:=
-#f74904;mso-highlight:#FBEDE7;"></span>i<span style=3D"background-color:#FB=
+#f74904;mso-highlight:#FBEDE7;"></span>r<span style=3D"background-color:#FB=
 EDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill=
--color:#f74904;mso-highlight:#FBEDE7;"></span>t<span style=3D"background-co=
+-color:#f74904;mso-highlight:#FBEDE7;"></span>e<span style=3D"background-co=
 lor:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfi=
-ll-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>y<span style=3D"backgr=
+ll-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>a<span style=3D"backgr=
 ound-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style=
--textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span> <span style=3D=
+-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>d<span style=3D=
 "background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;ms=
-o-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>i<span s=
+o-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>y<span s=
 tyle=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f7=
-4904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>n=
+4904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>.=
 <span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-=
 alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"><=
-/span>c<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso=
+/span> <span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso=
 -color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBE=
-DE7;"></span>i<span style=3D"background-color:#FBEDE7;color:#f74904 !import=
+DE7;"></span>I<span style=3D"background-color:#FBEDE7;color:#f74904 !import=
 ant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlig=
-ht:#FBEDE7;"></span>d<span style=3D"background-color:#FBEDE7;color:#f74904 =
+ht:#FBEDE7;"></span>s<span style=3D"background-color:#FBEDE7;color:#f74904 =
 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-=
-highlight:#FBEDE7;"></span>e<span style=3D"background-color:#FBEDE7;color:#=
+highlight:#FBEDE7;"></span> <span style=3D"background-color:#FBEDE7;color:#=
 f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f749=
-04;mso-highlight:#FBEDE7;"></span>n<span style=3D"background-color:#FBEDE7;=
+04;mso-highlight:#FBEDE7;"></span>y<span style=3D"background-color:#FBEDE7;=
 color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-colo=
-r:#f74904;mso-highlight:#FBEDE7;"></span>t<span style=3D"background-color:#=
+r:#f74904;mso-highlight:#FBEDE7;"></span>o<span style=3D"background-color:#=
 FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fi=
-ll-color:#f74904;mso-highlight:#FBEDE7;"></span>s<span style=3D"background-=
+ll-color:#f74904;mso-highlight:#FBEDE7;"></span>u<span style=3D"background-=
 color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-text=
-fill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span> <span style=3D"back=
+fill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>r<span style=3D"back=
 ground-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-sty=
-le-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>b<span style=
+le-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span> <span style=
 =3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904=
-;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>y<spa=
+;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>S<spa=
 n style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:=
 #f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></spa=
-n> <span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-col=
+n>O<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-col=
 or-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;=
-"></span>4<span style=3D"background-color:#FBEDE7;color:#f74904 !important;=
+"></span>C<span style=3D"background-color:#FBEDE7;color:#f74904 !important;=
 mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#=
-FBEDE7;"></span>.<span style=3D"background-color:#FBEDE7;color:#f74904 !imp=
+FBEDE7;"></span> <span style=3D"background-color:#FBEDE7;color:#f74904 !imp=
 ortant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-high=
-light:#FBEDE7;"></span>5<span style=3D"background-color:#FBEDE7;color:#f749=
+light:#FBEDE7;"></span>2<span style=3D"background-color:#FBEDE7;color:#f749=
 04 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;m=
-so-highlight:#FBEDE7;"></span>x<span style=3D"background-color:#FBEDE7;colo=
+so-highlight:#FBEDE7;"></span>?<span style=3D"background-color:#FBEDE7;colo=
 r:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f=
 74904;mso-highlight:#FBEDE7;"></span>
 </a>
@@ -1144,18 +966,175 @@ ld;line-height:22.5px;
 </tr>
 <tr>
 <td style=3D"padding:10px 0;color:#000000 !important;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3DPDAOKnMKuVoRq7gG&amp;mid=3D915021ea-4ba6-4ce9-a86=
-5-cbade02d2e5a" style=3D"font-family:Helvetica, sans-serif;font-size:15px;l=
-ine-height:22.5px;
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3DjgK8q2gQbTQYvHHL&amp;mid=3Da19f7faa-eed4-401f-964d=
+-5ed5ef610187" style=3D"font-family:Helvetica, sans-serif;font-size:15px;li=
+ne-height:22.5px;
                      color:#000000 !important;text-decoration:none;display:=
 block;
                      mso-color-alt:windowtext;mso-style-textfill-fill-color=
 :#000000;">
-    =E2=96=B8 Leaked Anthropic system prompt reveals <span style=3D"backgro=
-und-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-=
-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;">Claude Fable 5</span> a=
-nd new Mythos model tier
+    =E2=96=B8 OpenCut is a <span style=3D"background-color:#FBEDE7;color:#f=
+74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f7490=
+4;mso-highlight:#FBEDE7;">free open-source video</span> editor with 55K Git=
+Hub stars and no watermarks
+  </a>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr><td style=3D"border-top:1px solid #6B6B6B;"></td></tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:5px 0 0 0;color:#000000 !important;">
+<p style=3D"font-family:Helvetica, sans-serif;font-size:15px;font-weight:bo=
+ld;line-height:22.5px;
+            margin:0;padding:0;
+            color:#000000 !important;mso-color-alt:windowtext;
+            mso-style-textfill-fill-color:#000000;">
+<u>AWS</u>
+</p>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3DWgBjDx8aJLWFeu0x&amp;mid=3Da19f7faa-eed4-401f-964d=
+-5ed5ef610187" style=3D"font-family:Helvetica, sans-serif;font-size:15px;li=
+ne-height:22.5px;
+                     color:#000000 !important;text-decoration:none;display:=
+block;
+                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
+:#000000;">
+<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-=
+alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"><=
+/span>=E2=96=B8<span style=3D"background-color:#FBEDE7;color:#f74904 !impor=
+tant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highli=
+ght:#FBEDE7;"></span> <span style=3D"background-color:#FBEDE7;color:#f74904=
+ !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso=
+-highlight:#FBEDE7;"></span>T<span style=3D"background-color:#FBEDE7;color:=
+#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74=
+904;mso-highlight:#FBEDE7;"></span>w<span style=3D"background-color:#FBEDE7=
+;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-col=
+or:#f74904;mso-highlight:#FBEDE7;"></span>o<span style=3D"background-color:=
+#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-f=
+ill-color:#f74904;mso-highlight:#FBEDE7;"></span> <span style=3D"background=
+-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-tex=
+tfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>d<span style=3D"bac=
+kground-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-st=
+yle-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>a<span style=
+=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904=
+;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>y<spa=
+n style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:=
+#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></spa=
+n>s<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-col=
+or-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;=
+"></span> <span style=3D"background-color:#FBEDE7;color:#f74904 !important;=
+mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#=
+FBEDE7;"></span>o<span style=3D"background-color:#FBEDE7;color:#f74904 !imp=
+ortant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-high=
+light:#FBEDE7;"></span>f<span style=3D"background-color:#FBEDE7;color:#f749=
+04 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;m=
+so-highlight:#FBEDE7;"></span> <span style=3D"background-color:#FBEDE7;colo=
+r:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f=
+74904;mso-highlight:#FBEDE7;"></span>a<span style=3D"background-color:#FBED=
+E7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-c=
+olor:#f74904;mso-highlight:#FBEDE7;"></span>g<span style=3D"background-colo=
+r:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill=
+-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>e<span style=3D"backgrou=
+nd-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-t=
+extfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>n<span style=3D"b=
+ackground-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-=
+style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>t<span sty=
+le=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f749=
+04;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>i<s=
+pan style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-al=
+t:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></s=
+pan>c<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-c=
+olor-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE=
+7;"></span> <span style=3D"background-color:#FBEDE7;color:#f74904 !importan=
+t;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight=
+:#FBEDE7;"></span>A<span style=3D"background-color:#FBEDE7;color:#f74904 !i=
+mportant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-hi=
+ghlight:#FBEDE7;"></span>I<span style=3D"background-color:#FBEDE7;color:#f7=
+4904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904=
+;mso-highlight:#FBEDE7;"></span> <span style=3D"background-color:#FBEDE7;co=
+lor:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:=
+#f74904;mso-highlight:#FBEDE7;"></span>a<span style=3D"background-color:#FB=
+EDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill=
+-color:#f74904;mso-highlight:#FBEDE7;"></span>t<span style=3D"background-co=
+lor:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfi=
+ll-fill-color:#f74904;mso-highlight:#FBEDE7;"></span> <span style=3D"backgr=
+ound-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style=
+-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>A<span style=3D=
+"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;ms=
+o-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>W<span s=
+tyle=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f7=
+4904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>S=
+<span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-=
+alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"><=
+/span> <span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso=
+-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBE=
+DE7;"></span>S<span style=3D"background-color:#FBEDE7;color:#f74904 !import=
+ant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlig=
+ht:#FBEDE7;"></span>u<span style=3D"background-color:#FBEDE7;color:#f74904 =
+!important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-=
+highlight:#FBEDE7;"></span>m<span style=3D"background-color:#FBEDE7;color:#=
+f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f749=
+04;mso-highlight:#FBEDE7;"></span>m<span style=3D"background-color:#FBEDE7;=
+color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-colo=
+r:#f74904;mso-highlight:#FBEDE7;"></span>i<span style=3D"background-color:#=
+FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fi=
+ll-color:#f74904;mso-highlight:#FBEDE7;"></span>t<span style=3D"background-=
+color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-text=
+fill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span> <span style=3D"back=
+ground-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-sty=
+le-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>D<span style=
+=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904=
+;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></span>C<spa=
+n style=3D"background-color:#FBEDE7;color:#f74904 !important;mso-color-alt:=
+#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;"></spa=
+n>
+</a>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tr><td style=3D"border-top:1px solid #6B6B6B;"></td></tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:5px 0 0 0;color:#000000 !important;">
+<p style=3D"font-family:Helvetica, sans-serif;font-size:15px;font-weight:bo=
+ld;line-height:22.5px;
+            margin:0;padding:0;
+            color:#000000 !important;mso-color-alt:windowtext;
+            mso-style-textfill-fill-color:#000000;">
+<u>Top News</u>
+</p>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3DidB5oqk6zEE14WSd&amp;mid=3Da19f7faa-eed4-401f-964d=
+-5ed5ef610187" style=3D"font-family:Helvetica, sans-serif;font-size:15px;li=
+ne-height:22.5px;
+                     color:#000000 !important;text-decoration:none;display:=
+block;
+                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
+:#000000;">
+    =E2=96=B8 Anthropic launches <span style=3D"background-color:#FBEDE7;co=
+lor:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:=
+#f74904;mso-highlight:#FBEDE7;">Claude Design</span> to build UIs using you=
+r real design system
   </a>
 </td>
 </tr>
@@ -1180,103 +1159,101 @@ ld;line-height:22.5px;
 </tr>
 <tr>
 <td style=3D"padding:10px 0;color:#000000 !important;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3D178v0tFAt6BJm69bJ&amp;mid=3D915021ea-4ba6-4ce9-a8=
-65-cbade02d2e5a" style=3D"font-family:Helvetica, sans-serif;font-size:15px;=
-line-height:22.5px;
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3DKgypVt5AdgqlYLaa&amp;mid=3Da19f7faa-eed4-401f-964d=
+-5ed5ef610187" style=3D"font-family:Helvetica, sans-serif;font-size:15px;li=
+ne-height:22.5px;
                      color:#000000 !important;text-decoration:none;display:=
 block;
                      mso-color-alt:windowtext;mso-style-textfill-fill-color=
 :#000000;">
-    1. Claude designs a full <span style=3D"background-color:#FBEDE7;color:=
-#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74=
-904;mso-highlight:#FBEDE7;">humanoid robot CAD</span> model using 1.4M toke=
-ns
+    1. xAI ships <span style=3D"background-color:#FBEDE7;color:#f74904 !imp=
+ortant;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-high=
+light:#FBEDE7;">image-to-video model</span> with sharper realism and better=
+ physics
   </a>
 </td>
 </tr>
 <tr>
 <td style=3D"padding:10px 0;color:#000000 !important;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3D1cY45aBXvEkzC7ReT&amp;mid=3D915021ea-4ba6-4ce9-a8=
-65-cbade02d2e5a" style=3D"font-family:Helvetica, sans-serif;font-size:15px;=
-line-height:22.5px;
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3D1wmLR5wvTNuYsO3eI&amp;mid=3Da19f7faa-eed4-401f-964=
+d-5ed5ef610187" style=3D"font-family:Helvetica, sans-serif;font-size:15px;l=
+ine-height:22.5px;
                      color:#000000 !important;text-decoration:none;display:=
 block;
                      mso-color-alt:windowtext;mso-style-textfill-fill-color=
 :#000000;">
     2. <span style=3D"background-color:#FBEDE7;color:#f74904 !important;mso=
 -color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-highlight:#FBE=
-DE7;">Presented by Sentry:</span> Bring your Sentry issues into Cursor and =
-let Seer trace the root cause
+DE7;">Presented by Tiger Data:</span> Stale data is a silent agent killer. =
+TimescaleDB keeps your data fresh for real-time Al decisions
   </a>
 </td>
 </tr>
 <tr>
 <td style=3D"padding:10px 0;color:#000000 !important;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3DyKqYJQfDtLpE3qjH&amp;mid=3D915021ea-4ba6-4ce9-a86=
-5-cbade02d2e5a" style=3D"font-family:Helvetica, sans-serif;font-size:15px;l=
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3DjTHUIpeJBtwPYQvo&amp;mid=3Da19f7faa-eed4-401f-964d=
+-5ed5ef610187" style=3D"font-family:Helvetica, sans-serif;font-size:15px;li=
+ne-height:22.5px;
+                     color:#000000 !important;text-decoration:none;display:=
+block;
+                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
+:#000000;">
+    3. Zero to Mastery releases <span style=3D"background-color:#FBEDE7;col=
+or:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#=
+f74904;mso-highlight:#FBEDE7;">free open-source ML</span> course with 10 ho=
+urs on YouTube
+  </a>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3D1B0LdyQ66eNvbAucX&amp;mid=3Da19f7faa-eed4-401f-964=
+d-5ed5ef610187" style=3D"font-family:Helvetica, sans-serif;font-size:15px;l=
 ine-height:22.5px;
                      color:#000000 !important;text-decoration:none;display:=
 block;
                      mso-color-alt:windowtext;mso-style-textfill-fill-color=
 :#000000;">
-    3. Microsoft opens free 12-week <span style=3D"background-color:#FBEDE7=
-;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill-col=
-or:#f74904;mso-highlight:#FBEDE7;">machine learning course</span> with 26 l=
-essons and 52 quizzes
+    4. MIT method trains RNNs in parallel without backpropagation through t=
+ime
   </a>
 </td>
 </tr>
 <tr>
 <td style=3D"padding:10px 0;color:#000000 !important;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3De89020E8ap4l7rhP&amp;mid=3D915021ea-4ba6-4ce9-a86=
-5-cbade02d2e5a" style=3D"font-family:Helvetica, sans-serif;font-size:15px;l=
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3DjP9kvEOgYnTa7f0i&amp;mid=3Da19f7faa-eed4-401f-964d=
+-5ed5ef610187" style=3D"font-family:Helvetica, sans-serif;font-size:15px;li=
+ne-height:22.5px;
+                     color:#000000 !important;text-decoration:none;display:=
+block;
+                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
+:#000000;">
+    5. LocalAI ships ByteDance depth model as a fast, <span style=3D"backgr=
+ound-color:#FBEDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style=
+-textfill-fill-color:#f74904;mso-highlight:#FBEDE7;">CPU-only C++ tool</spa=
+n>
+</a>
+</td>
+</tr>
+<tr>
+<td style=3D"padding:10px 0;color:#000000 !important;">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3D1y1AZ1JvjisKccb1n&amp;mid=3Da19f7faa-eed4-401f-964=
+d-5ed5ef610187" style=3D"font-family:Helvetica, sans-serif;font-size:15px;l=
 ine-height:22.5px;
                      color:#000000 !important;text-decoration:none;display:=
 block;
                      mso-color-alt:windowtext;mso-style-textfill-fill-color=
 :#000000;">
-    4. New distributed algorithm steers <span style=3D"background-color:#FB=
-EDE7;color:#f74904 !important;mso-color-alt:#f74904;mso-style-textfill-fill=
--color:#f74904;mso-highlight:#FBEDE7;">multi-agent networks</span> to equil=
-ibrium without a central coordinator
-  </a>
-</td>
-</tr>
-<tr>
-<td style=3D"padding:10px 0;color:#000000 !important;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3DshD6nFoaPWroLBCY&amp;mid=3D915021ea-4ba6-4ce9-a86=
-5-cbade02d2e5a" style=3D"font-family:Helvetica, sans-serif;font-size:15px;l=
-ine-height:22.5px;
-                     color:#000000 !important;text-decoration:none;display:=
-block;
-                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
-:#000000;">
-    5. Cohere releases <span style=3D"background-color:#FBEDE7;color:#f7490=
-4 !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;ms=
-o-highlight:#FBEDE7;">open-weight 30B coding</span> model with only 3B acti=
-ve parameters
-  </a>
-</td>
-</tr>
-<tr>
-<td style=3D"padding:10px 0;color:#000000 !important;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3D1y0p3UyUq1nCAebq6&amp;mid=3D915021ea-4ba6-4ce9-a8=
-65-cbade02d2e5a" style=3D"font-family:Helvetica, sans-serif;font-size:15px;=
-line-height:22.5px;
-                     color:#000000 !important;text-decoration:none;display:=
-block;
-                     mso-color-alt:windowtext;mso-style-textfill-fill-color=
-:#000000;">
-    6. Google ships <span style=3D"background-color:#FBEDE7;color:#f74904 !=
-important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso-h=
-ighlight:#FBEDE7;">real-time audio translation</span> model covering 70+ la=
-nguages
+    6. Zhipu AI ships <span style=3D"background-color:#FBEDE7;color:#f74904=
+ !important;mso-color-alt:#f74904;mso-style-textfill-fill-color:#f74904;mso=
+-highlight:#FBEDE7;">GLM-5.2 for Go</span> with 1M token context at no extr=
+a cost
   </a>
 </td>
 </tr>
@@ -1292,7 +1269,7 @@ B;background-color:#ffffff;padding:15px 20px 20px 20px;" width=3D"100%">
              color:#000000 !important;mso-color-alt:windowtext;mso-style-te=
 xtfill-fill-color:#000000;
              padding:0 0 10px 0;">
-    Top Repo
+    Top News
     </td>
 </tr>
 <!-- Divider -->
@@ -1312,8 +1289,7 @@ line-height:22px;font-weight:bold;
            mso-style-textfill-fill-color:#000000;
            padding:0 0 5px 0;">
 <span style=3D"color:#000000 !important;text-decoration:none;">
-    Open-source tool with 13K GitHub stars auto-generates short-form videos=
- end-to-end
+    Midjourney launches a new medical imaging division
   </span>
 </td>
 </tr>
@@ -1325,14 +1301,14 @@ line-height:22px;font-weight:bold;
                   color:#f74904 !important;
                   mso-color-alt:#f74904;
                   mso-style-textfill-fill-color:#f74904;">
-          10,187 Likes
+          26,349 Likes
         </td>
 </tr>
 <!-- Feature Image -->
 <tr>
 <td style=3D"padding:0 0 10px 0;"> <!-- bottom only -->
-<img alt=3D"Open-source tool with 13K GitHub stars auto-genera" border=3D"0=
-" src=3D"https://alphasignal.ai/image/1781194326399-lyfubo.png" style=3D"di=
+<img alt=3D"Midjourney launches a new medical imaging division" border=3D"0=
+" src=3D"https://alphasignal.ai/image/1776647823920-9z8qyt.png" style=3D"di=
 splay:block;width:100%;max-width:560px;height:auto;" width=3D"560"/>
 </td>
 </tr>
@@ -1344,20 +1320,21 @@ splay:block;width:100%;max-width:560px;height:auto;" width=3D"560"/>
 ll-fill-color:#000000;
          padding:0;">
 <div style=3D"margin-top:0;">
-<p><b>MoneyPrinterTurbo</b> is an open-source tool that turns a single topi=
-c or keyword into a fully edited short video, no timeline, no manual cuts, =
-no subscriptions.</p><p>The problem it solves is real. Making a short video=
- normally means juggling five separate tools: one for scripting, one for vo=
-iceover, one for subtitles, one for stock footage, one for editing. This pr=
-oject collapses all of that into one self-hosted pipeline.</p><p>Here is wh=
-at it handles automatically:</p><ul><li><b>Script generation</b> using your=
- LLM of choice (GPT, DeepSeek, Gemini, Ollama)</li><li>AI voiceover via Edg=
-e TTS, free by default</li><li>Stock footage pulled from Pexels or Pixabay,=
- royalty-free</li><li>Subtitles with custom font, color, and position</li><=
-li>Background music, then a rendered HD video ready to post</li></ul><p>You=
- can run it via <b>Web UI, Docker, or CLI</b>. The repo has over 62K stars =
-on GitHub. The code is free. A 60-second script costs under $0.001 with GPT=
--4o-mini, Edge TTS is free, and Pexels is free at normal volumes.</p>
+<p>Midjourney, the company you know for turning text into images, just anno=
+unced <b>Midjourney Medical</b> , a full-body scanner. Nobody saw this comi=
+ng.</p><p>Here is what it actually is. You step into a pool of water. Sound=
+ waves pass through your body from every angle. <b>60 seconds later</b>, yo=
+u have a 3D map of your entire body. No radiation, no magnets, just ultraso=
+und.</p><p>The specs are wild:</p><ul><li><b>500,000 transducers</b> (tiny =
+sensors) firing sound waves through you simultaneously</li><li>17 gigabytes=
+ of data processed every second</li><li>A few dollars per scan, not hundred=
+s</li><li>First location opens in a San Francisco spa in 2027</li></ul><p>T=
+he goal is catching health problems early, before symptoms show up. Think o=
+f it like version control for your body , scan regularly, spot changes over=
+ time.</p><p>They are starting with body composition data (fat, muscle, bon=
+e density) while working toward FDA approval for full diagnostics. Midjourn=
+ey has never shipped a physical product before, so the 2027 timeline is the=
+ real test.</p>
 </div>
 </td>
 </tr>
@@ -1371,9 +1348,9 @@ le=3D"presentation">
 :Helvetica, sans-serif;font-size:16px;font-weight:bold;
                    padding:12px 12px;color:#ffffff !important;
                    border:1px solid #6B6B6B;display:block;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3DWozEiL92XtfZVpnj&amp;mid=3D915021ea-4ba6-4ce9-a86=
-5-cbade02d2e5a" style=3D"text-decoration:none;color:#ffffff !important;disp=
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3D1iXpXBWweYeDoIg5E&amp;mid=3Da19f7faa-eed4-401f-964=
+d-5ed5ef610187" style=3D"text-decoration:none;color:#ffffff !important;disp=
 lay:inline-block;font-size:16px;" target=3D"_blank">
 <span style=3D"color:#ffffff !important;">READ MORE</span>
 </a>
@@ -1388,20 +1365,19 @@ lay:inline-block;font-size:16px;" target=3D"_blank">
 n" style=3D"max-width:600px;margin:0 auto;" width=3D"100%">
 <tr>
 <td style=3D"padding:0; text-align:right;">
-<a href=3D"mailto:?subject=3DFwd%3A%20Open-source%20tool%20with%2013K%20Git=
-Hub%20stars%20auto-generates%20short-form%20videos%20end-to-end&amp;body=3D=
-Thought%20you%27d%20find%20this%20interesting%3A%0D%0A%0D%0A%22MoneyPrinter=
-Turbo%20is%20an%20open-source%20tool%20that%20turns%20a%20single%20topic%20=
-or%20keyword%20into%20a%20fully%20edited%20short%20video%2C%20no%20timeline=
-%2C%20no%20manual%20cuts%2C%20no%20subscriptions.%0D%0A%0D%0AThe%20problem%=
-20it%20solves%20is%20real.%20Making%20a%20short%20video%20normally%20means%=
-20juggling%20five%20separate%20tools%3A%20one%20for%20scripting%2C%20one%20=
-for%20voiceover%2C%20one%20for%20subtitles%2C%20one%20for%20stock%20footage=
-%2C%20one%20for%20editing.%20This%20project%20collapses...%22%0D%0A%0D%0ARe=
-ad%20it%20here%3A%20https%3A%2F%2Falphasignal.ai%2Femail%2F5cae0dc847eb915d=
-%3Futm_source%3Dforward" style=3D"text-decoration:none;color:#767676 !impor=
-tant;font-family:Helvetica, sans-serif;font-size:13px;font-style:italic;" t=
-arget=3D"_blank">
+<a href=3D"mailto:?subject=3DFwd%3A%20Midjourney%20launches%20a%20new%20med=
+ical%20imaging%20division&amp;body=3DThought%20you%27d%20find%20this%20inte=
+resting%3A%0D%0A%0D%0A%22Midjourney%2C%20the%20company%20you%20know%20for%2=
+0turning%20text%20into%20images%2C%20just%20announced%20Midjourney%20Medica=
+l%20%2C%20a%20full-body%20scanner.%20Nobody%20saw%20this%20coming.%0D%0A%0D=
+%0AHere%20is%20what%20it%20actually%20is.%20You%20step%20into%20a%20pool%20=
+of%20water.%20Sound%20waves%20pass%20through%20your%20body%20from%20every%2=
+0angle.%2060%20seconds%20later%2C%20you%20have%20a%203D%20map%20of%20your%2=
+0entire%20body.%20No%20radiation%2C%20no%20magnets%2C...%22%0D%0A%0D%0ARead=
+%20it%20here%3A%20https%3A%2F%2Falphasignal.ai%2Femail%2F5a512074041fb2d4%3=
+Futm_source%3Dforward" style=3D"text-decoration:none;color:#767676 !importa=
+nt;font-family:Helvetica, sans-serif;font-size:13px;font-style:italic;" tar=
+get=3D"_blank">
 <span style=3D"color:#767676 !important;font-style:italic;">forward =E2=86=
 =92</span>
 </a>
@@ -1420,7 +1396,7 @@ B;background-color:#ffffff;padding:15px 20px 20px 20px;" width=3D"100%">
                   color:#999999 !important;
                   mso-color-alt:#999999;
                   mso-style-textfill-fill-color:#999999;">
-          Presented by Encord
+          Presented by Vanta
         </td>
 </tr>
 <!-- Headline -->
@@ -1431,17 +1407,17 @@ line-height:22px;font-weight:bold;
            mso-style-textfill-fill-color:#000000;
            padding:0 0 5px 0;">
 <span style=3D"color:#000000 !important;text-decoration:none;">
-    Your data should work for you. Wherever you work.
+    The enterprise deal is ready. Is your SOC 2?
   </span>
 </td>
 </tr>
 <!-- Feature Image -->
 <tr>
 <td style=3D"padding:0 0 10px 0;"> <!-- bottom only -->
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3D1DLHdn7lsFH25HCqD&amp;mid=3D915021ea-4ba6-4ce9-a8=
-65-cbade02d2e5a" style=3D"text-decoration:none;" target=3D"_blank"><img alt=
-=3D"" border=3D"0" src=3D"https://alphasignal.ai/image/1781194245285-4z8k6a=
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3DfQ4yarLlX3yMF5Ql&amp;mid=3Da19f7faa-eed4-401f-964d=
+-5ed5ef610187" style=3D"text-decoration:none;" target=3D"_blank"><img alt=
+=3D"" border=3D"0" src=3D"https://alphasignal.ai/image/1781804582587-8yl2n3=
 .png" style=3D"display:block;width:100%;max-width:560px;height:auto;" width=
 =3D"560"/></a>
 </td>
@@ -1454,16 +1430,18 @@ cae0dc847eb915d&amp;lid=3D1DLHdn7lsFH25HCqD&amp;mid=3D915021ea-4ba6-4ce9-a8=
 ll-fill-color:#000000;
          padding:0;">
 <div style=3D"margin-top:0;">
-<p>Encord, <a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&=
-amp;cid=3D5cae0dc847eb915d&amp;lid=3D1DLHdn7lsFH25HCqD&amp;mid=3D915021ea-4=
-ba6-4ce9-a865-cbade02d2e5a" style=3D"color:#000000 !important;text-decorati=
-on:none;"><span style=3D"color:#000000 !important;border-bottom:1px solid #=
-f74904;display:inline;">the Data Layer for Physical AI</span></a>, is launc=
-hing an MCP for Claude and Slack that lets you build, observe, and optimise=
- your data infrastructure in a single conversation. </p><p>Configure projec=
-ts from a prompt, surface coverage gaps, and find edge cases to fix faster =
-than ever. </p><p>Join the waitlist for early access to the Agentic Intelli=
-gence Layer for Encord.</p>
+<p>The fastest-growing startups know that when customers ask for a SOC 2 re=
+port, they need to have it ready to go.=C2=A0</p><p>That's where Vanta come=
+s in. Used by over 16,000 global companies like Ramp, Cursor, and Harvey, V=
+anta helps you audit-ready quickly =E2=80=94 and stay that way.</p><p>The V=
+anta Agent runs in your background like a 24/7 GRC engineer, pulling eviden=
+ce, drafting fixes, and answering questionnaires.</p><p>Don't let complianc=
+e be the reason a deal slips. <a href=3D"https://app.alphasignal.ai/c?uid=
+=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a512074041fb2d4&amp;lid=3DfQ4yarLlX3yMF5Ql&a=
+mp;mid=3Da19f7faa-eed4-401f-964d-5ed5ef610187" style=3D"color:#000000 !impo=
+rtant;text-decoration:none;"><span style=3D"color:#000000 !important;border=
+-bottom:1px solid #f74904;display:inline;">Watch the on-demand demo</span><=
+/a> to see how Vanta works.</p>
 </div>
 </td>
 </tr>
@@ -1477,11 +1455,11 @@ le=3D"presentation">
 :Helvetica, sans-serif;font-size:16px;font-weight:bold;
                    padding:12px 12px;color:#ffffff !important;
                    border:1px solid #6B6B6B;display:block;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3D1DLHdn7lsFH25HCqD&amp;mid=3D915021ea-4ba6-4ce9-a8=
-65-cbade02d2e5a" style=3D"text-decoration:none;color:#ffffff !important;dis=
-play:inline-block;font-size:16px;" target=3D"_blank">
-<span style=3D"color:#ffffff !important;">JOIN THE WAITLIST</span>
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3DfQ4yarLlX3yMF5Ql&amp;mid=3Da19f7faa-eed4-401f-964d=
+-5ed5ef610187" style=3D"text-decoration:none;color:#ffffff !important;displ=
+ay:inline-block;font-size:16px;" target=3D"_blank">
+<span style=3D"color:#ffffff !important;">SEE IT NOW</span>
 </a>
 </td>
 </tr>
@@ -1494,9 +1472,9 @@ play:inline-block;font-size:16px;" target=3D"_blank">
 n" style=3D"max-width:600px;margin:0 auto;" width=3D"100%">
 <tr>
 <td style=3D"padding:0; text-align:right;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3D9ZRzg9ekRWKidcP4&amp;mid=3D915021ea-4ba6-4ce9-a86=
-5-cbade02d2e5a" style=3D"text-decoration:none;color:#767676 !important;font=
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3D1g8zfwqkS9VrhV96L&amp;mid=3Da19f7faa-eed4-401f-964=
+d-5ed5ef610187" style=3D"text-decoration:none;color:#767676 !important;font=
 -family:Helvetica, sans-serif;font-size:13px;font-style:italic;" target=3D"=
 _blank">
 <span style=3D"color:#767676 !important;font-style:italic;">partner with us=
@@ -1536,8 +1514,8 @@ line-height:22px;font-weight:bold;
            mso-style-textfill-fill-color:#000000;
            padding:0 0 5px 0;">
 <span style=3D"color:#000000 !important;text-decoration:none;">
-    Claude builds a playable Minecraft clone in HTML with background music =
-for $30
+    OpenCut is a free open-source video editor with 55K GitHub stars and no=
+ watermarks
   </span>
 </td>
 </tr>
@@ -1549,14 +1527,14 @@ for $30
                   color:#f74904 !important;
                   mso-color-alt:#f74904;
                   mso-style-textfill-fill-color:#f74904;">
-          5,131 Likes
+          23,605 Likes
         </td>
 </tr>
 <!-- Feature Image -->
 <tr>
 <td style=3D"padding:0 0 10px 0;"> <!-- bottom only -->
-<img alt=3D"Claude builds a playable Minecraft clone in HTML w" border=3D"0=
-" src=3D"https://alphasignal.ai/image/1781194371658-xt4h2m.png" style=3D"di=
+<img alt=3D"OpenCut is a free open-source video editor with 55" border=3D"0=
+" src=3D"https://alphasignal.ai/image/1781804734848-5ie7nm.png" style=3D"di=
 splay:block;width:100%;max-width:560px;height:auto;" width=3D"560"/>
 </td>
 </tr>
@@ -1568,20 +1546,44 @@ splay:block;width:100%;max-width:560px;height:auto;" width=3D"560"/>
 ll-fill-color:#000000;
          padding:0;">
 <div style=3D"margin-top:0;">
-<p>Someone just asked <b>Claude Fable 5</b> to build Minecraft. In a browse=
-r. From scratch. And it delivered.</p><p>The result runs entirely in HTML u=
-sing Three.js, a 3D graphics library for the browser. No assets, no images,=
- no pre-made sounds. Everything is generated on the fly, including the back=
-ground music.</p><p>Here is what got built in <b>one shot for ~$30</b>:</p>=
-<ul><li>Infinite terrain with biomes: plains, forests, deserts, snowy tundr=
-a, oceans</li><li>Caves, ore veins, day/night cycle, dynamic lighting, and =
-torches</li><li>TNT with chain reactions, block physics, and a full invento=
-ry system</li><li>Procedurally synthesized audio, including a generative am=
-bient music system</li></ul><p>The code is public on GitHub. You can clone =
-it and run it locally with <b>npm start</b>, no build step needed.</p><p>Wh=
-at this shows: Fable 5 can hold an entire complex codebase in its head and =
-ship it coherently. That opens up rapid prototyping of games, simulations, =
-and interactive tools from a single prompt.</p>
+<p>CapCut locks basic features behind a paywall, slaps watermarks on your e=
+xports, and uploads your footage to their servers. A group of devs got fed =
+up and built <b>OpenCut</b>, a fully open-source alternative that just hit =
+<b>55,000 GitHub stars</b>.</p><p>Here's what you actually get:</p><ul><li>=
+Multi-track timeline editor with real-time preview, no watermarks, no subsc=
+riptions</li><li>Runs in your browser, on desktop, and on mobile, all from =
+one codebase</li><li>Your files never leave your device, everything is stor=
+ed locally</li><li><b>MCP Server</b> built in, meaning you can connect AI a=
+gents to automate editing tasks</li><li>MIT license, so you can fork it, mo=
+dify it, ship it in your own product</li></ul><p>The current version works =
+today. A full rewrite in <b>Rust</b> (a faster, lower-level language) is in=
+ progress, adding a plugin system and scripting support.</p><p>To try it: c=
+lone the repo, run=20
+<pre style=3D"
+    margin:0;
+    font-size:13px;
+    font-family:'SF Mono';
+    background-
+    border:1px solid #2A2A2A;
+   =20
+    overflow:auto;
+    padding:16px;
+    line-height:1.38;
+"><code><span>bun</span>=C2=A0<span>install</span><br/></code></pre>
+, then=20
+<pre style=3D"
+    margin:0;
+    font-size:13px;
+    font-family:'SF Mono';
+    background-
+    border:1px solid #2A2A2A;
+   =20
+    overflow:auto;
+    padding:16px;
+    line-height:1.38;
+"><code><span>bun</span>=C2=A0<span>run</span>=C2=A0<span>dev</span><br/></=
+code></pre>
+. Done.</p>
 </div>
 </td>
 </tr>
@@ -1595,10 +1597,10 @@ le=3D"presentation">
 :Helvetica, sans-serif;font-size:16px;font-weight:bold;
                    padding:12px 12px;color:#ffffff !important;
                    border:1px solid #6B6B6B;display:block;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3D1fGQ4ScuIxSw0viOo&amp;mid=3D915021ea-4ba6-4ce9-a8=
-65-cbade02d2e5a" style=3D"text-decoration:none;color:#ffffff !important;dis=
-play:inline-block;font-size:16px;" target=3D"_blank">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3DjgK8q2gQbTQYvHHL&amp;mid=3Da19f7faa-eed4-401f-964d=
+-5ed5ef610187" style=3D"text-decoration:none;color:#ffffff !important;displ=
+ay:inline-block;font-size:16px;" target=3D"_blank">
 <span style=3D"color:#ffffff !important;">READ MORE</span>
 </a>
 </td>
@@ -1612,20 +1614,20 @@ play:inline-block;font-size:16px;" target=3D"_blank">
 n" style=3D"max-width:600px;margin:0 auto;" width=3D"100%">
 <tr>
 <td style=3D"padding:0; text-align:right;">
-<a href=3D"mailto:?subject=3DFwd%3A%20Claude%20builds%20a%20playable%20Mine=
-craft%20clone%20in%20HTML%20with%20background%20music%20for%20%2430&amp;bod=
-y=3DThought%20you%27d%20find%20this%20interesting%3A%0D%0A%0D%0A%22Someone%=
-20just%20asked%20Claude%20Fable%205%20to%20build%20Minecraft.%20In%20a%20br=
-owser.%20From%20scratch.%20And%20it%20delivered.%0D%0A%0D%0AThe%20result%20=
-runs%20entirely%20in%20HTML%20using%20Three.js%2C%20a%203D%20graphics%20lib=
-rary%20for%20the%20browser.%20No%20assets%2C%20no%20images%2C%20no%20pre-ma=
-de%20sounds.%20Everything%20is%20generated%20on%20the%20fly%2C%20including%=
-20the%20background%20music.%0D%0A%0D%0AHere%20is%20what%20got%20built%20in%=
-20one%20shot%20for%20~%2430%3A%0D%0A%0D%0AInfinite...%22%0D%0A%0D%0ARead%20=
-it%20here%3A%20https%3A%2F%2Falphasignal.ai%2Femail%2F5cae0dc847eb915d%3Fut=
-m_source%3Dforward" style=3D"text-decoration:none;color:#767676 !important;=
-font-family:Helvetica, sans-serif;font-size:13px;font-style:italic;" target=
-=3D"_blank">
+<a href=3D"mailto:?subject=3DFwd%3A%20OpenCut%20is%20a%20free%20open-source=
+%20video%20editor%20with%2055K%20GitHub%20stars%20and%20no%20watermarks&amp=
+;body=3DThought%20you%27d%20find%20this%20interesting%3A%0D%0A%0D%0A%22CapC=
+ut%20locks%20basic%20features%20behind%20a%20paywall%2C%20slaps%20watermark=
+s%20on%20your%20exports%2C%20and%20uploads%20your%20footage%20to%20their%20=
+servers.%20A%20group%20of%20devs%20got%20fed%20up%20and%20built%20OpenCut%2=
+C%20a%20fully%20open-source%20alternative%20that%20just%20hit%2055%2C000%20=
+GitHub%20stars.%0D%0A%0D%0AHere%27s%20what%20you%20actually%20get%3A%0D%0A%=
+0D%0AMulti-track%20timeline%20editor%20with%20real-time%20preview%2C%20no%2=
+0watermarks%2C%20no%20subscriptions%0D%0A%0D%0ARuns%20in%20your%20browser%2=
+C%20on%20desktop%2C...%22%0D%0A%0D%0ARead%20it%20here%3A%20https%3A%2F%2Fal=
+phasignal.ai%2Femail%2F5a512074041fb2d4%3Futm_source%3Dforward" style=3D"te=
+xt-decoration:none;color:#767676 !important;font-family:Helvetica, sans-ser=
+if;font-size:13px;font-style:italic;" target=3D"_blank">
 <span style=3D"color:#767676 !important;font-style:italic;">forward =E2=86=
 =92</span>
 </a>
@@ -1644,7 +1646,7 @@ B;background-color:#ffffff;padding:15px 20px 20px 20px;" width=3D"100%">
                   color:#999999 !important;
                   mso-color-alt:#999999;
                   mso-style-textfill-fill-color:#999999;">
-          Presented by Teleport
+          Presented by AWS
         </td>
 </tr>
 <!-- Headline -->
@@ -1655,17 +1657,17 @@ line-height:22px;font-weight:bold;
            mso-style-textfill-fill-color:#000000;
            padding:0 0 5px 0;">
 <span style=3D"color:#000000 !important;text-decoration:none;">
-    This decreases AI security incidents by 4.5x
+    Two days of agentic AI at AWS Summit DC
   </span>
 </td>
 </tr>
 <!-- Feature Image -->
 <tr>
 <td style=3D"padding:0 0 10px 0;"> <!-- bottom only -->
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3DzGtIt28WhwqVz2I3&amp;mid=3D915021ea-4ba6-4ce9-a86=
-5-cbade02d2e5a" style=3D"text-decoration:none;" target=3D"_blank"><img alt=
-=3D"" border=3D"0" src=3D"https://alphasignal.ai/image/1781194246946-pcp3r9=
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3DWgBjDx8aJLWFeu0x&amp;mid=3Da19f7faa-eed4-401f-964d=
+-5ed5ef610187" style=3D"text-decoration:none;" target=3D"_blank"><img alt=
+=3D"" border=3D"0" src=3D"https://alphasignal.ai/image/1781804583848-mm8s9y=
 .png" style=3D"display:block;width:100%;max-width:560px;height:auto;" width=
 =3D"560"/></a>
 </td>
@@ -1678,15 +1680,16 @@ cae0dc847eb915d&amp;lid=3DzGtIt28WhwqVz2I3&amp;mid=3D915021ea-4ba6-4ce9-a86=
 ll-fill-color:#000000;
          padding:0;">
 <div style=3D"margin-top:0;">
-<p>Organizations see 4.5x fewer security incidents when agents operate with=
- least-privileged access.=C2=A0</p><p><a href=3D"https://app.alphasignal.ai=
-/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5cae0dc847eb915d&amp;lid=3DzGtIt28Whwq=
-Vz2I3&amp;mid=3D915021ea-4ba6-4ce9-a865-cbade02d2e5a" style=3D"color:#00000=
-0 !important;text-decoration:none;"><span style=3D"color:#000000 !important=
-;border-bottom:1px solid #f74904;display:inline;">Teleport</span></a> gives=
- every AI agent a cryptographic identity with short-lived, least-privileged=
- access and full auditability, eliminating the risks of shared accounts and=
- standing privileges.</p>
+<p><a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=
+=3D5a512074041fb2d4&amp;lid=3DWgBjDx8aJLWFeu0x&amp;mid=3Da19f7faa-eed4-401f=
+-964d-5ed5ef610187" style=3D"color:#000000 !important;text-decoration:none;=
+"><span style=3D"color:#000000 !important;border-bottom:1px solid #f74904;d=
+isplay:inline;">AWS Summit Washington</span></a>, DC runs June 30=E2=80=93J=
+uly 1 at Walter E. Washington Convention Center:</p><ul><li>350+ sessions a=
+cross agentic AI, AI infrastructure, and modernization.</li><li>Real produc=
+tion builds, not slideware.</li><li>Keynote from Dave Levy, VP, Worldwide P=
+ublic Sector.</li><li>Hands-on labs and direct access to AWS engineers.</li=
+></ul>
 </div>
 </td>
 </tr>
@@ -1700,11 +1703,11 @@ le=3D"presentation">
 :Helvetica, sans-serif;font-size:16px;font-weight:bold;
                    padding:12px 12px;color:#ffffff !important;
                    border:1px solid #6B6B6B;display:block;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3DzGtIt28WhwqVz2I3&amp;mid=3D915021ea-4ba6-4ce9-a86=
-5-cbade02d2e5a" style=3D"text-decoration:none;color:#ffffff !important;disp=
-lay:inline-block;font-size:16px;" target=3D"_blank">
-<span style=3D"color:#ffffff !important;">READY TO TELEPORT?</span>
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3DWgBjDx8aJLWFeu0x&amp;mid=3Da19f7faa-eed4-401f-964d=
+-5ed5ef610187" style=3D"text-decoration:none;color:#ffffff !important;displ=
+ay:inline-block;font-size:16px;" target=3D"_blank">
+<span style=3D"color:#ffffff !important;">REGISTER HERE</span>
 </a>
 </td>
 </tr>
@@ -1717,9 +1720,9 @@ lay:inline-block;font-size:16px;" target=3D"_blank">
 n" style=3D"max-width:600px;margin:0 auto;" width=3D"100%">
 <tr>
 <td style=3D"padding:0; text-align:right;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3D9ZRzg9ekRWKidcP4&amp;mid=3D915021ea-4ba6-4ce9-a86=
-5-cbade02d2e5a" style=3D"text-decoration:none;color:#767676 !important;font=
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3D1g8zfwqkS9VrhV96L&amp;mid=3Da19f7faa-eed4-401f-964=
+d-5ed5ef610187" style=3D"text-decoration:none;color:#767676 !important;font=
 -family:Helvetica, sans-serif;font-size:13px;font-style:italic;" target=3D"=
 _blank">
 <span style=3D"color:#767676 !important;font-style:italic;">partner with us=
@@ -1739,7 +1742,7 @@ B;background-color:#ffffff;padding:15px 20px 20px 20px;" width=3D"100%">
              color:#000000 !important;mso-color-alt:windowtext;mso-style-te=
 xtfill-fill-color:#000000;
              padding:0 0 10px 0;">
-    Top Repo
+    Top News
     </td>
 </tr>
 <!-- Divider -->
@@ -1759,8 +1762,8 @@ line-height:22px;font-weight:bold;
            mso-style-textfill-fill-color:#000000;
            padding:0 0 5px 0;">
 <span style=3D"color:#000000 !important;text-decoration:none;">
-    Leaked Anthropic system prompt reveals Claude Fable 5 and new Mythos mo=
-del tier
+    Anthropic launches Claude Design to build UIs using your real design sy=
+stem
   </span>
 </td>
 </tr>
@@ -1772,14 +1775,14 @@ del tier
                   color:#f74904 !important;
                   mso-color-alt:#f74904;
                   mso-style-textfill-fill-color:#f74904;">
-          4,492 Likes
+          13,223 Likes
         </td>
 </tr>
 <!-- Feature Image -->
 <tr>
 <td style=3D"padding:0 0 10px 0;"> <!-- bottom only -->
-<img alt=3D"Leaked Anthropic system prompt reveals Claude Fabl" border=3D"0=
-" src=3D"https://alphasignal.ai/image/1781194418570-ftt4k8.png" style=3D"di=
+<img alt=3D"Anthropic launches Claude Design to build UIs usin" border=3D"0=
+" src=3D"https://alphasignal.ai/image/1781804923812-a6ixl1.png" style=3D"di=
 splay:block;width:100%;max-width:560px;height:auto;" width=3D"560"/>
 </td>
 </tr>
@@ -1791,21 +1794,20 @@ splay:block;width:100%;max-width:560px;height:auto;" width=3D"560"/>
 ll-fill-color:#000000;
          padding:0;">
 <div style=3D"margin-top:0;">
-<p>Someone just leaked the internal system prompt for <b>Claude Fable 5</b>=
-, Anthropic's newest model, and it reveals a lot about how the product actu=
-ally works under the hood.</p><p>Here's what's actually interesting for you=
-:</p><ul><li><b>New model tier called Mythos-class</b> sits above Opus. Fab=
-le 5 and Mythos 5 share the same base model, but Mythos drops safety restri=
-ctions for approved orgs only.</li><li><b>Artifacts now have persistent sto=
-rage</b> across sessions using a key-value API. You can build journals, lea=
-derboards, and trackers that actually remember data between chats.</li><li>=
-<b>Claude Code, Claude Cowork, and browser/Excel/PowerPoint agents</b> are =
-all listed as real products you can use today.</li><li>The model can switch=
- mid-conversation, so previous messages from a different model version are =
-still valid.</li></ul><p>The storage API is the most useful thing here. You=
- can now build stateful mini-apps inside Claude artifacts without any backe=
-nd. That opens up real lightweight tooling without spinning up a server.</p=
->
+<p><b>Claude Design</b> just got a big update, and the core idea is simple:=
+ stop letting AI invent your brand from scratch every time.</p><p>The old p=
+roblem? You'd prompt Claude Design to build a UI, and it would make up its =
+own buttons, colors, and spacing. Every project looked slightly different. =
+Now you can import your actual design system from a GitHub repo, a design f=
+ile, or a raw upload. <b>Claude builds with your real components</b>, then =
+checks its own output against your system before you even see it.</p><p>Her=
+e's what's new and worth knowing:</p><ul><li>Import your design system once=
+, stay on brand across every project</li><li>Edit directly on the canvas by=
+ dragging, resizing, and aligning elements</li><li>Use <b>/design-sync</b> =
+in Claude Code to pull your design system into your terminal workflow</li><=
+li>Export to PDF, PowerPoint, Canva, Vercel, and more</li><li>Shared usage =
+limits with Claude Code, so less quota burn</li></ul><p>Find it at claude.a=
+i/design on any paid plan.</p>
 </div>
 </td>
 </tr>
@@ -1819,10 +1821,10 @@ le=3D"presentation">
 :Helvetica, sans-serif;font-size:16px;font-weight:bold;
                    padding:12px 12px;color:#ffffff !important;
                    border:1px solid #6B6B6B;display:block;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3DPDAOKnMKuVoRq7gG&amp;mid=3D915021ea-4ba6-4ce9-a86=
-5-cbade02d2e5a" style=3D"text-decoration:none;color:#ffffff !important;disp=
-lay:inline-block;font-size:16px;" target=3D"_blank">
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3DidB5oqk6zEE14WSd&amp;mid=3Da19f7faa-eed4-401f-964d=
+-5ed5ef610187" style=3D"text-decoration:none;color:#ffffff !important;displ=
+ay:inline-block;font-size:16px;" target=3D"_blank">
 <span style=3D"color:#ffffff !important;">READ MORE</span>
 </a>
 </td>
@@ -1836,20 +1838,19 @@ lay:inline-block;font-size:16px;" target=3D"_blank">
 n" style=3D"max-width:600px;margin:0 auto;" width=3D"100%">
 <tr>
 <td style=3D"padding:0; text-align:right;">
-<a href=3D"mailto:?subject=3DFwd%3A%20Leaked%20Anthropic%20system%20prompt%=
-20reveals%20Claude%20Fable%205%20and%20new%20Mythos%20model%20tier&amp;body=
-=3DThought%20you%27d%20find%20this%20interesting%3A%0D%0A%0D%0A%22Someone%2=
-0just%20leaked%20the%20internal%20system%20prompt%20for%20Claude%20Fable%20=
-5%2C%20Anthropic%27s%20newest%20model%2C%20and%20it%20reveals%20a%20lot%20a=
-bout%20how%20the%20product%20actually%20works%20under%20the%20hood.%0D%0A%0=
-D%0AHere%27s%20what%27s%20actually%20interesting%20for%20you%3A%0D%0A%0D%0A=
-New%20model%20tier%20called%20Mythos-class%20sits%20above%20Opus.%20Fable%2=
-05%20and%20Mythos%205%20share%20the%20same%20base%20model%2C%20but%20Mythos=
-%20drops%20safety%20restrictions%20for%20approved%20orgs...%22%0D%0A%0D%0AR=
-ead%20it%20here%3A%20https%3A%2F%2Falphasignal.ai%2Femail%2F5cae0dc847eb915=
-d%3Futm_source%3Dforward" style=3D"text-decoration:none;color:#767676 !impo=
-rtant;font-family:Helvetica, sans-serif;font-size:13px;font-style:italic;" =
-target=3D"_blank">
+<a href=3D"mailto:?subject=3DFwd%3A%20Anthropic%20launches%20Claude%20Desig=
+n%20to%20build%20UIs%20using%20your%20real%20design%20system&amp;body=3DTho=
+ught%20you%27d%20find%20this%20interesting%3A%0D%0A%0D%0A%22Claude%20Design=
+%20just%20got%20a%20big%20update%2C%20and%20the%20core%20idea%20is%20simple=
+%3A%20stop%20letting%20AI%20invent%20your%20brand%20from%20scratch%20every%=
+20time.%0D%0A%0D%0AThe%20old%20problem%3F%20You%27d%20prompt%20Claude%20Des=
+ign%20to%20build%20a%20UI%2C%20and%20it%20would%20make%20up%20its%20own%20b=
+uttons%2C%20colors%2C%20and%20spacing.%20Every%20project%20looked%20slightl=
+y%20different.%20Now%20you%20can%20import%20your%20actual%20design%20system=
+%20from%20a...%22%0D%0A%0D%0ARead%20it%20here%3A%20https%3A%2F%2Falphasigna=
+l.ai%2Femail%2F5a512074041fb2d4%3Futm_source%3Dforward" style=3D"text-decor=
+ation:none;color:#767676 !important;font-family:Helvetica, sans-serif;font-=
+size:13px;font-style:italic;" target=3D"_blank">
 <span style=3D"color:#767676 !important;font-style:italic;">forward =E2=86=
 =92</span>
 </a>
@@ -1903,24 +1904,24 @@ nt;
 t;
                            mso-style-textfill-fill-color:#000000;
                            margin:0;padding:0 0 5px 0;">
-<a class=3D"h1" href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrO=
-O&amp;cid=3D5cae0dc847eb915d&amp;lid=3D178v0tFAt6BJm69bJ&amp;mid=3D915021ea=
--4ba6-4ce9-a865-cbade02d2e5a" style=3D"font-family:Helvetica,Arial,sans-ser=
-if;
+<a class=3D"h1" href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE=
+&amp;cid=3D5a512074041fb2d4&amp;lid=3DKgypVt5AdgqlYLaa&amp;mid=3Da19f7faa-e=
+ed4-401f-964d-5ed5ef610187" style=3D"font-family:Helvetica,Arial,sans-serif=
+;
                             font-size:16px !important;font-weight:bold;line=
 -height:22.5px;
                             color:#000000 !important;mso-color-alt:windowte=
 xt;
                             text-decoration:none;display:block;margin:0;">
-                    Claude designs a full humanoid robot CAD model using 1.=
-4M tokens
+                    xAI ships image-to-video model with sharper realism and=
+ better physics
                   </a>
 </td>
 </tr>
 <tr><td><span style=3D"font-family:system-ui,-apple-system,BlinkMacSystemFo=
 nt,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f74904;font-weight:6=
-00;font-size:13px;line-height:22.5px;margin:0;padding:0;display:block;">3,3=
-75 Likes</span></td></tr>
+00;font-size:13px;line-height:22.5px;margin:0;padding:0;display:block;">11,=
+631 Likes</span></td></tr>
 </table>
 <!--[if mso]></td></tr></table><![endif]-->
 </td>
@@ -1954,24 +1955,24 @@ nt;
 t;
                            mso-style-textfill-fill-color:#000000;
                            margin:0;padding:0 0 5px 0;">
-<a class=3D"h1" href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrO=
-O&amp;cid=3D5cae0dc847eb915d&amp;lid=3D1cY45aBXvEkzC7ReT&amp;mid=3D915021ea=
--4ba6-4ce9-a865-cbade02d2e5a" style=3D"font-family:Helvetica,Arial,sans-ser=
-if;
+<a class=3D"h1" href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE=
+&amp;cid=3D5a512074041fb2d4&amp;lid=3D1wmLR5wvTNuYsO3eI&amp;mid=3Da19f7faa-=
+eed4-401f-964d-5ed5ef610187" style=3D"font-family:Helvetica,Arial,sans-seri=
+f;
                             font-size:16px !important;font-weight:bold;line=
 -height:22.5px;
                             color:#000000 !important;mso-color-alt:windowte=
 xt;
                             text-decoration:none;display:block;margin:0;">
-                    Bring your Sentry issues into Cursor and let Seer trace=
- the root cause
+                    Stale data is a silent agent killer. TimescaleDB keeps =
+your data fresh for real-time Al decisions
                   </a>
 </td>
 </tr>
 <tr><td><span style=3D"font-family:system-ui,-apple-system,BlinkMacSystemFo=
 nt,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#999999;font-weight:6=
 00;font-size:13px;line-height:22.5px;margin:0;padding:0;display:block;">Pre=
-sented by Sentry</span></td></tr>
+sented by Tiger Data</span></td></tr>
 </table>
 <!--[if mso]></td></tr></table><![endif]-->
 </td>
@@ -2005,24 +2006,24 @@ nt;
 t;
                            mso-style-textfill-fill-color:#000000;
                            margin:0;padding:0 0 5px 0;">
-<a class=3D"h1" href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrO=
-O&amp;cid=3D5cae0dc847eb915d&amp;lid=3DyKqYJQfDtLpE3qjH&amp;mid=3D915021ea-=
-4ba6-4ce9-a865-cbade02d2e5a" style=3D"font-family:Helvetica,Arial,sans-seri=
-f;
+<a class=3D"h1" href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE=
+&amp;cid=3D5a512074041fb2d4&amp;lid=3DjTHUIpeJBtwPYQvo&amp;mid=3Da19f7faa-e=
+ed4-401f-964d-5ed5ef610187" style=3D"font-family:Helvetica,Arial,sans-serif=
+;
                             font-size:16px !important;font-weight:bold;line=
 -height:22.5px;
                             color:#000000 !important;mso-color-alt:windowte=
 xt;
                             text-decoration:none;display:block;margin:0;">
-                    Microsoft opens free 12-week machine learning course wi=
-th 26 lessons and 52 quizzes
+                    Zero to Mastery releases free open-source ML course wit=
+h 10 hours on YouTube
                   </a>
 </td>
 </tr>
 <tr><td><span style=3D"font-family:system-ui,-apple-system,BlinkMacSystemFo=
 nt,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f74904;font-weight:6=
-00;font-size:13px;line-height:22.5px;margin:0;padding:0;display:block;">86,=
-627 Stars</span></td></tr>
+00;font-size:13px;line-height:22.5px;margin:0;padding:0;display:block;">5,6=
+81 Stars</span></td></tr>
 </table>
 <!--[if mso]></td></tr></table><![endif]-->
 </td>
@@ -2056,24 +2057,24 @@ nt;
 t;
                            mso-style-textfill-fill-color:#000000;
                            margin:0;padding:0 0 5px 0;">
-<a class=3D"h1" href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrO=
-O&amp;cid=3D5cae0dc847eb915d&amp;lid=3De89020E8ap4l7rhP&amp;mid=3D915021ea-=
-4ba6-4ce9-a865-cbade02d2e5a" style=3D"font-family:Helvetica,Arial,sans-seri=
+<a class=3D"h1" href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE=
+&amp;cid=3D5a512074041fb2d4&amp;lid=3D1B0LdyQ66eNvbAucX&amp;mid=3Da19f7faa-=
+eed4-401f-964d-5ed5ef610187" style=3D"font-family:Helvetica,Arial,sans-seri=
 f;
                             font-size:16px !important;font-weight:bold;line=
 -height:22.5px;
                             color:#000000 !important;mso-color-alt:windowte=
 xt;
                             text-decoration:none;display:block;margin:0;">
-                    New distributed algorithm steers multi-agent networks t=
-o equilibrium without a central coordinator
+                    MIT method trains RNNs in parallel without backpropagat=
+ion through time
                   </a>
 </td>
 </tr>
 <tr><td><span style=3D"font-family:system-ui,-apple-system,BlinkMacSystemFo=
 nt,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f74904;font-weight:6=
-00;font-size:13px;line-height:22.5px;margin:0;padding:0;display:block;">Mus=
-t Read</span></td></tr>
+00;font-size:13px;line-height:22.5px;margin:0;padding:0;display:block;">759=
+ Likes</span></td></tr>
 </table>
 <!--[if mso]></td></tr></table><![endif]-->
 </td>
@@ -2107,24 +2108,24 @@ nt;
 t;
                            mso-style-textfill-fill-color:#000000;
                            margin:0;padding:0 0 5px 0;">
-<a class=3D"h1" href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrO=
-O&amp;cid=3D5cae0dc847eb915d&amp;lid=3DshD6nFoaPWroLBCY&amp;mid=3D915021ea-=
-4ba6-4ce9-a865-cbade02d2e5a" style=3D"font-family:Helvetica,Arial,sans-seri=
-f;
+<a class=3D"h1" href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE=
+&amp;cid=3D5a512074041fb2d4&amp;lid=3DjP9kvEOgYnTa7f0i&amp;mid=3Da19f7faa-e=
+ed4-401f-964d-5ed5ef610187" style=3D"font-family:Helvetica,Arial,sans-serif=
+;
                             font-size:16px !important;font-weight:bold;line=
 -height:22.5px;
                             color:#000000 !important;mso-color-alt:windowte=
 xt;
                             text-decoration:none;display:block;margin:0;">
-                    Cohere releases open-weight 30B coding model with only =
-3B active parameters
+                    LocalAI ships ByteDance depth model as a fast, CPU-only=
+ C++ tool
                   </a>
 </td>
 </tr>
 <tr><td><span style=3D"font-family:system-ui,-apple-system,BlinkMacSystemFo=
 nt,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f74904;font-weight:6=
-00;font-size:13px;line-height:22.5px;margin:0;padding:0;display:block;">29 =
-Downloads</span></td></tr>
+00;font-size:13px;line-height:22.5px;margin:0;padding:0;display:block;">144=
+ Downloads</span></td></tr>
 </table>
 <!--[if mso]></td></tr></table><![endif]-->
 </td>
@@ -2158,24 +2159,24 @@ nt;
 t;
                            mso-style-textfill-fill-color:#000000;
                            margin:0;padding:0 0 5px 0;">
-<a class=3D"h1" href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrO=
-O&amp;cid=3D5cae0dc847eb915d&amp;lid=3D1y0p3UyUq1nCAebq6&amp;mid=3D915021ea=
--4ba6-4ce9-a865-cbade02d2e5a" style=3D"font-family:Helvetica,Arial,sans-ser=
-if;
+<a class=3D"h1" href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE=
+&amp;cid=3D5a512074041fb2d4&amp;lid=3D1y1AZ1JvjisKccb1n&amp;mid=3Da19f7faa-=
+eed4-401f-964d-5ed5ef610187" style=3D"font-family:Helvetica,Arial,sans-seri=
+f;
                             font-size:16px !important;font-weight:bold;line=
 -height:22.5px;
                             color:#000000 !important;mso-color-alt:windowte=
 xt;
                             text-decoration:none;display:block;margin:0;">
-                    Google ships real-time audio translation model covering=
- 70+ languages
+                    Zhipu AI ships GLM-5.2 for Go with 1M token context at =
+no extra cost
                   </a>
 </td>
 </tr>
 <tr><td><span style=3D"font-family:system-ui,-apple-system,BlinkMacSystemFo=
 nt,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f74904;font-weight:6=
-00;font-size:13px;line-height:22.5px;margin:0;padding:0;display:block;">3,1=
-21 Likes</span></td></tr>
+00;font-size:13px;line-height:22.5px;margin:0;padding:0;display:block;">5,9=
+76 Likes</span></td></tr>
 </table>
 <!--[if mso]></td></tr></table><![endif]-->
 </td>
@@ -2262,9 +2263,9 @@ ial, sans-serif;font-size:16px;line-height:20px;
                                font-weight:bold;padding:12px 12px;color:#ff=
 ffff !important;
                                border:1px solid #6B6B6B;display:block;">
-<a href=3D"https://app.alphasignal.ai/c?uid=3D1rbQTN73dcamvOrOO&amp;cid=3D5=
-cae0dc847eb915d&amp;lid=3D9ZRzg9ekRWKidcP4&amp;mid=3D915021ea-4ba6-4ce9-a86=
-5-cbade02d2e5a" style=3D"color:#ffffff !important;text-decoration:none;disp=
+<a href=3D"https://app.alphasignal.ai/c?uid=3D62BeSDVQ4qzjV6ZE&amp;cid=3D5a=
+512074041fb2d4&amp;lid=3D1g8zfwqkS9VrhV96L&amp;mid=3Da19f7faa-eed4-401f-964=
+d-5ed5ef610187" style=3D"color:#ffffff !important;text-decoration:none;disp=
 lay:inline-block;" target=3D"_blank">
                         WORK WITH US
                       </a>
@@ -2293,9 +2294,9 @@ ound-color:#ffffff;" width=3D"100%">
 <!-- Buttons -->
 <div style=3D"font-family:Helvetica, Arial, sans-serif;font-size:16px;line-=
 height:22px;">
-<a class=3D"feedback-btn" href=3D"https://app.alphasignal.ai/fb/1rbQTN73dca=
-mvOrOO?cid=3D5cae0dc847eb915d&amp;feedback=3DAwesome" style=3D"display:inli=
-ne-block;
+<a class=3D"feedback-btn" href=3D"https://app.alphasignal.ai/fb/62BeSDVQ4qz=
+jV6ZE?cid=3D5a512074041fb2d4&amp;feedback=3DAwesome" style=3D"display:inlin=
+e-block;
                       text-decoration:none;
                       color:#000000;
                       border:1px solid #6B6B6B;
@@ -2303,9 +2304,9 @@ ne-block;
                       margin:0 6px;" target=3D"_blank">
               Awesome
             </a>
-<a class=3D"feedback-btn" href=3D"https://app.alphasignal.ai/fb/1rbQTN73dca=
-mvOrOO?cid=3D5cae0dc847eb915d&amp;feedback=3DDecent" style=3D"display:inlin=
-e-block;
+<a class=3D"feedback-btn" href=3D"https://app.alphasignal.ai/fb/62BeSDVQ4qz=
+jV6ZE?cid=3D5a512074041fb2d4&amp;feedback=3DDecent" style=3D"display:inline=
+-block;
                       text-decoration:none;
                       color:#000000;
                       border:1px solid #6B6B6B;
@@ -2314,8 +2315,8 @@ e-block;
               Decent
             </a>
 <a class=3D"feedback-btn feedback-btn-last" href=3D"https://app.alphasignal=
-.ai/fb/1rbQTN73dcamvOrOO?cid=3D5cae0dc847eb915d&amp;feedback=3DNot%20Great"=
- style=3D"display:inline-block;
+.ai/fb/62BeSDVQ4qzjV6ZE?cid=3D5a512074041fb2d4&amp;feedback=3DNot%20Great" =
+style=3D"display:inline-block;
                       text-decoration:none;
                       color:#000000;
                       border:1px solid #6B6B6B;
@@ -2333,8 +2334,8 @@ n" style=3D"max-width:600px;margin:auto;" width=3D"100%">
 <tr>
 <td align=3D"center" style=3D"padding:20px 10px;">
 <!-- Unsubscribe -->
-<a href=3D"https://app.alphasignal.ai/unsubscribe/u/1rbQTN73dcamvOrOO?cid=
-=3D5cae0dc847eb915d" style=3D"font-family:system-ui;
+<a href=3D"https://app.alphasignal.ai/unsubscribe/u/62BeSDVQ4qzjV6ZE?cid=3D=
+5a512074041fb2d4" style=3D"font-family:system-ui;
                     font-size:14px;line-height:20px;
                     text-decoration:none;color:#f74904 !important;
                     mso-color-alt:#f74904;
@@ -2354,4 +2355,4 @@ k">
 </tr>
 </table>
 </body></html>
-------=_Part_1905123_1953859381.1781199195100--
+------=_Part_441169_2136910891.1781812272433--

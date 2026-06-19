@@ -6,6 +6,7 @@ import { LoaderCircle, Search } from "lucide-react";
 
 import { DigestCard } from "@/components/digest-card";
 import { DigestDetailSheet } from "@/components/digest-detail-sheet";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Input } from "@/components/ui/input";
 import { fetcher, type Digest, type DigestTopic, type Status } from "@/lib/api";
 
@@ -53,7 +54,10 @@ export function DigestCardList() {
   return (
     <section className="w-full max-w-6xl space-y-4">
       <header className="space-y-1.5">
-        <h1 className="font-heading text-lg font-medium">Hedwig</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="font-heading text-lg font-medium">Hedwig</h1>
+          <ThemeToggle />
+        </div>
         <div className="flex items-baseline justify-between gap-4">
           <p className="text-xs text-muted-foreground">
             AI-powered newsletter intelligence

@@ -2,16 +2,15 @@
 
 import { useMemo, useState, type ReactNode } from "react";
 import useSWR from "swr";
-import { LoaderCircle, RefreshCw, Search } from "lucide-react";
+import { LoaderCircle, Search } from "lucide-react";
 
 import { DigestCard } from "@/components/digest-card";
 import { DigestDetailSheet } from "@/components/digest-detail-sheet";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { fetcher, type Digest, type DigestTopic } from "@/lib/api";
 
 export function DigestCardList() {
-  const { data, error, isLoading, mutate } = useSWR<Digest[]>(
+  const { data, error, isLoading } = useSWR<Digest[]>(
     "/digests",
     fetcher,
   );
@@ -49,12 +48,7 @@ export function DigestCardList() {
         </p>
       </header>
 
-      <FilterBar
-        filter={filter}
-        onFilterChange={setFilter}
-        onRefresh={() => mutate()}
-        isRefreshing={isLoading}
-      />
+      <FilterBar filter={filter} onFilterChange={setFilter} />
 
       <ListState
         isLoading={isLoading}
@@ -96,13 +90,9 @@ export function DigestCardList() {
 function FilterBar({
   filter,
   onFilterChange,
-  onRefresh,
-  isRefreshing,
 }: {
   filter: string;
   onFilterChange: (value: string) => void;
-  onRefresh: () => void;
-  isRefreshing: boolean;
 }) {
   return (
     <div className="flex items-center gap-2">
@@ -117,15 +107,6 @@ function FilterBar({
           aria-label="Filter topics by label"
         />
       </div>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={onRefresh}
-        disabled={isRefreshing}
-      >
-        <RefreshCw className={isRefreshing ? "animate-spin" : undefined} />
-        Refresh
-      </Button>
     </div>
   );
 }
@@ -157,8 +138,8 @@ function ListState({
   if (error) {
     return (
       <div className="py-12 text-sm text-destructive">
-        Could not load digests. Check that the backend is running and try
-        Refresh.
+        Could not load digests. Check that the backend is running and reload
+        the page.
       </div>
     );
   }
@@ -166,7 +147,7 @@ function ListState({
   if (!hasDigests) {
     return (
       <div className="py-12 text-sm text-muted-foreground">
-        No digests yet. Generate one and click Refresh.
+        No digests yet. Generate one and reload the page.
       </div>
     );
   }

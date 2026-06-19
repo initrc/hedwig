@@ -1,31 +1,33 @@
 """Split long newsletter text into overlapping chunks for embedding.
 
-Chunking is the first place where retrieval quality is won or lost.  Chunks that
-are too large bury the answer inside a wall of text the retriever can't
+Chunking is the first place where retrieval quality is won or lost.  Chunks
+that are too large bury the answer inside a wall of text the retriever can't
 pinpoint; chunks that are too small lose the context the LLM needs to understand
-the question.  The constants below are tuned for newsletter prose — a few
-paragraphs of financial or tech writing at a time.
+the question.
 
-Why 512 tokens (~2048 characters) with 64 tokens (~256 characters) of overlap:
-
-- 512 tokens holds 2–4 paragraphs of typical newsletter text.  That is enough
-  context for the LLM to understand a claim and cite it, but small enough that a
-  similarity search returns the *specific* passage that answers the question
-  rather than a whole article.
-- 64 tokens of overlap keeps a sentence from being cut exactly at the boundary
-  between two chunks.  If a key sentence straddles the cut, it appears intact in
-  both chunks, so the retriever can still find it in at least one.
+The sample newsletters (AlphaSignal, Superhuman) arrive as one dense block of
+prose with no blank-line paragraph breaks, so the paragraph splitter below
+rarely fires and chunks fill to `CHUNK_SIZE` off sentence boundaries.  At
+2048 chars a single chunk spans several unrelated stories, and a specific
+question only weakly matches it (cosine similarity around 0.3) — low enough to
+trip the confidence guardrail in `ask.py` even when the answer is right there in
+the text.  512 chars (~128 tokens, two or three sentences) keeps each chunk on
+one passage so a focused question clears the guardrail, while still leaving the
+LLM enough surrounding context to answer and cite.
 """
 
 import re
 
 # Target chunk size in *characters* (not tokens).  English is roughly 4 chars
-# per token, so 512 tokens ≈ 2048 chars.  We use characters rather than a
-# tokenizer so the chunker stays fast and dependency-free.
-CHUNK_SIZE = 2048
+# per token, so 512 chars ≈ 128 tokens — two or three sentences of newsletter
+# prose.  We use characters rather than a tokenizer so the chunker stays fast
+# and dependency-free.
+CHUNK_SIZE = 512
 
-# Overlap between consecutive chunks, in characters.  64 tokens ≈ 256 chars.
-CHUNK_OVERLAP = 256
+# Overlap between consecutive chunks, in characters (~32 tokens, roughly one
+# sentence).  Keeps a sentence that straddles a cut intact in both chunks so the
+# retriever can still find it in at least one.
+CHUNK_OVERLAP = 128
 
 # A bare minimum chunk size.  If a paragraph is shorter than this after
 # splitting, we don't bother splitting it further — tiny chunks hurt retrieval

@@ -105,8 +105,8 @@ def test_chunk_text_long_paragraph_is_split() -> None:
 
 
 def test_chunk_text_applies_overlap() -> None:
-    para1 = "A" * 2040
-    para2 = "B" * 2040
+    para1 = "A" * (CHUNK_SIZE - 8)
+    para2 = "B" * (CHUNK_SIZE - 8)
     text = f"{para1}\n\n{para2}"
     chunks = chunk_text(text)
     assert len(chunks) == 2

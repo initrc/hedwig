@@ -153,7 +153,7 @@ def test_ask_returns_not_confident_when_best_score_below_threshold() -> None:
     fake_client = _json_reply({"answer": "should not be used", "sources": []})
 
     # The query embedding is orthogonal to the stored chunk (cosine sim = 0.0),
-    # which is below the 0.5 threshold.
+    # which is well below the confidence threshold.
     result = ask(
         "What is the weather on Mars?",
         vector_store=store,

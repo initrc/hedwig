@@ -35,14 +35,16 @@ _logger = logging.getLogger(__name__)
 # user's question.  Rather than letting the LLM guess (and risk hallucination),
 # we return a polite refusal without making an LLM call at all.
 #
-# Cosine similarity for text embeddings from `text-embedding-3-small`
-# typically falls in [0, 1] (normalized vectors).  A score of 0.5 means the
-# query and chunk are only loosely related — the chunk may share a word or
-# broad topic but is unlikely to contain the specific answer.  Real matches
-# for factual questions against newsletter text usually score 0.7 or above.
-# We start at 0.5 as a conservative floor; tune this after inspecting real
-# query-chunk pairs.
-_CONFIDENCE_THRESHOLD: float = 0.5
+# Calibrated against the real newsletter archive with `text-embedding-3-small`:
+# focused chunks that contain the answer to a specific factual question score
+# roughly 0.45-0.60, while clearly unrelated questions (weather, recipes, car
+# prices) score at most ~0.24.  0.35 sits in the gap between them — high enough
+# to reject off-topic questions, low enough that a real match clears it with
+# margin.  Cosine similarity for these normalized embeddings rarely reaches the
+# 0.7 the original 0.5 floor assumed, so the higher value rejected clear
+# matches and produced a steady run of "I don't have enough information"
+# refusals for questions the source text actually answered.
+_CONFIDENCE_THRESHOLD: float = 0.35
 
 # How many chunks to retrieve from the vector store per query by default.
 _DEFAULT_TOP_K: int = 5

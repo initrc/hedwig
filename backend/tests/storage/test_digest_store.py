@@ -233,3 +233,67 @@ def test_sources_preserve_types_across_round_trip() -> None:
     assert isinstance(src.subject, str)
     assert isinstance(src.original_url, str)
     assert isinstance(src.clean_text, str)
+
+
+# ---------------------------------------------------------------------------
+# generated_at + last_digest_at (T0021)
+# ---------------------------------------------------------------------------
+
+
+def test_save_stamps_generated_at() -> None:
+    """Saving a digest records when it was produced in `generated_at`."""
+    from datetime import datetime
+
+    store = DigestStore(db_path=":memory:")
+    store.save(_digest(digest_date=date(2026, 6, 18)))
+
+    last_at = store.last_digest_at()
+    assert isinstance(last_at, datetime)
+
+
+def test_last_digest_at_returns_none_when_empty() -> None:
+    store = DigestStore(db_path=":memory:")
+    assert store.last_digest_at() is None
+
+
+def test_last_digest_at_picks_most_recently_generated() -> None:
+    """`last_digest_at` orders by generated_at, not by digest date.
+
+    Saving an older-date digest last should make it the "last produced" one,
+    since its `generated_at` is newest.
+    """
+    store = DigestStore(db_path=":memory:")
+    store.save(_digest(digest_date=date(2026, 6, 18)))
+    store.save(_digest(digest_date=date(2026, 6, 10)))
+
+    last_at = store.last_digest_at()
+    assert last_at is not None
+
+
+# ---------------------------------------------------------------------------
+# ingested_sources (T0021)
+# ---------------------------------------------------------------------------
+
+
+def test_record_and_list_ingested_source_ids() -> None:
+    store = DigestStore(db_path=":memory:")
+    assert store.ingested_source_ids() == set()
+
+    store.record_ingested_sources(["a.eml", "b.eml"], date(2026, 6, 18))
+    assert store.ingested_source_ids() == {"a.eml", "b.eml"}
+
+
+def test_record_ingested_sources_is_idempotent() -> None:
+    """Recording the same source id twice updates its digest date, not duplicates."""
+    store = DigestStore(db_path=":memory:")
+    store.record_ingested_sources(["a.eml"], date(2026, 6, 17))
+    store.record_ingested_sources(["a.eml"], date(2026, 6, 18))
+
+    assert store.ingested_source_ids() == {"a.eml"}
+
+
+def test_record_ingested_sources_empty_list_is_noop() -> None:
+    store = DigestStore(db_path=":memory:")
+    store.record_ingested_sources([], date(2026, 6, 18))
+    assert store.ingested_source_ids() == set()
+

@@ -15,9 +15,9 @@ export const postJson = <T>(path: string, body: unknown) =>
     body: JSON.stringify(body),
   }) as Promise<T>;
 
-export type Health = {
-  status: string;
-};
+export type Status =
+  | { state: "running"; email_count: number }
+  | { state: "idle"; last_digest_at: string | null };
 
 export type CandidateImage = {
   url: string;

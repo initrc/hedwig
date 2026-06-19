@@ -175,11 +175,20 @@ inspect the JSON, fix the prompts, repeat. This iteration *is* the skill.
    synthesized from several newsletters, each claim cited.
 4. **Scoped chat** at the bottom of the Sheet, wired to `POST /chat?topic_label=<label>` — ask questions
    about *that* topic, answered from its sources. The topic id is the `label` string from the digest.
-5. A **"Generate digest"** button that calls `POST /digest/run` so you can run it on demand.
+5. **Auto-run digest on startup + status.** No manual button — the backend runs the digest pipeline
+   automatically when it starts, but only if there are sample emails not yet digested (already-
+   processed source ids are recorded, so restarting is idempotent). The run happens in a background
+   thread so the server stays responsive while the LLM works. `GET /status` reports `running` (with
+   the email count) or `idle` (with the last digest's timestamp, so the user knows how stale the
+   content is). The dashboard header title is "Hedwig" with the status as its subtitle, and polls
+   `/status` every 30s while a run is in progress, stopping once idle (the digest runs once a day;
+   the next day is a new session). `POST /digest/run` is kept for manual/test use but is no longer
+   the primary trigger.
 
 **Timebox to one day.** shadcn makes this fast — hold the line and bank leftover time for Day 5.
 
-**End of day:** click card → Sheet with full detail + scoped chat; digest generates on demand.
+**End of day:** click card → Sheet with full detail + scoped chat; digest runs automatically on
+backend startup and its status shows in the dashboard header.
 
 ---
 

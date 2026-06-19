@@ -16,7 +16,17 @@ cp .env.example .env   # fill in IMAP credentials when needed (T0003)
 uv run fastapi dev     # auto-discovers app/main.py, starts dev server with reload
 ```
 
-Then `GET http://127.0.0.1:8000/health` returns `{"status": "ok"}`.
+On startup the backend runs the digest pipeline automatically when there are
+sample emails not yet digested (see `EMAIL_SOURCE` in `.env`). The run happens
+in a background thread so the server stays responsive. `GET /status` reports
+what is happening:
+
+- `{"state": "running", "email_count": N}` while a digest is being generated.
+- `{"state": "idle", "last_digest_at": "<ISO>"}` when no run is in progress (`null` until the first digest exists).
+
+Restarting the server does not re-run the pipeline unless a new `.eml` file
+has been added to `samples/` — already-digested source ids are recorded in the
+database, so the startup check is idempotent.
 
 ## Parse samples
 
@@ -25,11 +35,12 @@ uv run python -m app.ingest.dump            # writes db/items.json (one item per
 uv run python -m app.ingest.dump -o foo.json --samples-dir samples
 ```
 
-## Run a digest
+## Run a digest manually
 
-With the dev server running (`uv run fastapi dev`), POST to `/digest/run` to
-ingest the committed samples, run the pipeline against DeepSeek, and persist +
-index one digest **per day** found in the samples:
+The digest runs automatically on startup (above). `POST /digest/run` is kept
+for manual and test use — it ingests the committed samples, runs the pipeline
+against DeepSeek, and persists + indexes one digest **per day** found in the
+samples:
 
 ```bash
 curl -X POST http://127.0.0.1:8000/digest/run \

@@ -7,13 +7,24 @@ import { LoaderCircle, Search } from "lucide-react";
 import { DigestCard } from "@/components/digest-card";
 import { DigestDetailSheet } from "@/components/digest-detail-sheet";
 import { Input } from "@/components/ui/input";
-import { fetcher, type Digest, type DigestTopic } from "@/lib/api";
+import { fetcher, type Digest, type DigestTopic, type Status } from "@/lib/api";
 
 export function DigestCardList() {
-  const { data, error, isLoading } = useSWR<Digest[]>(
-    "/digests",
-    fetcher,
-  );
+  const { data, error, isLoading } = useSWR<Digest[]>("/digests", fetcher);
+
+  const {
+    data: status,
+    error: statusError,
+    isLoading: statusLoading,
+  } = useSWR<Status>("/status", fetcher, {
+    // Re-poll every 30s while a digest is running; stop once idle. The digest
+    // runs once a day, so there is no reason to keep polling after it finishes
+    // — the next day is a new session.
+    refreshInterval: (latest) =>
+      latest && latest.state === "running" ? 30_000 : 0,
+    // Refocusing the tab must not restart polling once idle.
+    revalidateOnFocus: false,
+  });
 
   const [filter, setFilter] = useState("");
   const [selectedTopic, setSelectedTopic] = useState<DigestTopic | null>(null);
@@ -42,10 +53,19 @@ export function DigestCardList() {
   return (
     <section className="w-full max-w-6xl space-y-4">
       <header className="space-y-1.5">
-        <h1 className="font-heading text-lg font-medium">Digest history</h1>
-        <p className="text-xs text-muted-foreground">
-          Every saved digest, grouped by day. Click a card to open the details.
-        </p>
+        <h1 className="font-heading text-lg font-medium">Hedwig</h1>
+        <div className="flex items-baseline justify-between gap-4">
+          <p className="text-xs text-muted-foreground">
+            AI-powered newsletter intelligence
+          </p>
+          <p className="text-xs text-muted-foreground">
+            <StatusText
+              status={status}
+              isLoading={statusLoading}
+              error={statusError}
+            />
+          </p>
+        </div>
       </header>
 
       <FilterBar filter={filter} onFilterChange={setFilter} />
@@ -85,6 +105,34 @@ export function DigestCardList() {
       />
     </section>
   );
+}
+
+function StatusText({
+  status,
+  isLoading,
+  error,
+}: {
+  status: Status | undefined;
+  isLoading: boolean;
+  error: Error | undefined;
+}) {
+  if (isLoading) return "Checking digest status...";
+  if (error || !status) return "Could not reach the backend.";
+  if (status.state === "running") {
+    return `Generating digest from ${status.email_count} email${
+      status.email_count === 1 ? "" : "s"
+    }…`;
+  }
+  if (status.last_digest_at) {
+    const when = new Date(status.last_digest_at).toLocaleString(undefined, {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+    return `Last digest ${when}`;
+  }
+  return "No digests yet.";
 }
 
 function FilterBar({
@@ -138,8 +186,8 @@ function ListState({
   if (error) {
     return (
       <div className="py-12 text-sm text-destructive">
-        Could not load digests. Check that the backend is running and reload
-        the page.
+        Could not load digests. Check that the backend is running and reload the
+        page.
       </div>
     );
   }
@@ -147,7 +195,7 @@ function ListState({
   if (!hasDigests) {
     return (
       <div className="py-12 text-sm text-muted-foreground">
-        No digests yet. Generate one and reload the page.
+        No digests yet. The backend will generate one shortly.
       </div>
     );
   }
@@ -155,9 +203,7 @@ function ListState({
   if (visibleTopicCount === 0) {
     return (
       <div className="py-12 text-sm text-muted-foreground">
-        {hasFilter
-          ? "No topics match this filter."
-          : "No topics to display."}
+        {hasFilter ? "No topics match this filter." : "No topics to display."}
       </div>
     );
   }

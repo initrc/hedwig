@@ -1,19 +1,18 @@
-"""POST /digest/run — ingest, run one pipeline per day, persist, and return the digests.
+"""POST /digest/run and GET /digests — on-demand digest generation and listing.
 
-This is the main endpoint for on-demand digest generation. It ties together the
-three pieces built in earlier steps: the local-sample ingestor, the four-stage
-pipeline (segment → cluster → summarize → pick-image), and the SQLite store.
+`/digest/run` is kept for manual and test use; in normal operation the digest
+runs automatically on backend startup (see `app.main` and `app.runner`). The
+endpoint delegates to the shared `run_digests` runner so the status object
+stays consistent regardless of who triggered the run.
 
 Each parsed email is bucketed by the UTC calendar day of its `received_at` and
 the pipeline runs once per bucket, so a single request over a samples folder
-spanning several days produces one digest per day. The LLM client and the digest
-store are both injected via FastAPI dependencies so a test can override them — a
-fake client keeps tests off the network, and an in-memory database keeps them
-isolated.
+spanning several days produces one digest per day. The LLM client and the
+digest store are both injected via FastAPI dependencies so a test can override
+them — a fake client keeps tests off the network, and an in-memory database
+keeps them isolated.
 """
 
-import logging
-from datetime import UTC
 from datetime import date as date_type
 from functools import lru_cache
 from pathlib import Path
@@ -23,19 +22,16 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
 from app.ingest.dump import DEFAULT_SAMPLES_DIR
-from app.ingest.parser import ParsedEmail, parse
 from app.ingest.source import LocalEmlSource
 from app.llm.client import LLMClient, get_client
 from app.pipeline.digest import Digest, run_pipeline
 from app.rag.chroma_store import ChromaStore
 from app.rag.embed import EmbedFn, embed
-from app.rag.index import index_digest
 from app.rag.store import VectorStore
+from app.runner import run_digests
 from app.storage.digest_store import DEFAULT_DB_PATH, DigestStore
 
 digest_router = APIRouter()
-
-_logger = logging.getLogger(__name__)
 
 
 class DigestRunRequest(BaseModel):
@@ -91,8 +87,8 @@ def get_llm_client() -> LLMClient:
     """Return the shared DeepSeek client for pipeline stages.
 
     Returns the real client so a reader can trace from the route parameter
-    straight to the implementation in one hop.  Override this dependency
-    in tests to keep tests off the network.
+    straight to the implementation in one hop.  Override this dependency in
+    tests to keep tests off the network.
     """
     return get_client()
 
@@ -128,45 +124,13 @@ def digest_run(
     the returned list has zero or one entry.
     """
     samples_dir = Path(body.samples_dir) if body.samples_dir else DEFAULT_SAMPLES_DIR
-    items = [parse(raw) for raw in LocalEmlSource(samples_dir).fetch()]
-    buckets = _group_by_day(items)
+    return run_digests(
+        LocalEmlSource(samples_dir),
+        store=store,
+        pipeline=pipeline,  # type: ignore[arg-type]
+        vector_store=vector_store,
+        embed_fn=embed_fn,
+        client=client,
+        date_filter=body.date,
+    )
 
-    if body.date is not None:
-        buckets = {day: emails for day, emails in buckets.items() if day == body.date}
-
-    results: list[Digest] = []
-    for day in sorted(buckets):
-        day_items = sorted(buckets[day], key=lambda item: item.id)
-        digest: Digest = pipeline(day_items, date=day, client=client)  # type: ignore[operator]
-        store.save(digest)
-        try:
-            index_digest(digest, vector_store=vector_store, embed_fn=embed_fn)
-        except Exception:
-            _logger.exception(
-                "Failed to index digest dated %s — digest was saved but is not yet searchable",
-                digest.date.isoformat(),
-            )
-        results.append(digest)
-    return results
-
-
-def _group_by_day(items: list[ParsedEmail]) -> dict[date_type, list[ParsedEmail]]:
-    """Bucket parsed emails by the UTC calendar day of their ``received_at``.
-
-    Emails with no ``received_at`` (missing or unparseable ``Date`` header) are
-    skipped with a WARNING log naming the ``source_id``, so a caller can see
-    which file was dropped instead of having it silently folded into an
-    arbitrary day.
-    """
-    buckets: dict[date_type, list[ParsedEmail]] = {}
-    for item in items:
-        if item.received_at is None:
-            _logger.warning(
-                "Skipping email %s: no received_at date (missing or unparseable "
-                "Date header); cannot assign to a daily digest.",
-                item.id,
-            )
-            continue
-        day = item.received_at.astimezone(UTC).date()
-        buckets.setdefault(day, []).append(item)
-    return buckets

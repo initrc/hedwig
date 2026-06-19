@@ -1,7 +1,7 @@
 ---
 id: T0027
 title: Show every digest on the dashboard
-status: new
+status: done
 dependencies:
   - T0026
 ---
@@ -55,3 +55,5 @@ dependencies:
   `GET /digests` — when the list refreshes, the whole history re-renders.
 - Out of scope: the generate button (T0021), any per-source navigation, and any
   pagination/virtualization (the digest count will stay small for the demo).
+- Chosen `GET /digests` default limit: 100. This returns the full digest
+  history for the demo without requiring the frontend to pass a `?limit=` param.

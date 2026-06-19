@@ -100,7 +100,7 @@ def get_llm_client() -> LLMClient:
 @digest_router.get("/digests")
 def digests_list(
     store: Annotated[DigestStore, Depends(get_store)],
-    limit: int = 10,
+    limit: int = 100,
 ) -> list[Digest]:
     """Return the most recent digests, newest date first."""
     return store.list_recent(limit=limit)

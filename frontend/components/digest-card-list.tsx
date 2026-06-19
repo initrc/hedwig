@@ -19,30 +19,33 @@ export function DigestCardList() {
   const [filter, setFilter] = useState("");
   const [selectedTopic, setSelectedTopic] = useState<DigestTopic | null>(null);
 
-  const latestDigest = data?.[0];
-
-  const filteredTopics = useMemo(() => {
-    const topics = latestDigest?.topics ?? [];
+  const filteredDigests = useMemo(() => {
+    const digests = data ?? [];
     const query = filter.trim().toLowerCase();
-    if (!query) return topics;
-    return topics.filter((topic) =>
-      topic.label.toLowerCase().includes(query),
-    );
-  }, [latestDigest, filter]);
+    if (!query) return digests;
+    return digests
+      .map((digest) => ({
+        ...digest,
+        topics: digest.topics.filter((topic) =>
+          topic.label.toLowerCase().includes(query),
+        ),
+      }))
+      .filter((digest) => digest.topics.length > 0);
+  }, [data, filter]);
+
+  const visibleTopicCount = filteredDigests.reduce(
+    (count, digest) => count + digest.topics.length,
+    0,
+  );
+  const hasDigests = (data?.length ?? 0) > 0;
+  const hasFilter = filter.trim().length > 0;
 
   return (
     <section className="w-full max-w-6xl space-y-4">
       <header className="space-y-1.5">
-        <h1 className="font-heading text-lg font-medium">
-          Latest digest
-          {latestDigest && (
-            <span className="ml-2 text-sm text-muted-foreground">
-              {latestDigest.date}
-            </span>
-          )}
-        </h1>
+        <h1 className="font-heading text-lg font-medium">Digest history</h1>
         <p className="text-xs text-muted-foreground">
-          Topics from the most recent digest. Click a card to open the details.
+          Every saved digest, grouped by day. Click a card to open the details.
         </p>
       </header>
 
@@ -56,17 +59,26 @@ export function DigestCardList() {
       <ListState
         isLoading={isLoading}
         error={error}
-        hasDigest={Boolean(latestDigest)}
-        topicCount={filteredTopics.length}
-        hasFilter={filter.trim().length > 0}
+        hasDigests={hasDigests}
+        visibleTopicCount={visibleTopicCount}
+        hasFilter={hasFilter}
       >
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredTopics.map((topic) => (
-            <DigestCard
-              key={topic.label}
-              topic={topic}
-              onSelect={setSelectedTopic}
-            />
+        <div className="space-y-8">
+          {filteredDigests.map((digest) => (
+            <section key={digest.date} className="space-y-3">
+              <h2 className="font-heading text-base font-medium">
+                {digest.date}
+              </h2>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {digest.topics.map((topic) => (
+                  <DigestCard
+                    key={`${digest.date}-${topic.label}`}
+                    topic={topic}
+                    onSelect={setSelectedTopic}
+                  />
+                ))}
+              </div>
+            </section>
           ))}
         </div>
       </ListState>
@@ -121,15 +133,15 @@ function FilterBar({
 function ListState({
   isLoading,
   error,
-  hasDigest,
-  topicCount,
+  hasDigests,
+  visibleTopicCount,
   hasFilter,
   children,
 }: {
   isLoading: boolean;
   error: Error | undefined;
-  hasDigest: boolean;
-  topicCount: number;
+  hasDigests: boolean;
+  visibleTopicCount: number;
   hasFilter: boolean;
   children: ReactNode;
 }) {
@@ -151,7 +163,7 @@ function ListState({
     );
   }
 
-  if (!hasDigest) {
+  if (!hasDigests) {
     return (
       <div className="py-12 text-sm text-muted-foreground">
         No digests yet. Generate one and click Refresh.
@@ -159,12 +171,12 @@ function ListState({
     );
   }
 
-  if (topicCount === 0) {
+  if (visibleTopicCount === 0) {
     return (
       <div className="py-12 text-sm text-muted-foreground">
         {hasFilter
           ? "No topics match this filter."
-          : "This digest has no topics."}
+          : "No topics to display."}
       </div>
     );
   }

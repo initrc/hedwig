@@ -10,8 +10,10 @@ tests.
 
 from datetime import UTC, date, datetime
 
+import pytest
+
 from app.pipeline.cluster import Clustering, DraftTopic
-from app.pipeline.digest import Digest, run_pipeline
+from app.pipeline.digest import _SELECT_TOPIC_IMAGES, Digest, run_pipeline
 from app.pipeline.image import ImageChoice
 from app.pipeline.segment import DraftStory, Segmentation
 from app.pipeline.summarize import DraftSummary
@@ -46,27 +48,22 @@ def _image_reply(index: int | None) -> ImageChoice:
 
 
 def test_run_pipeline_composes_all_stages_and_round_trips() -> None:
-    image_a = _image("https://x/a.png")
-    image_b = _image("https://x/b.png")
-
     items = [
         _parsed_email(
             item_id="alpha.eml",
             clean_text="Alpha news.",
-            candidate_images=[image_a],
         ),
         _parsed_email(
             item_id="beta.eml",
             clean_text="Beta news.",
-            candidate_images=[image_b],
         ),
     ]
 
-    # The pipeline makes 7 LLM calls in this order:
+    # The pipeline makes 5 LLM calls in this order:
     #   1–2. segment (one per email)
     #   3.   cluster
     #   4–5. summarize_topic (one per topic)
-    #   6–7. select_image (one per topic)
+    # Image selection is currently disabled by `_SELECT_TOPIC_IMAGES`.
     client = QueuedFakeClient(
         [
             # segment(alpha.eml)
@@ -84,28 +81,59 @@ def test_run_pipeline_composes_all_stages_and_round_trips() -> None:
             model_reply(_summary_reply("Chip summary.", ["alpha.eml"]).model_dump_json()),
             # summarize_topic("Bonds")
             model_reply(_summary_reply("Bond summary.", ["beta.eml"]).model_dump_json()),
-            # select_image("Chips", [image_a])
-            model_reply(_image_reply(0).model_dump_json()),
-            # select_image("Bonds", [image_b])
+        ]
+    )
+
+    digest = run_pipeline(items, client=client)
+
+    assert client.chat.completions.call_count == 5
+
+    assert len(digest.topics) == 2
+    assert digest.topics[0].label == "Chips"
+    assert digest.topics[0].summary == "Chip summary."
+    assert digest.topics[0].image is None
+    assert digest.topics[1].label == "Bonds"
+    assert digest.topics[1].summary == "Bond summary."
+    assert digest.topics[1].image is None
+
+    # The assembled object survives a JSON round-trip.
+    reloaded = Digest.model_validate(digest.model_dump(mode="json"))
+    assert reloaded == digest
+
+
+def test_image_selection_is_skipped_by_default() -> None:
+    assert _SELECT_TOPIC_IMAGES is False
+
+
+def test_image_selection_runs_when_flag_enabled(monkeypatch: pytest.MonkeyPatch) -> None:
+    """When the feature flag is on, the pipeline still calls `select_image`."""
+    image_a = _image("https://x/a.png")
+
+    items = [
+        _parsed_email(
+            item_id="alpha.eml",
+            clean_text="Alpha news.",
+            candidate_images=[image_a],
+        ),
+    ]
+
+    monkeypatch.setattr(
+        "app.pipeline.digest._SELECT_TOPIC_IMAGES", True
+    )
+
+    client = QueuedFakeClient(
+        [
+            model_reply(_segment_reply("Alpha story").model_dump_json()),
+            model_reply(_cluster_reply(("Chips", ["alpha.eml#0"])).model_dump_json()),
+            model_reply(_summary_reply("Chip summary.", ["alpha.eml"]).model_dump_json()),
             model_reply(_image_reply(0).model_dump_json()),
         ]
     )
 
     digest = run_pipeline(items, client=client)
 
-    assert client.chat.completions.call_count == 7
-
-    assert len(digest.topics) == 2
-    assert digest.topics[0].label == "Chips"
-    assert digest.topics[0].summary == "Chip summary."
+    assert client.chat.completions.call_count == 4
     assert digest.topics[0].image is image_a
-    assert digest.topics[1].label == "Bonds"
-    assert digest.topics[1].summary == "Bond summary."
-    assert digest.topics[1].image is image_b
-
-    # The assembled object survives a JSON round-trip.
-    reloaded = Digest.model_validate(digest.model_dump(mode="json"))
-    assert reloaded == digest
 
 
 def test_topic_sources_resolve_to_the_input_parsed_emails() -> None:
@@ -136,13 +164,13 @@ def test_topic_sources_resolve_to_the_input_parsed_emails() -> None:
             model_reply(
                 _summary_reply("Two things.", ["alpha.eml", "beta.eml"]).model_dump_json()
             ),
-            model_reply(_image_reply(None).model_dump_json()),
         ]
     )
 
     digest = run_pipeline(items, client=client)
 
     [digest_topic] = digest.topics
+    assert digest_topic.image is None
     assert len(digest_topic.sources) == 2
 
     alpha_source = next(s for s in digest_topic.sources if s.id == "alpha.eml")
@@ -171,7 +199,6 @@ def test_fallback_when_original_url_is_none_is_preserved() -> None:
             model_reply(_segment_reply("Solo").model_dump_json()),
             model_reply(_cluster_reply(("Solo", ["alpha.eml#0"])).model_dump_json()),
             model_reply(_summary_reply("One thing.", ["alpha.eml"]).model_dump_json()),
-            model_reply(_image_reply(None).model_dump_json()),
         ]
     )
 

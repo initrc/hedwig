@@ -20,6 +20,10 @@ from app.pipeline.image import gather_candidates, select_image
 from app.pipeline.segment import segment_items
 from app.pipeline.summarize import Source, summarize_topics
 
+# Feature flag: topic image selection is disabled because the chosen images are
+# often inaccurate or pixelated. The code is kept so we can revisit later.
+_SELECT_TOPIC_IMAGES = False
+
 
 class DigestSource(BaseModel):
     """A newsletter that contributed to a topic, with enough for the "view original" link.
@@ -110,8 +114,11 @@ def run_pipeline(
 
     result_topics: list[DigestTopic] = []
     for topic, summary in zip(topics, summaries, strict=True):
-        candidates = gather_candidates(topic, emails_by_id)
-        image = select_image(topic, candidates, client=client)
+        if _SELECT_TOPIC_IMAGES:
+            candidates = gather_candidates(topic, emails_by_id)
+            image = select_image(topic, candidates, client=client)
+        else:
+            image = None
         sources = _resolve_digest_sources(summary.sources, emails_by_id)
 
         result_topics.append(

@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { ExternalLink, LoaderCircle, Send } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -58,18 +57,6 @@ export function DigestDetailSheet({
 function TopicBody({ topic }: { topic: DigestTopic }) {
   return (
     <div className="flex-1 overflow-y-auto px-4 pb-4">
-      {topic.image && (
-        <div className="relative mb-3 aspect-video w-full overflow-hidden bg-muted">
-          <Image
-            src={topic.image.url}
-            alt={topic.image.alt || topic.label}
-            fill
-            sizes="(min-width: 640px) 448px, 100vw"
-            className="object-cover"
-          />
-        </div>
-      )}
-
       <h2 className="mb-1 text-xs font-medium text-muted-foreground">
         Summary
       </h2>

@@ -1,7 +1,7 @@
 ---
 id: T0032
 title: Build labeled eval set and harness scaffolding
-status: new
+status: done
 dependencies: []
 ---
 
@@ -76,3 +76,96 @@ dependencies: []
   needs a `ParsedEmail`/`Story` shape.
 - **Out of scope:** the eval functions themselves (T0033–T0036), the runner and markdown rendering
   (T0037), and any live LLM/embedding calls. This task is data + types + a loader.
+
+# Human Responsibilities (step by step)
+
+The code (package, loader, schema, dump script, tests) is done and in `review`.
+What remains is the hand-labeled data — the substance the suite regresses
+against. Work through these in order.
+
+## Step 1 — Generate the segmented story skeleton
+
+From `backend/` (needs `DEEPSEEK_API_KEY` in `.env`):
+
+```bash
+uv run python scripts/dump_segmented_stories.py
+```
+
+This parses the 5 sample `.eml` files, runs the real DeepSeek segmenter, and
+writes `backend/evals/fixtures/topic_labels.skeleton.json` with one entry per
+story. Each entry has `story_id`, `source_item_id`, `title`, `text` filled in
+and `expected_topic: ""` left empty. It also prints the `ParsedEmail.id →
+subject` map, which you'll need in Step 3.
+
+Notes:
+- Segmentation is non-deterministic (LLM call), so the story count and exact
+  splits vary between runs. Pick one run's skeleton and stick with it.
+- Each run calls DeepSeek once per email (5 calls) and costs a small amount of
+  credit. Re-run only if you want a fresh split.
+- A skeleton has already been generated (19 stories as of the last run). If
+  you're happy with it, skip ahead to Step 2.
+
+## Step 2 — Hand-label `topic_labels.json`
+
+Open `backend/evals/fixtures/topic_labels.skeleton.json` and fill in
+`expected_topic` for every entry. The label is a free-form short string you
+choose by hand — it does not need to match the LLM's wording, since T0033
+scores topic assignment by story co-membership, not exact label match.
+
+Examples of good labels: "AI model releases", "M&A", "product launches",
+"market commentary", "developer tooling". Keep labels stable once written —
+they are the ground truth the suite regresses against.
+
+When every `expected_topic` is non-empty, copy the file to
+`backend/evals/fixtures/topic_labels.json` (replacing the current `[]`).
+The loader rejects empty labels, so don't merge half-labeled entries.
+
+Verify they load:
+
+```bash
+uv run pytest tests/evals/test_dataset.py -q
+```
+
+## Step 3 — Hand-write `golden_qa.json`
+
+Open `backend/evals/fixtures/golden_qa.json` (it ships with 3 example entries
+as a template — replace/augment them with real questions). Each entry is:
+
+```jsonc
+{
+  "question": "...",
+  "expected_source_ids": ["<ParsedEmail.id>", ...],  // whose clean_text contains the answer
+  "topic_label": null,                                 // optional, for scoped retrieval
+  "expect_refusal": false                              // true for out-of-corpus probes
+}
+```
+
+- **In-corpus questions:** write a question whose answer is in one or more
+  sample emails. List the `ParsedEmail.id`(s) (the `.eml` filenames —
+  `20260617-alpha-signal.eml`, etc., from the map printed in Step 1) whose
+  `clean_text` actually contains the answer.
+- **Scoped questions (optional):** set `topic_label` to one of the labels you
+  wrote in Step 2 to test scoped retrieval.
+- **Out-of-corpus probes:** weather, recipes, car prices — questions no sample
+  email could answer. Set `expected_source_ids: []` and
+  `expect_refusal: true`. The guardrail should refuse these; T0034 reuses them
+  for the refusal eval.
+
+Aim for a handful of entries across all three kinds.
+
+Verify they load:
+
+```bash
+uv run pytest tests/evals/test_dataset.py::test_real_golden_qa_fixture_validates -q
+```
+
+## Step 4 — Final check and LGTM
+
+Run the full gate from `backend/`:
+
+```bash
+uv run pytest -q && uv run ruff check && uv run mypy
+```
+
+If green, reply with **LGTM**. The implementer will mark the task `done` and
+create the single commit (`T0032: Build labeled eval set and harness scaffolding`).

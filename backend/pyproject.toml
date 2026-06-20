@@ -37,7 +37,7 @@ select = ["E", "F", "I", "UP", "B"]
 [tool.mypy]
 python_version = "3.13"
 strict = true
-files = ["app", "tests"]
+files = ["app", "evals", "tests"]
 
 [[tool.mypy.overrides]]
 # The readability-lxml library has no type annotations, so mypy can't see what

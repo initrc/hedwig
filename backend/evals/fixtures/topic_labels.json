@@ -1,0 +1,177 @@
+[
+  {
+    "story_id": "20260617-alpha-signal.eml#0",
+    "source_item_id": "20260617-alpha-signal.eml",
+    "title": "Z.ai ships GLM-5.2 open-weight model with 1M context and stronger coding",
+    "text": "Z.ai just dropped GLM-5.2, an open-weights model built for serious coding work. Here is what makes it interesting. The biggest upgrade is the context window. 1 million tokens means you can feed it an entire codebase in one shot and ask it to refactor, debug, or extend it without losing track. That jumped 5x from GLM-5.1's 200K limit. You also get two reasoning modes to control speed vs. quality tradeoffs: Max mode: pushes hardest on complex problems, uses more compute. High mode: faster and cheaper, still strong for most tasks. MIT license: download the weights, self-host it, fine-tune it, ship it commercially, no strings attached. Benchmark scores: 81.0 on Terminal-Bench 2.1, up from 62.0 on GLM-5.1. On pricing, it runs at $1.40 per million input tokens, roughly one-sixth of GPT-5.5. You can grab the weights on Hugging Face or hit the Z.ai API directly.",
+    "expected_topic": "GLM-5.2"
+  },
+  {
+    "story_id": "20260617-alpha-signal.eml#1",
+    "source_item_id": "20260617-alpha-signal.eml",
+    "title": "Cursor announces Origin, a git hosting platform built for AI agents",
+    "text": "Cursor just announced Origin, their own git hosting platform, and it's a direct shot at GitHub. Here's the quick backstory: Cursor (the AI code editor) acquired Graphite, a code review tool, and now they're stacking a full hosting layer on top. The goal is to own the entire coding pipeline: write in Cursor, review with Graphite, host on Origin. So why does this matter? AI agents are now opening pull requests faster than humans can review them. GitHub was built for humans, not for dozens of AI agents committing code in parallel. A live demo showed 22.6 commits per second inside a single repo, a load GitHub was never designed for. Origin is built specifically for that world. Key features include: Scales to handle massive agent-driven commit volumes. Built-in merge conflict resolution handled automatically by agents. Extensible via API and MCP. Native integration with Cursor's existing agent workflows. You can join the waitlist now. Full release is coming this fall.",
+    "expected_topic": "Cursor Origin"
+  },
+  {
+    "story_id": "20260617-alpha-signal.eml#2",
+    "source_item_id": "20260617-alpha-signal.eml",
+    "title": "Nous Research's Hermes agent can now buy things and pay APIs using Stripe",
+    "text": "Your AI agent just got a wallet. Hermes Agent now has three official Stripe skills, and together they let your agent handle real money, on its own, with guardrails you control. Here is what you can install: stripe-link-cli -- lets your agent buy things on the open web, like a human clicking checkout. mpp-agent -- lets your agent pay for APIs that charge per call, so it can keep working without stopping to ask you for a credit card. stripe-projects -- lets your agent spin up and bill its own SaaS products, no human required. To get any of these, run: hermes skills install official/payments/[skill-name]. The safety story matters here. Your real credentials never appear in the agent's conversation history. You can require human approval before any payment fires. One-time credentials are deleted after use. Stripe Projects issues scoped credentials tied to a specific project, with pre-defined permissions and spending guardrails. What this opens up: agents that fund themselves, pay for their own tools, and ship products, all while you stay in control of the limits.",
+    "expected_topic": "Hermes Stripe skills"
+  },
+  {
+    "story_id": "20260617-superhuman.eml#0",
+    "source_item_id": "20260617-superhuman.eml",
+    "title": "SpaceX acquires Cursor for $60B",
+    "text": "SpaceX has exercised its option to buy Cursor all in stock, a deal that was first announced in April. The two companies have been jointly training a new model, which they plan to release in Cursor and Grok Build soon. The deal lands just days after SpaceX’s record-setting public offering — read all the details from the IPO.",
+    "expected_topic": "SpaceX acquires Cursor"
+  },
+  {
+    "story_id": "20260617-superhuman.eml#1",
+    "source_item_id": "20260617-superhuman.eml",
+    "title": "Databricks launches agentic coworker Genie One",
+    "text": "Genie One is an AI coworker for business teams that automates workplace tasks across apps, documents, chats, and more. It runs on Genie Ontology, a self-improving context layer that connects to your organization’s data and drives Genie’s actions and insights, helping it provide more accurate, affordable answers.",
+    "expected_topic": "Databricks Genie One"
+  },
+  {
+    "story_id": "20260617-superhuman.eml#2",
+    "source_item_id": "20260617-superhuman.eml",
+    "title": "Microsoft's Copilot Cowork becomes generally available",
+    "text": "Microsoft is rolling out its agentic workplace tool to any Microsoft 365 user globally, claiming that Copilot Cowork runs 30-40% cheaper per prompt than Anthropic’s Claude Cowork. The tool includes model choice, usage-based billing, and cost management controls.",
+    "expected_topic": "Microsoft Copilot Cowork"
+  },
+  {
+    "story_id": "20260617-superhuman.eml#3",
+    "source_item_id": "20260617-superhuman.eml",
+    "title": "Leaked documents show OpenAI lost $38.5B in 2025",
+    "text": "Leaked audited financial documents, independently verified by the Financial Times, show OpenAI posted a $38.5 billion net loss in 2025 — over 7X the $5 billion loss it posted in 2024. Revenue grew as well, from $3.7B to $13B, but not fast enough to outpace its losses. The same day, a separate report found that ChatGPT’s market share has dipped below 50% for the first time ever, thanks to rising competition. The news lands at an inopportune time: OpenAI filed confidentially to go public just last week.",
+    "expected_topic": "OpenAI lost leaked"
+  },
+  {
+    "story_id": "20260617-superhuman.eml#4",
+    "source_item_id": "20260617-superhuman.eml",
+    "title": "How to create and edit videos and images inside ChatGPT",
+    "text": "Open ChatGPT and sign in. Go to Settings > Apps > Add more > Runway > Connect. Once connected, start a new chat and mention @Runway followed by your prompt. Sample Prompt: @Runway create a video/image ad for this product: [enter URL]. It will automatically generate a video or image ad based on the product page. Within minutes, you can generate, iterate on, and finalize ad creatives without leaving ChatGPT.",
+    "expected_topic": "Create videos and images in ChatGPT"
+  },
+  {
+    "story_id": "20260617-superhuman.eml#5",
+    "source_item_id": "20260617-superhuman.eml",
+    "title": "Buyer Resistance Decoder Prompt",
+    "text": "You are a world-class conversion copywriter and customer psychologist. Analyze [PRODUCT] and identify the 15 most common objections prospects have before buying. For each objection, explain the type of objection (price, trust, timing, competition, complexity, risk, need, etc.), write the exact thought the customer is likely having in their own words, and create a concise one-line counter-argument that can be used in sales copy. Also recommend the strongest form of proof to overcome the objection, such as a testimonial, case study, guarantee, statistic, comparison, or demo, and suggest the best place to address it on a landing page or within the funnel. Rank all objections by their likely impact on conversion, highlight the 5 most important objections, and rewrite those into persuasive landing-page-ready copy. Finally, identify any missing trust builders, guarantees, proof elements, or messaging opportunities that could eliminate these objections before they arise. Focus on uncovering both obvious and hidden objections, and think like a skeptical buyer actively looking for reasons not to purchase.",
+    "expected_topic": "Buyer resistance decoder prompt"
+  },
+  {
+    "story_id": "20260617-superhuman.eml#6",
+    "source_item_id": "20260617-superhuman.eml",
+    "title": "Vinyl Figures Image Prompt",
+    "text": "Create a highly detailed 3D collectible toy diorama based on the uploaded image. Transform every visible person into a premium designer vinyl figure while preserving their likeness, pose, clothing, expressions, and the overall composition of the original image. Give each character smooth glossy plastic surfaces, subtle articulated toy-joint details, oversized expressive eyes, realistic facial features, and stylish outfits matching the reference. Recreate the original scene, environment, lighting, objects, and atmosphere as a luxury collectible figurine display while maintaining the same mood and visual storytelling of the uploaded image. Style: Pixar-inspired collectible toy, premium vinyl figure, designer toy aesthetic, ultra-realistic 3D render, glossy plastic texture, toy photography, shallow depth of field, cinematic lighting, warm golden-hour sunlight, photorealistic materials, high-end commercial product photography, sharp focus, ultra detailed, 8K resolution. Composition: Preserve the original framing, camera angle, subject placement, poses, expressions, background elements, and scene composition from the uploaded image. Natural proportions, realistic depth, professional advertisement quality, collectible diorama presentation. Render Quality: Octane Render, Unreal Engine 5, ray tracing, global illumination, realistic reflections, HDR lighting, highly detailed textures, premium collectible figurine showcase, museum-quality craftsmanship, ultra-sharp focus, photorealistic materials, luxury designer toy aesthetic.",
+    "expected_topic": "Vinyl figures image prompt"
+  },
+  {
+    "story_id": "20260617-tikr.eml#0",
+    "source_item_id": "20260617-tikr.eml",
+    "title": "TIKR Ultimate Reopening with Discount",
+    "text": "For investors who want every edge in their research... we're reopening Ultimate today. Starting today, for a brief window only, we're extending the same pricing structure our charter members received in March. Here is what that means for you: A 20% discount on the upgrade cost... and 20% off your first renewal. A 14-day money-back guarantee. If Ultimate is not the right fit, we will return your subscription to Plus and restore your existing pricing. Log In and Access Your TIKR Ultimate Invitation! Here's what Ultimate unlocks beyond your current free access: Coverage expands from roughly 15,000 U.S. stocks to 100,000+ globally... Financial history jumps from 3 years to 30 years... Analyst estimates extend from 1 year to 5 years forward... Transcript access goes from 90 days to 15 years, with search, audio, and slides... Unlock Excel export, segmented financials, management guidance, and beats/misses tracking... Custom Dashboard with 300+ column options... Catalyst Tracker... 100+ new screening factors... And while Ultimate has been closed to new subscribers, we have not been sitting still... a few of the most meaningful additions: Estimates Revisions... Portfolio Tracking... Backed by a 14-day money-back guarantee! If Ultimate isn't the right fit, we'll refund your payment in full and your account simply returns to your free plan. We're confident you'll feel the difference, but we want you to experience it for yourself with zero risk. We built Ultimate for investors like you: serious, long-term focused, and always looking for an edge in the quality of your research process. We think you'll feel the difference immediately. Log In and Access Your TIKR Ultimate Invitation! Best regards, David Hanson TIKR P.S. The 20% discount on your first year and the 20% off your first renewal are only available through June 30 at 5 PM ET. After that, the window closes. If you've been considering a serious upgrade to your research toolkit, this is the best price you'll see. Log in to learn more!",
+    "expected_topic": "TIKR Ultimate reopend"
+  },
+  {
+    "story_id": "20260618-alpha-signal.eml#0",
+    "source_item_id": "20260618-alpha-signal.eml",
+    "title": "Midjourney Launches Medical Imaging Division",
+    "text": "Midjourney, the company you know for turning text into images, just announced Midjourney Medical, a full-body scanner. Nobody saw this coming. Here is what it actually is. You step into a pool of water. Sound waves pass through your body from every angle. 60 seconds later, you have a 3D map of your entire body. No radiation, no magnets, just ultrasound. The specs are wild: 500,000 transducers (tiny sensors) firing sound waves through you simultaneously; 17 gigabytes of data processed every second; A few dollars per scan, not hundreds; First location opens in a San Francisco spa in 2027. The goal is catching health problems early, before symptoms show up. Think of it like version control for your body, scan regularly, spot changes over time. They are starting with body composition data (fat, muscle, bone density) while working toward FDA approval for full diagnostics. Midjourney has never shipped a physical product before, so the 2027 timeline is the real test.",
+    "expected_topic": "Midjourney body scanner"
+  },
+  {
+    "story_id": "20260618-alpha-signal.eml#1",
+    "source_item_id": "20260618-alpha-signal.eml",
+    "title": "OpenCut: Free Open-Source Video Editor",
+    "text": "CapCut locks basic features behind a paywall, slaps watermarks on your exports, and uploads your footage to their servers. A group of devs got fed up and built OpenCut, a fully open-source alternative that just hit 55,000 GitHub stars. Here's what you actually get: Multi-track timeline editor with real-time preview, no watermarks, no subscriptions; Runs in your browser, on desktop, and on mobile, all from one codebase; Your files never leave your device, everything is stored locally; MCP Server built in, meaning you can connect AI agents to automate editing tasks; MIT license, so you can fork it, modify it, ship it in your own product. The current version works today. A full rewrite in Rust (a faster, lower-level language) is in progress, adding a plugin system and scripting support. To try it: clone the repo, run bun install, then bun run dev. Done.",
+    "expected_topic": "OpenCut shipped"
+  },
+  {
+    "story_id": "20260618-alpha-signal.eml#2",
+    "source_item_id": "20260618-alpha-signal.eml",
+    "title": "Anthropic Launches Claude Design with Design System Integration",
+    "text": "Claude Design just got a big update, and the core idea is simple: stop letting AI invent your brand from scratch every time. The old problem? You'd prompt Claude Design to build a UI, and it would make up its own buttons, colors, and spacing. Every project looked slightly different. Now you can import your actual design system from a GitHub repo, a design file, or a raw upload. Claude builds with your real components, then checks its own output against your system before you even see it. Here's what's new and worth knowing: Import your design system once, stay on brand across every project; Edit directly on the canvas by dragging, resizing, and aligning elements; Use /design-sync in Claude Code to pull your design system into your terminal workflow; Export to PDF, PowerPoint, Canva, Vercel, and more; Shared usage limits with Claude Code, so less quota burn; Find it at claude.ai/design on any paid plan.",
+    "expected_topic": "Claude Design intergration"
+  },
+  {
+    "story_id": "20260618-superhuman.eml#0",
+    "source_item_id": "20260618-superhuman.eml",
+    "title": "AI image startup Midjourney announces full body scanner",
+    "text": "When AI image generation startup Midjourney said it was announcing a new hardware product, no one was expecting it to be a sci-fi style full body scanner. The company plans to deploy around 50,000 of these scanners around the world.",
+    "expected_topic": "Midjourney body scanner"
+  },
+  {
+    "story_id": "20260618-superhuman.eml#1",
+    "source_item_id": "20260618-superhuman.eml",
+    "title": "Noam Shazeer leaves Google to join OpenAI",
+    "text": "AI heavyweight Noam Shazeer is leaving Google to join OpenAI.",
+    "expected_topic": "Noam Shazeer joins OpenAI from Google"
+  },
+  {
+    "story_id": "20260618-superhuman.eml#2",
+    "source_item_id": "20260618-superhuman.eml",
+    "title": "Tim Cook warns iPhone and Mac prices may rise",
+    "text": "Tim Cook warns iPhone and Mac prices may rise: The outgoing CEO told the WSJ that its component costs have quadrupled since last year due to AI’s demand for memory chips, calling eventual price hikes 'unavoidable.' Research firm TechInsights estimates the company needs to add $270 to the next iPhone Pro to maintain its margin, implying the iPhone 18 Pro could cost $1,299.",
+    "expected_topic": "iPhone and Mac prices may rise"
+  },
+  {
+    "story_id": "20260618-superhuman.eml#3",
+    "source_item_id": "20260618-superhuman.eml",
+    "title": "Meta rolls out AI Mode on Facebook as employee morale sinks",
+    "text": "Meta rolls out AI Mode on Facebook as employee morale sinks: AI Mode is a search tab inside Facebook that pulls from publicly shared info across Meta’s apps, powered by the company’s proprietary Muse Spark model. But employees aren’t exactly celebrating — CTO Andrew Bosworth reportedly stated that morale is near its lowest point in his 20 years at the company, due to several rounds of layoffs and restructuring.",
+    "expected_topic": "Facebook AI mode"
+  },
+  {
+    "story_id": "20260618-superhuman.eml#4",
+    "source_item_id": "20260618-superhuman.eml",
+    "title": "Google’s first Gemini-powered smart speaker opens pre-orders",
+    "text": "Google’s first Gemini-powered smart speaker opens pre-orders: The Google Home Speaker, powered by Gemini, will better understand natural language requests, including conversational requests and multistep commands. It’s the tech giant’s first major speaker release since 2020 and is expected to ship later this month.",
+    "expected_topic": "Gemini-power speaker on pre-order"
+  },
+  {
+    "story_id": "20260618-superhuman.eml#5",
+    "source_item_id": "20260618-superhuman.eml",
+    "title": "Claude Fable’s plug is pulled — and the situation has sent an unspoken message",
+    "text": "Anthropic’s Claude Fable and Mythos went live for just days before the government suspended them, citing national security. The two groups are working on a solution, but the situation has sent a clear unspoken message — relying on a single model is becoming increasingly risky. As the industry evolves, it’s best to assume that access to your favorite model could shift without warning. Creating a handoff document can help you stay prepared to switch providers without slowing down. Just prompt your AI: 'Write a handoff document I can use to work successfully with another LLM. Include all stored memories, preferred workflows, and context you’ve learned.' Then feed that document to the next LLM to keep working smoothly. Want to go one step further? Consider downloading open-weight models, like Google’s Gemma family, to your own machine. Once downloaded, no lab or government can revoke your access. Other benefits: your data stays local, and you skip the monthly bills that come with frontier models. This is one of the first times that a government has pulled a live, public AI model — but it likely won’t be the last.",
+    "expected_topic": "Claude Fable pulled"
+  },
+  {
+    "story_id": "20260618-superhuman.eml#6",
+    "source_item_id": "20260618-superhuman.eml",
+    "title": "How to analyze data in Excel using ChatGPT",
+    "text": "Open Excel and click Add-ins in the Insert tab. Search ‘ChatGPT’ > ‘Add’ to open it in the sidebar. Click ‘Continue with ChatGPT’ > Login with your ChatGPT account. Upload your data (Excel, CSV, image, PDF or anything) and start prompting. Sample Prompt: 'give me a formula to calculate the total sales in column C for values above 500.' You can also prompt it to build financial models. Ask questions, get formulas, or generate analysis in plain language, and it turns them into real, usable results.",
+    "expected_topic": "Analyze data in Excel using ChatGPT"
+  },
+  {
+    "story_id": "20260618-superhuman.eml#7",
+    "source_item_id": "20260618-superhuman.eml",
+    "title": "What’s trending on socials today",
+    "text": "Meme of the day: AI Teacher: The viral mouse Clicky can now draw on your computer screen to visually walk you through complex topics (500K views). Setting Reminders: You can now schedule tasks in ChatGPT, making it easier to remember important events or meet future deadlines. Drawing Help: AI can help you master almost any skill — except maybe drawing. A viral Reddit post shows that its drawing advice only has two settings: overly complicated or frustratingly simple (4K upvotes). Falling Popularity: Search traffic for OpenClaw has dropped sharply, sparking a debate in this post’s comments about the reason why. Claude Design: Anthropic’s design tool now integrates directly with Claude Code, letting it connect to your repository and sync across projects.",
+    "expected_topic": "Trending AI topics on socials today"
+  },
+  {
+    "story_id": "20260618-superhuman.eml#8",
+    "source_item_id": "20260618-superhuman.eml",
+    "title": "5 New & Trending AI Tools",
+    "text": "Waybound: Not sure how to implement AI at your company? Waybound designs a strategy tailored to your needs. Durable: Build a professional website in 30 seconds with AI. SubscriptionFlow: Turn website visitors into customers with AI conversations. IdeaApe: Get market research done using Reddit data for brand strategy and validation. Caddie: Joins sales calls, researches questions in real time, and gives reps instant answers and insights.",
+    "expected_topic": "New & trending AI tools"
+  },
+  {
+    "story_id": "20260618-superhuman.eml#9",
+    "source_item_id": "20260618-superhuman.eml",
+    "title": "Debug Like a Senior Engineer - Claude Code Prompt",
+    "text": "Claude Code Prompt: Analyze this error stack trace. Identify the root cause, explain exactly why it happens in plain English, suggest a fix with proper error handling, and write a regression test to prevent it: [ERROR]",
+    "expected_topic": "Claude Code debug prompt"
+  },
+  {
+    "story_id": "20260618-superhuman.eml#10",
+    "source_item_id": "20260618-superhuman.eml",
+    "title": "ChatGPT 2.0 Image Prompt",
+    "text": "Create a stylized watercolor and gouache illustration based on the following artistic style. Do not invent a new scene, transform the user's reference photo using these exact visual characteristics: - Style: Modern gouache folk art illustration with hand-painted watercolor textures and a matte finish. - Anatomy & Lines: Distorted anatomy, expressive blocky shapes, fluid outlines, and visible soft brushstrokes. - Facial Features: Stylized closed eyes, thin arched eyebrows, a long sharp nose, and simple flat lips. Distinct, clean, and minimalist facial structures. - Complexion: Warm skin tones, heavy distinct freckles, and prominent rosy textured cheeks with a stippled or dry-brush effect. - Composition: Organic flowing composition, interwoven layers, shallow depth of field, and a soft pastel background with vibrant botanical overlays. - Color Palette: Warm earth tones contrasted against cool botanical accent colors.",
+    "expected_topic": "ChatGPT 2.0 image prompt"
+  }
+]

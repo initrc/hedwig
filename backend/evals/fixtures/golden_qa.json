@@ -1,0 +1,59 @@
+[
+  {
+    "question": "Which new open-source LLMs were released this week?",
+    "expected_source_ids": [
+      "20260617-alpha-signal.eml",
+      "20260618-alpha-signal.eml"
+    ],
+    "topic_label": null,
+    "expect_refusal": false
+  },
+  {
+    "question": "Was there any hardware release that integrates with AI?",
+    "expected_source_ids": ["20260618-superhuman.eml"],
+    "topic_label": null,
+    "expect_refusal": false
+  },
+  {
+    "question": "Was there any news on medical application of AI?",
+    "expected_source_ids": [
+      "20260618-alpha-signal.eml",
+      "20260618-superhuman.eml"
+    ],
+    "topic_label": null,
+    "expect_refusal": false
+  },
+  {
+    "question": "Where can I access Midjourney's body scanner?",
+    "expected_source_ids": [
+      "20260618-alpha-signal.eml",
+      "20260618-superhuman.eml"
+    ],
+    "topic_label": "Midjourney body scanner",
+    "expect_refusal": false
+  },
+  {
+    "question": "Was there any AI company acquisition this week?",
+    "expected_source_ids": ["20260617-superhuman.eml"],
+    "topic_label": null,
+    "expect_refusal": false
+  },
+  {
+    "question": "What is the rumored price of the new iPhone",
+    "expected_source_ids": ["20260618-superhuman.eml"],
+    "topic_label": null,
+    "expect_refusal": false
+  },
+  {
+    "question": "What's the rumored IPO date of OpenAI?",
+    "expected_source_ids": [],
+    "topic_label": null,
+    "expect_refusal": true
+  },
+  {
+    "question": "What's the weather forecast for Tokyo tomorrow?",
+    "expected_source_ids": [],
+    "topic_label": null,
+    "expect_refusal": true
+  }
+]

@@ -16,6 +16,7 @@ from pydantic import BaseModel
 
 from app.llm.client import LLMClient, parse_structured
 from app.pipeline.cluster import Topic
+from app.pipeline.prompts import DEFAULT_PROMPT_VERSION, get_summarize_prompt
 from app.pipeline.segment import Story
 
 
@@ -53,16 +54,11 @@ class DraftSummary(BaseModel):
     source_ids: list[str]
 
 
-# Hand-written, and meant to be tweaked as you read real replies: it tells the
-# model to stay true to the stories and to cite only the ids we sent.
-_SYSTEM_PROMPT = (
-    "You write up one topic from a day's newsletters. You are given the topic's "
-    "stories, each tagged with the id of the source newsletter it came from. Write "
-    "a short summary that combines the stories into one account and stays true to "
-    "them, adding nothing they do not say. Cite your sources: return the ids of the "
-    "source newsletters your summary uses, using only ids that appear in the input "
-    "and never inventing one."
-)
+# The summarization prompt, kept as a versioned artifact in `prompts.py` so it
+# can be swapped (e.g. by the prompt-comparison eval) without editing this file.
+# Kept here as a name as well so `evals.injection` can still import the literal
+# text it checks for leakage; it always equals the v1 prompt.
+_SYSTEM_PROMPT = get_summarize_prompt(DEFAULT_PROMPT_VERSION)
 
 
 def _story_block(story: Story) -> str:
@@ -96,11 +92,21 @@ def _resolve_sources(source_ids: Iterable[str], valid: set[str]) -> list[Source]
     return sources
 
 
-def summarize_topic(topic: Topic, *, client: LLMClient | None = None) -> TopicSummary:
+def summarize_topic(
+    topic: Topic,
+    *,
+    client: LLMClient | None = None,
+    prompt_version: str = DEFAULT_PROMPT_VERSION,
+) -> TopicSummary:
     """Summarize one `topic`, keeping only citations that point to its sources.
 
     The citations are checked in code: `sources` can only name a newsletter that
     fed this topic (found through `Story.source_item_id`); anything else is dropped.
+
+    `prompt_version` selects the summarization prompt from the registry in
+    `prompts.py`. It defaults to v1 — the prompt the production pipeline has
+    always used — so callers that omit it see no change. Pass another version
+    (e.g. "v2") to run a regression comparison without forking the pipeline.
 
     Pass `client` only in tests, to use a fake connection instead of the real one.
     """
@@ -109,7 +115,7 @@ def summarize_topic(topic: Topic, *, client: LLMClient | None = None) -> TopicSu
     valid = {story.source_item_id for story in topic.stories}
 
     messages: list[ChatCompletionMessageParam] = [
-        {"role": "system", "content": _SYSTEM_PROMPT},
+        {"role": "system", "content": get_summarize_prompt(prompt_version)},
         {"role": "user", "content": _user_prompt(topic)},
     ]
     draft = parse_structured(
@@ -126,7 +132,13 @@ def summarize_topic(topic: Topic, *, client: LLMClient | None = None) -> TopicSu
 
 
 def summarize_topics(
-    topics: Iterable[Topic], *, client: LLMClient | None = None
+    topics: Iterable[Topic],
+    *,
+    client: LLMClient | None = None,
+    prompt_version: str = DEFAULT_PROMPT_VERSION,
 ) -> list[TopicSummary]:
     """Summarize many topics, in the same order."""
-    return [summarize_topic(topic, client=client) for topic in topics]
+    return [
+        summarize_topic(topic, client=client, prompt_version=prompt_version)
+        for topic in topics
+    ]

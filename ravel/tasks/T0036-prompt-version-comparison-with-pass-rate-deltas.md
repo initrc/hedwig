@@ -1,7 +1,7 @@
 ---
 id: T0036
 title: Prompt-version comparison with pass-rate deltas
-status: new
+status: done
 dependencies:
   - T0033
 ---
@@ -70,3 +70,27 @@ dependencies:
 - **Out of scope:** comparing prompts for other stages (cluster, RAG) — the build plan scopes this
   to the summarization prompt; the same mechanism generalizes later. The runner and scorecard are
   T0037.
+
+# Findings
+
+- **Prompt registry:** `backend/app/pipeline/prompts.py` holds the two versions as named
+  artifacts in `SUMMARIZE_PROMPTS` (``v1`` verbatim, ``v2`` a deliberate variant), looked up by
+  `get_summarize_prompt(version)`. `DEFAULT_PROMPT_VERSION = "v1"`.
+- **`summarize_topic` / `summarize_topics`** gained an optional `prompt_version: str = "v1"`
+  keyword; the default keeps the production pipeline and all existing tests unchanged. The old
+  `_SYSTEM_PROMPT` name is kept (assigned to the v1 text) so `evals.injection`'s leak check still
+  imports it.
+- **v2 change:** a conciseness variant — adds a hard budget ("two to three sentences, roughly 60
+  words at most"), tells the model to cut every non-informational word, and to ignore boilerplate /
+  sponsor / unsubscribe text. The citation instruction is kept verbatim so the code-enforced id
+  check still works.
+- **`eval_prompt_comparison`** lives in `backend/evals/prompt_comparison.py`. It groups the labeled
+  stories by their human labels (so the only variable is the prompt), summarizes each topic under
+  each version, builds a `Digest`, and runs T0033's `eval_summary_quality` twice. It parses the
+  per-dimension averages out of the aggregate `EvalResult.detail` and emits three results:
+  `prompt_comparison/v1`, `prompt_comparison/v2`, and `prompt_comparison` (whose `detail` states
+  the v2−v1 deltas per rubric dimension and overall, plus pass-rate deltas, and names the
+  higher-scoring version). The delta result passes when v2 does not regress on the overall score.
+- **Live-run delta:** not measured here. The comparison makes real summarize + judge LLM calls
+  (double the labeled set's cost), so the live run is gated by T0037's `--live`/env flag; the delta
+  numbers get filled in once that runner exists.

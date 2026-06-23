@@ -126,12 +126,16 @@ def _judge_user_prompt(topic: DigestTopic) -> str:
     )
 
 
-def _judge_topic(
+def judge_topic(
     topic: DigestTopic,
     *,
     judge_client: LLMClient | None = None,
 ) -> RubricScore:
-    """Run the judge on one topic's summary and return its structured scores."""
+    """Run the judge on one topic's summary and return its structured scores.
+
+    Public so the RAG faithfulness eval can reuse the same judge core (and the
+    same rubric) against a `DigestTopic` built from retrieved chunks.
+    """
     messages: list[ChatCompletionMessageParam] = [
         {"role": "system", "content": _JUDGE_SYSTEM_PROMPT},
         {"role": "user", "content": _judge_user_prompt(topic)},
@@ -189,7 +193,7 @@ def eval_summary_quality(
     cohere_scores: list[float] = []
 
     for topic in digest.topics:
-        rubric = _judge_topic(topic, judge_client=judge_client)
+        rubric = judge_topic(topic, judge_client=judge_client)
 
         weighted = _weighted_aggregate(rubric.faithfulness, rubric.conciseness, rubric.coherence)
 
@@ -264,7 +268,7 @@ def load_judge_calibration(
 def _calibration_topic(item: CalibrationItem) -> DigestTopic:
     """Build a `DigestTopic` from a calibration entry.
 
-    The stories in the fixture become `DigestSource` objects so `_judge_topic`
+    The stories in the fixture become `DigestSource` objects so `judge_topic`
     can consume them through the same path as real digest topics.
     """
     sources = [
@@ -308,7 +312,7 @@ def eval_judge_calibration(
 
     for item in items:
         topic = _calibration_topic(item)
-        rubric = _judge_topic(topic, judge_client=judge_client)
+        rubric = judge_topic(topic, judge_client=judge_client)
         human = item.human_scores
 
         faith_delta = rubric.faithfulness - human.faithfulness

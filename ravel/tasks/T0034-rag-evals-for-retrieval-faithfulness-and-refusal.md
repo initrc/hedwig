@@ -1,7 +1,7 @@
 ---
 id: T0034
 title: RAG evals for retrieval, faithfulness, and refusal
-status: new
+status: done
 dependencies:
   - T0032
 ---

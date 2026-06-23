@@ -1,7 +1,7 @@
 ---
 id: T0035
 title: Safety and robustness probes for prompt injection
-status: new
+status: done
 dependencies:
   - T0032
 ---

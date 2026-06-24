@@ -118,9 +118,7 @@ def _labeled_stories() -> tuple[list[Story], dict[str, str]]:
     return stories, labels
 
 
-def _eval_digest(
-    stories: list[Story], labels: dict[str, str], *, client: LLMClient
-) -> Digest:
+def _eval_digest(stories: list[Story], labels: dict[str, str], *, client: LLMClient) -> Digest:
     """Build the `Digest` the summary eval judges, from the labeled stories.
 
     Groups the stories by their expected topic (the labels define the grouping)
@@ -385,6 +383,40 @@ def _live_embed() -> EmbedFn:
     return embed
 
 
+def _live_injection_chunk_store(embed_fn: EmbedFn) -> VectorStore:
+    """A `StubStore` seeded with real embeddings of the injection question chunks.
+
+    In live mode the RAG injection probe must retrieve against chunks whose
+    embeddings were computed by the real embedding function, so cosine similarity
+    between the real question embedding and the real chunk-text embedding clears
+    the 0.35 guardrail and `ask()` reaches the real LLM call.
+    """
+    from tests.rag.fakes import StubStore
+
+    questions = load_injection_questions()
+    texts = [q.chunk_text for q in questions]
+    embeddings = embed_fn(texts)
+
+    store = StubStore()
+    for q, embedding in zip(questions, embeddings, strict=True):
+        store.insert(
+            [
+                IndexChunk(
+                    text=q.chunk_text,
+                    embedding=embedding,
+                    metadata={
+                        "digest_date": "2026-06-15",
+                        "topic_label": q.chunk_topic_label,
+                        "source_id": q.chunk_source_id,
+                        "source_subject": q.chunk_source_subject,
+                        "chunk_index": 0,
+                    },
+                )
+            ]
+        )
+    return store
+
+
 # ---------------------------------------------------------------------------
 # Running the suite
 # ---------------------------------------------------------------------------
@@ -430,9 +462,10 @@ def _build_evals(*, live: bool) -> list[tuple[str, _EvalThunk]]:
         embed_fn = _live_embed()
         llm_client = OpenAIClient.get()
         judge_client = llm_client
-        # Live: the RAG injection probe retrieves against the real on-disk index,
-        # the same store the rest of live mode uses.
-        injection_store = store
+        # Live: seed an in-memory store with real embeddings of the injection
+        # chunks so retrieval genuinely clears the guardrail and ask() reaches
+        # the real LLM call where the injected text would take effect.
+        injection_store = _live_injection_chunk_store(embed_fn)
     else:
         from tests.rag.fakes import StubStore
 

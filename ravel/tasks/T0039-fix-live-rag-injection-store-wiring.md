@@ -1,7 +1,7 @@
 ---
 id: T0039
 title: Fix live-mode RAG-injection store wiring in the eval runner
-status: new
+status: done
 dependencies: []
 ---
 

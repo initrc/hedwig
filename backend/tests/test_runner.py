@@ -13,7 +13,7 @@ LLM — mirroring the conventions in `tests/routes/test_digest_routes.py`.
 from __future__ import annotations
 
 from collections.abc import Iterator
-from datetime import date
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -22,7 +22,7 @@ import pytest
 from app.ingest.source import LocalEmlSource
 from app.llm.fake_client import FakeClient, model_reply
 from app.pipeline.digest import Digest
-from app.runner import run_digests, should_run_digest
+from app.runner import run_digests, should_run_daily, should_run_digest
 from app.status import DigestStatus
 from app.storage.digest_store import DigestStore
 from tests.fakes import make_digest, make_digest_source, make_digest_topic, make_story_source
@@ -55,8 +55,7 @@ def _stub_pipeline(
         for item in items
     ]
     story_sources = [
-        make_story_source(text=item.clean_text, source_item_id=item.id)
-        for item in items
+        make_story_source(text=item.clean_text, source_item_id=item.id) for item in items
     ]
     return make_digest(
         digest_date=date,
@@ -102,6 +101,64 @@ def test_should_run_returns_false_when_no_sources(deps: dict[str, Any]) -> None:
 
 def test_should_run_returns_true_when_store_empty(deps: dict[str, Any]) -> None:
     assert should_run_digest(["a.eml"], deps["store"]) is True
+
+
+# ---------------------------------------------------------------------------
+# should_run_daily (IMAP trigger policy)
+# ---------------------------------------------------------------------------
+
+
+def _stamp_last_digest(store: DigestStore, when: datetime) -> None:
+    """Overwrite the most recent digest's `generated_at` for deterministic tests."""
+    store._conn.execute("UPDATE digests SET generated_at = ?", [when.isoformat()])
+    store._conn.commit()
+
+
+def test_should_run_daily_true_when_store_empty(deps: dict[str, Any]) -> None:
+    """Never run → run."""
+    assert should_run_daily(deps["store"]) is True
+
+
+def test_should_run_daily_true_when_last_digest_predates_today(
+    deps: dict[str, Any],
+) -> None:
+    """A digest from yesterday (or earlier) triggers a run today."""
+    store: DigestStore = deps["store"]
+    store.save(make_digest())
+    _stamp_last_digest(store, datetime.now(UTC) - timedelta(days=1, hours=2))
+
+    assert should_run_daily(store) is True
+
+
+def test_should_run_daily_false_when_last_digest_is_today(deps: dict[str, Any]) -> None:
+    """A digest already produced today does not re-trigger on a same-day restart."""
+    store: DigestStore = deps["store"]
+    store.save(make_digest())
+    _stamp_last_digest(store, datetime.now(UTC) - timedelta(hours=2))
+
+    assert should_run_daily(store) is False
+
+
+def test_should_run_daily_uses_utc_day_boundary(deps: dict[str, Any]) -> None:
+    """A digest at 23:30 UTC yesterday still counts as 'today' is a new day."""
+    store: DigestStore = deps["store"]
+    store.save(make_digest())
+
+    now = datetime(2026, 6, 24, 0, 5, tzinfo=UTC)
+    _stamp_last_digest(store, datetime(2026, 6, 23, 23, 30, tzinfo=UTC))
+
+    assert should_run_daily(store, now=now) is True
+
+
+def test_should_run_daily_same_utc_day_no_rerun(deps: dict[str, Any]) -> None:
+    """Within the same UTC day, no re-run even hours later."""
+    store: DigestStore = deps["store"]
+    store.save(make_digest())
+
+    now = datetime(2026, 6, 24, 23, 55, tzinfo=UTC)
+    _stamp_last_digest(store, datetime(2026, 6, 24, 0, 5, tzinfo=UTC))
+
+    assert should_run_daily(store, now=now) is False
 
 
 # ---------------------------------------------------------------------------

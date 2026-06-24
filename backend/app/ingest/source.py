@@ -5,14 +5,17 @@ The parser consumes `RawEmail` objects and does not care whether they were read
 from local `.eml` files or fetched over IMAP.
 
 `get_email_source` picks an implementation from the `EMAIL_SOURCE` env var:
-`samples` (the default) reads the committed `.eml` files, `imap` will read a
-real mailbox (implemented in a later task). Callers that want a specific source
-can construct `LocalEmlSource` / `ImapSource` directly.
+`samples` (the default) reads the committed `.eml` files, `imap` builds an
+`ImapSource` from the `IMAP_*` env vars (sender allowlist; the fetch start date
+resumes from the last digest, falling back to `IMAP_INITIAL_SINCE_DAYS` on the
+first run). Callers that want a specific source can construct `LocalEmlSource` /
+`ImapSource` directly.
 """
 
 import os
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
+from datetime import date
 from email.message import Message
 from email.parser import BytesParser
 from email.policy import default
@@ -64,18 +67,27 @@ def list_local_source_ids(samples_dir: Path) -> list[str]:
     return sorted(path.name for path in samples_dir.glob("*.eml"))
 
 
-def get_email_source(samples_dir: Path) -> EmailSource:
+def email_source_choice() -> str:
+    """Return the normalized `EMAIL_SOURCE` env var (`samples` or `imap`)."""
+    return os.environ.get("EMAIL_SOURCE", "samples").strip().lower()
+
+
+def get_email_source(samples_dir: Path, *, since: date | None = None) -> EmailSource:
     """Build the `EmailSource` selected by the `EMAIL_SOURCE` env var.
 
     `EMAIL_SOURCE=samples` (the default) returns a `LocalEmlSource` pointed at
-    `samples_dir`. `EMAIL_SOURCE=imap` will return an `ImapSource.from_env()`
-    in a later task; for now it raises `NotImplementedError` so the choice is
-    explicit and the extension point is visible.
+    `samples_dir`. `EMAIL_SOURCE=imap` returns an `ImapSource.from_env()`,
+    built from `IMAP_*` (including the `IMAP_SENDERS` allowlist). `since` is
+    the IMAP fetch start date — pass the last digest's date so a downtime gap
+    is recovered in one fetch; when omitted (first run), `from_env` falls back
+    to `IMAP_INITIAL_SINCE_DAYS` days back. `samples_dir` and `since` are
+    unused outside their respective mode.
     """
-    choice = os.environ.get("EMAIL_SOURCE", "samples").strip().lower()
+    choice = email_source_choice()
     if choice == "samples":
         return LocalEmlSource(samples_dir)
     if choice == "imap":
-        # Real-email ingestion is a later task; see T0021 implementation notes.
-        raise NotImplementedError("EMAIL_SOURCE=imap is not implemented yet")
+        from app.ingest.imap_source import ImapSource
+
+        return ImapSource.from_env(since=since)
     raise ValueError(f"Unknown EMAIL_SOURCE {choice!r} (expected 'samples' or 'imap')")

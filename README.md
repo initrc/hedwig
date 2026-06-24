@@ -11,11 +11,15 @@ The project is also a vehicle for practicing Applied AI end to end: prompt engin
 ## Architecture
 
 ```
-LocalEmlSource ──> Parser ────> Pipeline ──> Digest ──┬──> SQLite
-(reads .eml)       (html to     (segment →            ├──> ChromaDB
-                    clean text)  cluster →            └──> GET /digests
-                                 summarize)
+ImapSource ─┐
+(IMAP)      ├──> EmailSource ──> Parser ────> Pipeline ──> Digest ──┬──> SQLite
+LocalEml    ┘    (interface)     (html →      (segment →            ├──> ChromaDB
+(.eml files)                      clean text)  cluster →            └──> GET /digests
+                                               summarize)
 ```
+At startup the backend auto-runs the digest pipeline iff new content is
+available: per-file detection for `samples`, once-per-UTC-day for `imap` (with
+gap recovery — fetch resumes from the last digest's date).
 
 **Stack:**
 
@@ -34,8 +38,8 @@ The backend and frontend communicate through a Next.js rewrite proxy (`/api/*` �
 
 The backend starts by fetching raw newsletter emails through an `EmailSource` interface (`backend/app/ingest/source.py`).
 
-- **LocalEmlSource** reads `.eml` files from `backend/samples/`. This is the default and works offline with no network dependency — it's the only source used today.
-- **ImapSource** (stubbed, not yet wired up) will connect to an IMAP mailbox and fetch messages filtered by sender and date. Selectable at runtime via the `EMAIL_SOURCE` environment variable once live.
+- **LocalEmlSource** reads `.eml` files from `backend/samples/`. This is the default and works offline with no network dependency.
+- **ImapSource** connects to an IMAP mailbox (Gmail via app password) and fetches messages filtered by a sender allowlist (`IMAP_SENDERS`) and a fetch start date. On the first run it looks back `IMAP_INITIAL_SINCE_DAYS` days; subsequent runs resume from the last digest's date so a downtime gap is recovered in one fetch. Selectable at runtime via `EMAIL_SOURCE=imap`.
 
 Each raw email flows through the parser (`backend/app/ingest/parser.py`), which extracts the HTML body, strips it to clean readable text (via `readability-lxml` + BeautifulSoup), collects candidate images (filtering out sub-100px junk like logos and tracking pixels), and captures any "view in browser" URL. The output is a `ParsedEmail` — a normalized structure with `id`, `source`, `subject`, `received_at`, `clean_text`, and `candidate_images`.
 
@@ -77,7 +81,7 @@ Scoped chat (`POST /chat?topic_label=...`) restricts retrieval to chunks from a 
 
 ### Auto-run on startup
 
-On startup, the backend checks whether any sample emails have not yet been processed (`backend/app/runner.py`). If new emails exist, it spawns a daemon thread to run the full digest pipeline in the background, so the server is immediately responsive while the LLM works. `GET /status` reports either `{"state": "running", "email_count": N}` or `{"state": "idle", "last_digest_at": ...}`. The frontend polls this endpoint every 30 seconds while a run is in progress and stops once idle (the digest runs once a day; the next day is a new session).
+On startup, the backend checks whether new emails need processing (`backend/app/runner.py`). The trigger differs by source: for `EMAIL_SOURCE=samples`, it runs whenever a sample file has not yet been digested (compared by filename); for `EMAIL_SOURCE=imap`, it runs once per UTC day, fetching from the last digest's date forward so a multi-day downtime gap is recovered in one run. Either way, the digest pipeline spawns on a daemon thread so the server is immediately responsive while the LLM works. `GET /status` reports either `{"state": "running", "email_count": N}` or `{"state": "idle", "last_digest_at": ...}`. The frontend polls this endpoint every 30 seconds while a run is in progress and stops once idle.
 
 ### LLM client
 
@@ -140,7 +144,8 @@ Clicking a topic card opens a right-side slide-over panel (`frontend/components/
 
 ```bash
 cd backend
-cp .env.example .env    # add your DEEPSEEK_API_KEY and OPENAI_API_KEY
+cp .env.example .env    # add your DEEPSEEK_API_KEY and OPENAI_API_KEY;
+                        # set IMAP_* vars for real-email ingestion
 uv run fastapi dev
 ```
 
@@ -162,4 +167,6 @@ Open [http://localhost:3000](http://localhost:3000). The frontend proxies `/api/
 | `DEEPSEEK_API_KEY` | LLM for pipeline and chat | Yes |
 | `OPENAI_API_KEY` | Embeddings for RAG | Yes |
 | `EMAIL_SOURCE` | `samples` (default) or `imap` | No |
-| `IMAP_HOST` / `IMAP_USERNAME` / `IMAP_PASSWORD` | IMAP credentials (only for `EMAIL_SOURCE=imap`) | No |
+| `IMAP_HOST` / `IMAP_PORT` / `IMAP_USERNAME` / `IMAP_PASSWORD` | IMAP connection (only for `EMAIL_SOURCE=imap`; Gmail requires an app password) | No |
+| `IMAP_SENDERS` | Comma-separated newsletter sender emails (required in IMAP mode) | No |
+| `IMAP_INITIAL_SINCE_DAYS` | Days back to fetch on the first IMAP run; subsequent runs resume from the last digest (default 1) | No |

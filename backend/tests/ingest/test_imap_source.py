@@ -121,3 +121,90 @@ def test_fetch_yields_raw_emails_keyed_by_uid(fake_imap: type[FakeIMAP4_SSL]) ->
     for email in emails:
         assert isinstance(email, RawEmail)
         assert email.message["Subject"] == "Weekly digest"
+
+
+# --- from_env (IMAP_SENDERS / IMAP_INITIAL_SINCE_DAYS parsing) ---
+
+
+def _set_imap_env(monkeypatch: pytest.MonkeyPatch, *, senders: str | None) -> None:
+    monkeypatch.setenv("IMAP_HOST", "imap.gmail.com")
+    monkeypatch.setenv("IMAP_PORT", "993")
+    monkeypatch.setenv("IMAP_USERNAME", "user@gmail.com")
+    monkeypatch.setenv("IMAP_PASSWORD", "secret")
+    if senders is None:
+        monkeypatch.delenv("IMAP_SENDERS", raising=False)
+    else:
+        monkeypatch.setenv("IMAP_SENDERS", senders)
+
+
+def test_from_env_reads_senders_and_credentials(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _set_imap_env(monkeypatch, senders="news@stratechery.com, digest@axios.com")
+    monkeypatch.setenv("IMAP_INITIAL_SINCE_DAYS", "7")
+
+    source = ImapSource.from_env()
+
+    assert source.host == "imap.gmail.com"
+    assert source.port == 993
+    assert source.username == "user@gmail.com"
+    assert source.password == "secret"
+    assert source.senders == ["news@stratechery.com", "digest@axios.com"]
+    assert source.since is not None
+
+
+def test_from_env_strips_blank_senders(monkeypatch: pytest.MonkeyPatch) -> None:
+    _set_imap_env(monkeypatch, senders=" a@x.com , , b@y.com , ")
+
+    source = ImapSource.from_env()
+
+    assert source.senders == ["a@x.com", "b@y.com"]
+
+
+def test_from_env_raises_when_senders_empty(monkeypatch: pytest.MonkeyPatch) -> None:
+    _set_imap_env(monkeypatch, senders="")
+
+    with pytest.raises(ValueError, match="IMAP_SENDERS"):
+        ImapSource.from_env()
+
+
+def test_from_env_raises_when_senders_unset(monkeypatch: pytest.MonkeyPatch) -> None:
+    _set_imap_env(monkeypatch, senders=None)
+
+    with pytest.raises(ValueError, match="IMAP_SENDERS"):
+        ImapSource.from_env()
+
+
+def test_from_env_defaults_initial_since_to_one_day_back(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _set_imap_env(monkeypatch, senders="a@x.com")
+    monkeypatch.delenv("IMAP_INITIAL_SINCE_DAYS", raising=False)
+
+    source = ImapSource.from_env()
+
+    assert source.since is not None
+    # The default window is one day; just assert it's recent, not an exact date.
+    assert (date.today() - source.since).days <= 2
+
+
+def test_from_env_invalid_initial_since_days_raises(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _set_imap_env(monkeypatch, senders="a@x.com")
+    monkeypatch.setenv("IMAP_INITIAL_SINCE_DAYS", "not-a-number")
+
+    with pytest.raises(ValueError):
+        ImapSource.from_env()
+
+
+def test_from_env_explicit_args_override_env(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _set_imap_env(monkeypatch, senders="env@x.com")
+    monkeypatch.setenv("IMAP_INITIAL_SINCE_DAYS", "7")
+
+    source = ImapSource.from_env(senders=["explicit@x.com"], since=date(2026, 1, 1))
+
+    assert source.senders == ["explicit@x.com"]
+    assert source.since == date(2026, 1, 1)

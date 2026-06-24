@@ -13,7 +13,7 @@ import imaplib
 import logging
 import os
 from collections.abc import Iterator
-from datetime import date
+from datetime import UTC, date, datetime, timedelta
 from email.parser import BytesParser
 from email.policy import default
 
@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_PORT = 993
 DEFAULT_MAILBOX = "INBOX"
+DEFAULT_INITIAL_SINCE_DAYS = 1
 
 
 class ImapSource:
@@ -55,12 +56,33 @@ class ImapSource:
     @classmethod
     def from_env(
         cls,
+        *,
         since: date | None = None,
         senders: list[str] | None = None,
         mailbox: str = DEFAULT_MAILBOX,
     ) -> ImapSource:
-        """Build an `ImapSource` from IMAP_* variables in `.env` / the environment."""
+        """Build an `ImapSource` from IMAP_* variables in `.env` / the environment.
+
+        `IMAP_SENDERS` (comma-separated newsletter sender emails) feeds the
+        sender allowlist when the caller does not pass one. An empty
+        `IMAP_SENDERS` is a loud error: an unfiltered mailbox fetch is exactly
+        the failure mode the allowlist exists to prevent.
+
+        `since` is the fetch start date. The caller should pass the last
+        digest's date so a downtime gap is recovered in one fetch; when
+        `since` is omitted (the very first run, no prior digest), it falls back
+        to `IMAP_INITIAL_SINCE_DAYS` days back from today.
+        """
         load_dotenv()
+        if senders is None:
+            senders = _parse_senders(os.environ.get("IMAP_SENDERS", ""))
+        if not senders:
+            raise ValueError(
+                "IMAP_SENDERS is empty; set it to a comma-separated list of "
+                "newsletter sender emails before enabling EMAIL_SOURCE=imap."
+            )
+        if since is None:
+            since = _initial_since_from_env(os.environ.get("IMAP_INITIAL_SINCE_DAYS", ""))
         return cls(
             host=os.environ["IMAP_HOST"],
             port=int(os.environ.get("IMAP_PORT", str(DEFAULT_PORT))),
@@ -131,3 +153,21 @@ def _or_from_clause(senders: list[str]) -> str:
     for sender in senders[1:]:
         clause = f'OR {clause} FROM "{sender}"'
     return clause
+
+
+def _parse_senders(raw: str) -> list[str]:
+    """Split a comma-separated sender list, dropping blanks and whitespace."""
+    return [s.strip() for s in raw.split(",") if s.strip()]
+
+
+def _initial_since_from_env(raw: str) -> date:
+    """Turn the `IMAP_INITIAL_SINCE_DAYS` env var into a `date` that many days back.
+
+    This is the fetch window for the very first run, when no prior digest
+    exists to resume from. Defaults to `DEFAULT_INITIAL_SINCE_DAYS` when unset
+    or blank. A non-integer value is a loud error so a typo doesn't silently
+    widen the fetch window.
+    """
+    text = raw.strip()
+    days = int(text) if text else DEFAULT_INITIAL_SINCE_DAYS
+    return (datetime.now(UTC) - timedelta(days=days)).date()

@@ -7,7 +7,7 @@ Plain (non-package) project: code lives in the `app/` package, tests in `tests/`
 
 ```bash
 uv sync                # creates .venv and installs dependencies
-cp .env.example .env   # fill in IMAP credentials when needed (T0003)
+cp .env.example .env   # fill in API keys; set IMAP_* vars for real-email ingestion
 ```
 
 ## Run
@@ -17,16 +17,29 @@ uv run fastapi dev     # auto-discovers app/main.py, starts dev server with relo
 ```
 
 On startup the backend runs the digest pipeline automatically when there are
-sample emails not yet digested (see `EMAIL_SOURCE` in `.env`). The run happens
-in a background thread so the server stays responsive. `GET /status` reports
-what is happening:
+emails to process (see `EMAIL_SOURCE` in `.env`). The trigger depends on the
+chosen source:
+
+- **samples** (default): runs when any `.eml` file in `backend/samples/` has
+  not yet been digested. Adding a new file triggers a re-run; an unchanged
+  folder does not.
+- **imap**: runs once per UTC day. The fetch starts from the last digest's
+  date so a downtime gap is recovered in one run; on the very first run it
+  looks back `IMAP_INITIAL_SINCE_DAYS` days. Requires `IMAP_SENDERS` (sender
+  allowlist) and Gmail app-password credentials (`IMAP_USERNAME`,
+  `IMAP_PASSWORD`).
+
+The run happens in a background thread so the server stays responsive.
+`GET /status` reports what is happening:
 
 - `{"state": "running", "email_count": N}` while a digest is being generated.
 - `{"state": "idle", "last_digest_at": "<ISO>"}` when no run is in progress (`null` until the first digest exists).
 
-Restarting the server does not re-run the pipeline unless a new `.eml` file
-has been added to `samples/` — already-digested source ids are recorded in the
-database, so the startup check is idempotent.
+Restarting the server with `EMAIL_SOURCE=samples` does not re-run the pipeline
+unless a new `.eml` file has been added to `samples/` — already-digested source
+ids are recorded in the database so the startup check is idempotent. With
+`EMAIL_SOURCE=imap`, restarting the same UTC day does not re-run; the next day
+triggers a fresh run.
 
 ## Parse samples
 

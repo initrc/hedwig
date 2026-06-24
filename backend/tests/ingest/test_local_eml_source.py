@@ -1,7 +1,9 @@
+from datetime import date
 from pathlib import Path
 
 import pytest
 
+from app.ingest.imap_source import ImapSource
 from app.ingest.source import (
     EmailSource,
     LocalEmlSource,
@@ -67,25 +69,63 @@ def test_get_email_source_defaults_to_samples(
     assert source.samples_dir == tmp_path
 
 
-def test_get_email_source_samples_explicit(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_get_email_source_samples_explicit(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("EMAIL_SOURCE", "samples")
     assert isinstance(get_email_source(tmp_path), LocalEmlSource)
 
 
-def test_get_email_source_imap_not_implemented(
+def test_get_email_source_imap_builds_from_env(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """EMAIL_SOURCE=imap is the extension point for the later real-email task."""
+    """EMAIL_SOURCE=imap returns an ImapSource built from IMAP_* env vars."""
     monkeypatch.setenv("EMAIL_SOURCE", "imap")
-    with pytest.raises(NotImplementedError):
+    monkeypatch.setenv("IMAP_HOST", "imap.gmail.com")
+    monkeypatch.setenv("IMAP_PORT", "993")
+    monkeypatch.setenv("IMAP_USERNAME", "user@gmail.com")
+    monkeypatch.setenv("IMAP_PASSWORD", "secret")
+    monkeypatch.setenv("IMAP_SENDERS", "news@stratechery.com, digest@axios.com")
+    monkeypatch.setenv("IMAP_INITIAL_SINCE_DAYS", "3")
+
+    source = get_email_source(tmp_path)
+
+    assert isinstance(source, ImapSource)
+    assert source.host == "imap.gmail.com"
+    assert source.username == "user@gmail.com"
+    assert source.senders == ["news@stratechery.com", "digest@axios.com"]
+    assert source.since is not None
+
+
+def test_get_email_source_imap_requires_senders(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """An empty IMAP_SENDERS is a loud error, not a fetch-everything fallback."""
+    monkeypatch.setenv("EMAIL_SOURCE", "imap")
+    monkeypatch.setenv("IMAP_HOST", "imap.gmail.com")
+    monkeypatch.setenv("IMAP_USERNAME", "user@gmail.com")
+    monkeypatch.setenv("IMAP_PASSWORD", "secret")
+    monkeypatch.delenv("IMAP_SENDERS", raising=False)
+
+    with pytest.raises(ValueError, match="IMAP_SENDERS"):
         get_email_source(tmp_path)
 
 
-def test_get_email_source_unknown_raises(
+def test_get_email_source_imap_passes_since_through(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    """An explicit `since` becomes the IMAP fetch start date (gap recovery path)."""
+    monkeypatch.setenv("EMAIL_SOURCE", "imap")
+    monkeypatch.setenv("IMAP_HOST", "imap.gmail.com")
+    monkeypatch.setenv("IMAP_USERNAME", "user@gmail.com")
+    monkeypatch.setenv("IMAP_PASSWORD", "secret")
+    monkeypatch.setenv("IMAP_SENDERS", "news@stratechery.com")
+
+    source = get_email_source(tmp_path, since=date(2026, 6, 10))
+
+    assert isinstance(source, ImapSource)
+    assert source.since == date(2026, 6, 10)
+
+
+def test_get_email_source_unknown_raises(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("EMAIL_SOURCE", "carrier-pigeon")
     with pytest.raises(ValueError, match="carrier-pigeon"):
         get_email_source(tmp_path)

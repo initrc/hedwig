@@ -8,16 +8,19 @@ were folded in, and indexes the digest for chat. It also drives the
 with the last-digest metadata at the end — so `GET /status` always reflects
 what the runner is doing.
 
-`should_run_digest` is the trigger policy. For the samples source it is "any
-sample file not yet digested"; the later real-email task will swap in a
-daily-schedule policy behind this same hook.
+Two trigger policies live here:
+
+- `should_run_digest` — the samples policy: run if any sample file's id has not
+  been folded into a digest yet.
+- `should_run_daily` — the IMAP policy: run once a day, when the last digest
+  predates today (UTC). A same-day restart does not re-run; the next day does.
 """
 
 from __future__ import annotations
 
 import logging
 from collections.abc import Callable
-from datetime import UTC
+from datetime import UTC, datetime
 from datetime import date as date_type
 
 from app.ingest.parser import ParsedEmail, parse
@@ -42,13 +45,23 @@ def should_run_digest(available_source_ids: list[str], store: DigestStore) -> bo
     (filenames, cheap to list without parsing) and compare against the ids
     already recorded in `ingested_sources`. A new file triggers a run; an
     unchanged folder does not.
-
-    The later real-email task replaces this with a daily-schedule check (run
-    once a day at a fixed UTC time if `last_digest_at` predates the expected
-    run). The source-id comparison is specific to the samples source.
     """
     ingested = store.ingested_source_ids()
     return any(sid not in ingested for sid in available_source_ids)
+
+
+def should_run_daily(store: DigestStore, *, now: datetime | None = None) -> bool:
+    """True when a daily digest has not yet been produced today (UTC).
+
+    The IMAP policy: `last_digest_at` is `None` (never run) or predates today's
+    UTC date, so the first startup of a new day triggers a run and same-day
+    restarts do not. `now` is overridable for tests.
+    """
+    last = store.last_digest_at()
+    if last is None:
+        return True
+    today = (now if now is not None else datetime.now(UTC)).astimezone(UTC).date()
+    return last.astimezone(UTC).date() < today
 
 
 def run_digests(

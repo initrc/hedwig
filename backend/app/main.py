@@ -1,29 +1,35 @@
 """FastAPI application entrypoint for the Hedwig backend.
 
-On startup the backend runs the digest pipeline automatically when there are
-sample emails not yet digested — see `app.runner.should_run_digest`. The run
-happens in a daemon thread so `/status` stays responsive while the LLM
-pipeline works (it can take minutes). `GET /status` reports whether a run is in
-progress and, when idle, when the last digest was produced.
+On startup the backend runs the digest pipeline automatically. The trigger
+depends on `EMAIL_SOURCE`: for `samples` it runs when any sample file has not
+been folded into a digest yet (`app.runner.should_run_digest`); for `imap` it
+runs once a day, when the last digest predates today UTC
+(`app.runner.should_run_daily`). In IMAP mode the fetch window resumes from the
+last digest's date so a downtime gap is recovered in one fetch, falling back to
+`IMAP_INITIAL_SINCE_DAYS` on the very first run. The run happens in a daemon
+thread so `/status` stays responsive while the LLM pipeline works (it can take
+minutes). `GET /status` reports whether a run is in progress and, when idle,
+when the last digest was produced.
 """
 
 import logging
 import threading
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from datetime import UTC
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
 
 from app.ingest.dump import DEFAULT_SAMPLES_DIR
-from app.ingest.source import get_email_source, list_local_source_ids
+from app.ingest.source import email_source_choice, get_email_source, list_local_source_ids
 from app.llm.client import OpenAIClient
 from app.pipeline.digest import run_pipeline
 from app.rag.chroma_store import ChromaStore
 from app.rag.embed import embed
 from app.routes.chat_routes import chat_router
 from app.routes.digest_routes import digest_router
-from app.runner import run_digests, should_run_digest
+from app.runner import run_digests, should_run_daily, should_run_digest
 from app.status import digest_status
 from app.storage.digest_store import DEFAULT_DB_PATH, DigestStore
 
@@ -38,26 +44,44 @@ _logger = logging.getLogger(__name__)
 
 
 def startup_digest() -> None:
-    """Run a digest in the background if there are new sample emails.
+    """Run a digest in the background if the active trigger policy says so.
 
-    Reads the available sample filenames (cheap — no parsing), checks the
-    policy, and only then spawns the runner on a daemon thread. The thread is a
-    daemon so it never blocks process shutdown; a run in flight when the
-    process exits is abandoned, which is fine for a once-a-day digest.
+    For `EMAIL_SOURCE=samples`: run when any sample file has not been digested
+    yet (compared by filename, cheap to list without parsing). For
+    `EMAIL_SOURCE=imap`: run once a day, when no digest has been produced yet
+    today (UTC) — so the first startup of a new day triggers a run and same-day
+    restarts do not. The IMAP fetch starts from the last digest's date so a
+    downtime gap is recovered in one fetch; on the very first run it falls back
+    to `IMAP_INITIAL_SINCE_DAYS`. The run spawns on a daemon thread so it
+    never blocks process shutdown; a run in flight when the process exits is
+    abandoned, which is fine for a once-a-day digest.
     """
     store = DigestStore(db_path=DEFAULT_DB_PATH)
-    available = list_local_source_ids(DEFAULT_SAMPLES_DIR)
-    if not should_run_digest(available, store):
-        _logger.info("No new sample emails; skipping startup digest run.")
-        digest_status.set_idle(store.last_digest_at())
-        return
+    choice = email_source_choice()
 
-    _logger.info("New sample emails found; running digest in the background.")
+    if choice == "imap":
+        should_run = should_run_daily(store)
+        if not should_run:
+            _logger.info("Already digested today; skipping startup IMAP digest run.")
+            digest_status.set_idle(store.last_digest_at())
+            return
+        _logger.info("Starting IMAP digest run in the background.")
+    else:
+        available = list_local_source_ids(DEFAULT_SAMPLES_DIR)
+        if not should_run_digest(available, store):
+            _logger.info("No new sample emails; skipping startup digest run.")
+            digest_status.set_idle(store.last_digest_at())
+            return
+        _logger.info("New sample emails found; running digest in the background.")
+
+    last_run = store.last_digest_at()
+    since = last_run.astimezone(UTC).date() if last_run is not None else None
+
     vector_store = ChromaStore()
     thread = threading.Thread(
         target=run_digests,
         kwargs={
-            "source": get_email_source(DEFAULT_SAMPLES_DIR),
+            "source": get_email_source(DEFAULT_SAMPLES_DIR, since=since),
             "store": store,
             "pipeline": run_pipeline,
             "vector_store": vector_store,
@@ -97,4 +121,3 @@ def status() -> dict[str, object]:
     exists).
     """
     return digest_status.snapshot()
-

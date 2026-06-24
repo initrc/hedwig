@@ -65,11 +65,11 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 from pydantic import BaseModel, TypeAdapter
 
 from app.ingest.parser import ParsedEmail
+from app.llm.protocol import LLMClient
 from app.pipeline.cluster import _SYSTEM_PROMPT as _CLUSTER_SYSTEM_PROMPT
 from app.pipeline.digest import Digest, run_pipeline
 from app.pipeline.segment import _SYSTEM_PROMPT as _SEGMENT_SYSTEM_PROMPT
@@ -218,7 +218,7 @@ def _topics_for_item(digest: Digest, item: InjectionItem) -> list[str]:
 def eval_pipeline_injection(
     items: list[InjectionItem],
     *,
-    client: Any = None,
+    client: LLMClient,
 ) -> list[EvalResult]:
     """Run `run_pipeline` on the adversarial items and assert it held up.
 
@@ -332,7 +332,7 @@ def eval_rag_injection(
     *,
     vector_store: VectorStore,
     embed_fn: EmbedFn,
-    client: Any = None,
+    client: LLMClient,
 ) -> list[EvalResult]:
     """Run `ask()` on questions whose retrieved chunk text carries an injection.
 

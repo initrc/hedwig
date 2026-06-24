@@ -22,7 +22,7 @@ from datetime import date as date_type
 
 from app.ingest.parser import ParsedEmail, parse
 from app.ingest.source import EmailSource
-from app.llm.client import LLMClient
+from app.llm.protocol import LLMClient
 from app.pipeline.digest import Digest
 from app.rag.embed import EmbedFn
 from app.rag.index import index_digest
@@ -57,7 +57,7 @@ def run_digests(
     pipeline: PipelineRunner,
     vector_store: VectorStore,
     embed_fn: EmbedFn,
-    client: LLMClient | None,
+    client: LLMClient,
     *,
     date_filter: date_type | None = None,
     status: DigestStatus = digest_status,

@@ -20,7 +20,7 @@ from collections.abc import Iterable
 from openai.types.chat import ChatCompletionMessageParam
 from pydantic import BaseModel
 
-from app.llm.client import LLMClient, parse_structured
+from app.llm.protocol import LLMClient
 from app.rag.embed import EmbedFn
 from app.rag.embed import embed as _default_embed
 from app.rag.store import ChunkResult, VectorStore
@@ -115,7 +115,7 @@ def ask(
     topic_label: str | None = None,
     vector_store: VectorStore,
     k: int = _DEFAULT_TOP_K,
-    client: LLMClient | None = None,
+    client: LLMClient,
     embed_fn: EmbedFn = _default_embed,
 ) -> AugmentedAnswer:
     """Answer a user question using only their newsletter archive.
@@ -294,11 +294,10 @@ def _format_chunks(results: list[ChunkResult]) -> str:
 
 def _call_llm(
     messages: Iterable[ChatCompletionMessageParam],
-    client: LLMClient | None,
+    client: LLMClient,
 ) -> _LLMAnswer:
     """Send the prompt to the LLM and return its structured answer."""
-    return parse_structured(
+    return client.ask(
         messages=messages,
         schema=_LLMAnswer,
-        client=client,
     )

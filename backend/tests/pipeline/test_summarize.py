@@ -11,13 +11,14 @@ fed the topic.
 
 from typing import cast
 
+from app.llm.fake_client import FakeClient, model_reply
 from app.pipeline.summarize import (
     DraftSummary,
     TopicSummary,
     summarize_topic,
     summarize_topics,
 )
-from tests.fakes import FakeClient, _story, _topic, model_reply, schema_instruction
+from tests.fakes import make_schema_instruction, make_story, make_topic
 
 
 def _fake_client(draft: DraftSummary) -> FakeClient:
@@ -26,11 +27,11 @@ def _fake_client(draft: DraftSummary) -> FakeClient:
 
 
 def test_multi_source_topic_gets_a_summary_and_at_least_one_citation() -> None:
-    topic = _topic(
+    topic = make_topic(
         "Acme funding",
         stories=[
-            _story("a#0", source_item_id="alpha.eml", title="Acme raises $50M"),
-            _story("b#0", source_item_id="beta.eml", title="Acme round led by Foo Capital"),
+            make_story("a#0", source_item_id="alpha.eml", title="Acme raises $50M"),
+            make_story("b#0", source_item_id="beta.eml", title="Acme round led by Foo Capital"),
         ],
     )
     client = _fake_client(
@@ -49,13 +50,13 @@ def test_multi_source_topic_gets_a_summary_and_at_least_one_citation() -> None:
     assert {s.source_item_id for s in result.sources} == {"alpha.eml", "beta.eml"}
 
 
-def test_every_citation_traces_back_to_a_source_in_the_topic() -> None:
-    topic = _topic(
+def test_every_citation_traces_back_to_a_source_in_themake_topic() -> None:
+    topic = make_topic(
         "Chips",
         stories=[
-            _story("a#0", source_item_id="alpha.eml"),
-            _story("a#1", source_item_id="alpha.eml"),
-            _story("b#0", source_item_id="beta.eml"),
+            make_story("a#0", source_item_id="alpha.eml"),
+            make_story("a#1", source_item_id="alpha.eml"),
+            make_story("b#0", source_item_id="beta.eml"),
         ],
     )
     # The model cites two real sources and one it made up.
@@ -73,11 +74,11 @@ def test_every_citation_traces_back_to_a_source_in_the_topic() -> None:
 
 
 def test_duplicate_citations_are_kept_only_once_in_order() -> None:
-    topic = _topic(
+    topic = make_topic(
         "Pair",
         stories=[
-            _story("a#0", source_item_id="alpha.eml"),
-            _story("b#0", source_item_id="beta.eml"),
+            make_story("a#0", source_item_id="alpha.eml"),
+            make_story("b#0", source_item_id="beta.eml"),
         ],
     )
     client = _fake_client(
@@ -91,8 +92,8 @@ def test_duplicate_citations_are_kept_only_once_in_order() -> None:
 
 
 def test_summary_is_trimmed() -> None:
-    topic = _topic(
-        "Topic", stories=[_story("a#0", source_item_id="alpha.eml")]
+    topic = make_topic(
+        "Topic", stories=[make_story("a#0", source_item_id="alpha.eml")]
     )
     client = _fake_client(DraftSummary(summary="  padded summary  ", source_ids=["alpha.eml"]))
 
@@ -102,16 +103,16 @@ def test_summary_is_trimmed() -> None:
 
 
 def test_prompt_carries_the_label_and_each_story_source_title_and_text() -> None:
-    topic = _topic(
+    topic = make_topic(
         "Chips bounce",
         stories=[
-            _story(
+            make_story(
                 "a#0",
                 source_item_id="alpha.eml",
                 title="Intel up",
                 text="Intel rose 10% on Monday.",
             ),
-            _story("b#0", source_item_id="beta.eml", title="AMD up", text="AMD followed."),
+            make_story("b#0", source_item_id="beta.eml", title="AMD up", text="AMD followed."),
         ],
     )
     client = _fake_client(DraftSummary(summary="s", source_ids=["alpha.eml"]))
@@ -120,7 +121,7 @@ def test_prompt_carries_the_label_and_each_story_source_title_and_text() -> None
 
     # The OpenAI-compatible message type is a union of TypedDicts, so inspect the recorded
     # messages as the plain dicts they are at runtime.
-    messages = cast(list[dict[str, object]], client.chat.completions.messages)
+    messages = cast(list[dict[str, object]], client.messages)
     user_turns = [m for m in messages if m.get("role") == "user"]
     assert len(user_turns) == 1
     content = user_turns[0]["content"]
@@ -134,8 +135,8 @@ def test_prompt_carries_the_label_and_each_story_source_title_and_text() -> None
 
 
 def test_requests_loose_json_object_mode() -> None:
-    topic = _topic(
-        "Topic", stories=[_story("a#0", source_item_id="alpha.eml")]
+    topic = make_topic(
+        "Topic", stories=[make_story("a#0", source_item_id="alpha.eml")]
     )
     client = _fake_client(DraftSummary(summary="s", source_ids=["alpha.eml"]))
 
@@ -143,19 +144,18 @@ def test_requests_loose_json_object_mode() -> None:
 
     # DeepSeek only supports loose JSON mode; the DraftSummary shape lives in the
     # prepended schema-instruction system message, not an API-enforced schema.
-    assert client.chat.completions.response_format == {"type": "json_object"}
-    instruction = schema_instruction(client.chat.completions.messages)
+    instruction = make_schema_instruction(client.messages)
     assert "DraftSummary" in instruction
 
 
 def test_summarize_topics_maps_over_a_list_in_order() -> None:
     topics = [
-        _topic("First", stories=[_story("a#0", source_item_id="alpha.eml")]),
-        _topic("Second", stories=[_story("b#0", source_item_id="beta.eml")]),
+        make_topic("First", stories=[make_story("a#0", source_item_id="alpha.eml")]),
+        make_topic("Second", stories=[make_story("b#0", source_item_id="beta.eml")]),
     ]
     client = _fake_client(DraftSummary(summary="s", source_ids=["alpha.eml"]))
 
     results = summarize_topics(topics, client=client)
 
     assert [r.label for r in results] == ["First", "Second"]
-    assert client.chat.completions.call_count == 2
+    assert client.call_count == 2

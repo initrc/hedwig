@@ -11,8 +11,9 @@ matter what the model says.
 
 from typing import cast
 
+from app.llm.fake_client import FakeClient, model_reply
 from app.pipeline.cluster import Clustering, DraftTopic, cluster
-from tests.fakes import FakeClient, _story, model_reply, schema_instruction
+from tests.fakes import make_schema_instruction, make_story
 
 
 def _fake_client(*drafts: DraftTopic) -> FakeClient:
@@ -22,8 +23,8 @@ def _fake_client(*drafts: DraftTopic) -> FakeClient:
 
 def test_related_stories_land_in_one_topic() -> None:
     stories = [
-        _story("a#0", title="Acme raises $50M"),
-        _story("a#1", title="Acme funding round led by Foo Capital"),
+        make_story("a#0", title="Acme raises $50M"),
+        make_story("a#1", title="Acme funding round led by Foo Capital"),
     ]
     client = _fake_client(DraftTopic(label="Acme funding", story_ids=["a#0", "a#1"]))
 
@@ -36,8 +37,8 @@ def test_related_stories_land_in_one_topic() -> None:
 
 def test_unrelated_stories_split_into_separate_topics() -> None:
     stories = [
-        _story("a#0", title="Chip launch"),
-        _story("b#0", title="Bond market dips"),
+        make_story("a#0", title="Chip launch"),
+        make_story("b#0", title="Bond market dips"),
     ]
     client = _fake_client(
         DraftTopic(label="Chips", story_ids=["a#0"]),
@@ -50,8 +51,8 @@ def test_unrelated_stories_split_into_separate_topics() -> None:
     assert [[s.id for s in t.stories] for t in topics] == [["a#0"], ["b#0"]]
 
 
-def test_every_topic_story_traces_back_to_an_input_story() -> None:
-    stories = [_story("a#0"), _story("a#1"), _story("b#0")]
+def test_every_topic_story_traces_back_to_an_inputmake_story() -> None:
+    stories = [make_story("a#0"), make_story("a#1"), make_story("b#0")]
     client = _fake_client(
         DraftTopic(label="One", story_ids=["a#0", "a#1"]),
         DraftTopic(label="Two", story_ids=["b#0"]),
@@ -66,7 +67,7 @@ def test_every_topic_story_traces_back_to_an_input_story() -> None:
 
 
 def test_mapping_is_total_every_input_story_lands_in_exactly_one_topic() -> None:
-    stories = [_story("a#0"), _story("a#1"), _story("b#0")]
+    stories = [make_story("a#0"), make_story("a#1"), make_story("b#0")]
     # The model groups two and forgets the third entirely.
     client = _fake_client(DraftTopic(label="Pair", story_ids=["a#0", "a#1"]))
 
@@ -80,7 +81,7 @@ def test_mapping_is_total_every_input_story_lands_in_exactly_one_topic() -> None
 
 
 def test_forgotten_story_becomes_its_own_topic_labelled_with_its_title() -> None:
-    stories = [_story("a#0", title="Grouped"), _story("b#0", title="Left out")]
+    stories = [make_story("a#0", title="Grouped"), make_story("b#0", title="Left out")]
     client = _fake_client(DraftTopic(label="Group", story_ids=["a#0"]))
 
     topics = cluster(stories, client=client)
@@ -93,7 +94,7 @@ def test_forgotten_story_becomes_its_own_topic_labelled_with_its_title() -> None
 
 
 def test_hallucinated_ids_are_dropped_not_invented() -> None:
-    stories = [_story("a#0")]
+    stories = [make_story("a#0")]
     # The model names a real id and one we never sent.
     client = _fake_client(DraftTopic(label="Topic", story_ids=["a#0", "ghost#9"]))
 
@@ -105,7 +106,7 @@ def test_hallucinated_ids_are_dropped_not_invented() -> None:
 
 
 def test_story_named_in_two_topics_is_placed_only_once() -> None:
-    stories = [_story("a#0"), _story("a#1")]
+    stories = [make_story("a#0"), make_story("a#1")]
     # The model puts "a#0" in both topics; it must end up in only the first.
     client = _fake_client(
         DraftTopic(label="First", story_ids=["a#0", "a#1"]),
@@ -127,11 +128,11 @@ def test_empty_input_yields_no_topics_without_calling_the_model() -> None:
 
     assert topics == []
     # Nothing to group, so the model is never asked — no request, no cost.
-    assert client.chat.completions.call_count == 0
+    assert client.call_count == 0
 
 
 def test_label_is_trimmed() -> None:
-    stories = [_story("a#0")]
+    stories = [make_story("a#0")]
     client = _fake_client(DraftTopic(label="  Spacey label  ", story_ids=["a#0"]))
 
     [topic] = cluster(stories, client=client)
@@ -141,14 +142,14 @@ def test_label_is_trimmed() -> None:
 
 def test_prompt_carries_each_story_id_title_and_snippet() -> None:
     stories = [
-        _story("a#0", title="Chips bounce", text="Intel rose 10% on Monday."),
-        _story("b#0", title="Bonds dip", text="Treasuries fell on the news."),
+        make_story("a#0", title="Chips bounce", text="Intel rose 10% on Monday."),
+        make_story("b#0", title="Bonds dip", text="Treasuries fell on the news."),
     ]
     client = _fake_client(DraftTopic(label="t", story_ids=["a#0", "b#0"]))
 
     cluster(stories, client=client)
 
-    messages = cast(list[dict[str, object]], client.chat.completions.messages)
+    messages = cast(list[dict[str, object]], client.messages)
     user_turns = [m for m in messages if m.get("role") == "user"]
     assert len(user_turns) == 1
     content = user_turns[0]["content"]
@@ -162,10 +163,9 @@ def test_prompt_carries_each_story_id_title_and_snippet() -> None:
 def test_requests_loose_json_object_mode() -> None:
     client = _fake_client(DraftTopic(label="t", story_ids=["a#0"]))
 
-    cluster([_story("a#0")], client=client)
+    cluster([make_story("a#0")], client=client)
 
     # DeepSeek only supports loose JSON mode; the Clustering shape lives in the
     # prepended schema-instruction system message, not an API-enforced schema.
-    assert client.chat.completions.response_format == {"type": "json_object"}
-    instruction = schema_instruction(client.chat.completions.messages)
+    instruction = make_schema_instruction(client.messages)
     assert "Clustering" in instruction

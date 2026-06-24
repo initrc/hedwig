@@ -17,7 +17,7 @@ one topic and nothing is silently lost.
 from openai.types.chat import ChatCompletionMessageParam
 from pydantic import BaseModel
 
-from app.llm.client import LLMClient, parse_structured
+from app.llm.protocol import LLMClient
 from app.pipeline.segment import Story
 
 # How many characters of each story's text to show the model. The id and title
@@ -90,7 +90,7 @@ def _user_prompt(stories: list[Story]) -> str:
     return "\n\n".join(_story_block(story) for story in stories)
 
 
-def cluster(stories: list[Story], *, client: LLMClient | None = None) -> list[Topic]:
+def cluster(stories: list[Story], *, client: LLMClient) -> list[Topic]:
     """Group `stories` into topics and return them, every input story placed exactly once.
 
     An empty list yields no topics, with no model call. The mapping is kept total
@@ -114,10 +114,9 @@ def cluster(stories: list[Story], *, client: LLMClient | None = None) -> list[To
         {"role": "system", "content": _SYSTEM_PROMPT},
         {"role": "user", "content": _user_prompt(stories)},
     ]
-    clustering = parse_structured(
+    clustering = client.ask(
         messages=messages,
         schema=Clustering,
-        client=client,
     )
 
     topics: list[Topic] = []

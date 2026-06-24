@@ -14,7 +14,7 @@ from collections.abc import Iterable
 from openai.types.chat import ChatCompletionMessageParam
 from pydantic import BaseModel
 
-from app.llm.client import LLMClient, parse_structured
+from app.llm.protocol import LLMClient
 from app.pipeline.cluster import Topic
 from app.pipeline.prompts import DEFAULT_PROMPT_VERSION, get_summarize_prompt
 from app.pipeline.segment import Story
@@ -95,7 +95,7 @@ def _resolve_sources(source_ids: Iterable[str], valid: set[str]) -> list[Source]
 def summarize_topic(
     topic: Topic,
     *,
-    client: LLMClient | None = None,
+    client: LLMClient,
     prompt_version: str = DEFAULT_PROMPT_VERSION,
 ) -> TopicSummary:
     """Summarize one `topic`, keeping only citations that point to its sources.
@@ -118,10 +118,9 @@ def summarize_topic(
         {"role": "system", "content": get_summarize_prompt(prompt_version)},
         {"role": "user", "content": _user_prompt(topic)},
     ]
-    draft = parse_structured(
+    draft = client.ask(
         messages=messages,
         schema=DraftSummary,
-        client=client,
     )
 
     return TopicSummary(
@@ -134,7 +133,7 @@ def summarize_topic(
 def summarize_topics(
     topics: Iterable[Topic],
     *,
-    client: LLMClient | None = None,
+    client: LLMClient,
     prompt_version: str = DEFAULT_PROMPT_VERSION,
 ) -> list[TopicSummary]:
     """Summarize many topics, in the same order."""

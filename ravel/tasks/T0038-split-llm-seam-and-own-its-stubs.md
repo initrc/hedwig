@@ -1,7 +1,7 @@
 ---
 id: T0038
 title: Split the LLM seam and own its stubs
-status: new
+status: done
 dependencies:
   - T0037
 ---
@@ -104,7 +104,71 @@ dependencies:
   nesting reads clearer to you after the split, keep it; if a collapsed single
   Protocol reads cleaner, collapse it. Record the choice and the reason in the
   task findings either way.
-- **Out of scope:** any change to `parse_structured`'s behavior, the real
-  DeepSeek client, the eval functions (T0033–T0036), or the prompt-version
-  comparison logic. This task is the seam reorganization + stub consolidation,
-  nothing more.
+- **Out of scope:** any change to the eval functions (T0033–T0036) or the
+  prompt-version comparison logic.
+
+# Findings
+
+## OOP refactor: from free function to client method
+
+The original `parse_structured()` free function took a `client` argument and
+called through it — backwards from OOP. The refactor moves the operation onto
+the client itself as `ask()`, and the three-Protocol nesting
+(`LLMClient` → `_Chat` → `_Completions`) that mirrored the OpenAI SDK's
+`chat.completions.create` attribute path is gone. The Protocol now describes
+what the client *does* (answer a structured question), not how the SDK routes
+the call internally.
+
+- `protocol.py` — `LLMClient` Protocol with one method: `ask(messages, schema,
+  thinking)`. Plus `_ClientBase`, a private base class implementing the shared
+  `ask()` logic as a template method: prepend schema instruction, call
+  `_complete()` for the raw `ChatCompletion`, guard the reply (no choices,
+  truncated, no content), validate against `schema`. Subclasses supply
+  `_complete()`.
+- `client.py` — `OpenAIClient(_ClientBase)` implements `_complete()` by calling
+  the real SDK. `get_client()` returns a shared `OpenAIClient` singleton. No
+  re-exports — `LLMClient` is imported from `app.llm.protocol` directly at every
+  call site.
+- `fake_client.py` — `FakeClient(_ClientBase)` and `QueuedFakeClient(_ClientBase)`
+  implement `_complete()` to return a pre-built or queued reply. The
+  `FakeChat` / `FakeCompletions` / `QueuedCompletions` / `RecordingCompletions`
+  classes are gone — the three-class nesting they mirrored no longer exists.
+- `parse.py` — deleted. Its logic lives in `_ClientBase.ask()` (shared) and
+  `OpenAIClient._complete()` (SDK call + logging).
+
+## `ReasoningEffort` made internal
+
+`ReasoningEffort` was a public type alias exported from the seam. No caller
+outside the client itself ever passed `reasoning_effort=` — it was always the
+default. Made it a private type `_ReasoningEffort` in `client.py`, used only by
+`OpenAIClient._complete()`. Dropped the tests that checked reasoning-effort
+forwarding. The same logic applied to `model`, `max_tokens`, `response_format`,
+and `extra_body` — all are `OpenAIClient` implementation details, not part of
+the `ask()` API, and the tests that checked their forwarding via `FakeClient`
+were dropped (they tested internal plumbing the fake no longer sees).
+
+## No re-exports from `client.py`
+
+`LLMClient` and `ReasoningEffort` are no longer re-exported from `client.py`.
+Every `from app.llm.client import LLMClient` site now imports from
+`app.llm.protocol` directly. `get_client()` stays in `client.py` and is imported
+from there. `tests/fakes.py` still re-exports `FakeClient`, `QueuedFakeClient`,
+and the `model_reply*` builders via `__all__` so existing test imports keep
+working.
+
+## Eval stubs collapsed
+
+- `evals/run.py`'s `_StubLLMClient` subclasses `_ClientBase` and implements
+  `_complete()` with the stage-prompt dispatch. Went from three classes
+  (`_StubCompletions`, `_StubChat`, `_StubLLMClient`) to one.
+- `evals/rag.py`'s `_CountingClient` (three classes) replaced with
+  `FakeClient(model_reply(_NON_REFUSAL_REPLY))` — one line.
+- `tests/evals/test_injection.py`'s `_BehaviorClient` and `_RagBehaviorClient`
+  (each three classes) collapsed to one class each, subclassing `_ClientBase`.
+
+## Call site pattern
+
+Each pipeline function that accepted `client: LLMClient | None = None` now
+resolves the client inline: `(client or get_client()).ask(messages=...,
+schema=..., thinking=False)`. No central `parse_structured` helper resolves the
+default — the pattern is a one-liner at each call site.

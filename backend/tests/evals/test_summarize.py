@@ -10,6 +10,7 @@ from typing import cast
 
 import pytest
 
+from app.llm.fake_client import FakeClient, model_reply
 from evals.summarize import (
     CalibrationItem,
     CalibrationScores,
@@ -19,13 +20,7 @@ from evals.summarize import (
     eval_summary_quality,
     load_judge_calibration,
 )
-from tests.fakes import (
-    FakeClient,
-    _digest,
-    _digest_source,
-    _digest_topic,
-    model_reply,
-)
+from tests.fakes import make_digest, make_digest_source, make_digest_topic
 
 
 def _judge_client(
@@ -49,12 +44,12 @@ def _judge_client(
 
 def test_single_topic_returns_topic_result_plus_aggregate() -> None:
     """One topic → two EvalResults: the topic and the aggregate."""
-    topic = _digest_topic(
+    topic = make_digest_topic(
         label="AI launches",
         summary="Several AI chips launched.",
-        sources=[_digest_source(subject="AI News", clean_text="Chips.")],
+        sources=[make_digest_source(subject="AI News", clean_text="Chips.")],
     )
-    digest = _digest(topics=[topic])
+    digest = make_digest(topics=[topic])
 
     results = eval_summary_quality(digest, judge_client=_judge_client())
 
@@ -66,12 +61,12 @@ def test_single_topic_returns_topic_result_plus_aggregate() -> None:
 
 def test_per_topic_result_carries_scores_in_detail() -> None:
     """The topic EvalResult detail field includes per-dimension scores."""
-    topic = _digest_topic(
+    topic = make_digest_topic(
         label="Test",
         summary="Test summary.",
-        sources=[_digest_source()],
+        sources=[make_digest_source()],
     )
-    digest = _digest(topics=[topic])
+    digest = make_digest(topics=[topic])
 
     results = eval_summary_quality(
         digest, judge_client=_judge_client(faithfulness=0.7, conciseness=0.6, coherence=0.8)
@@ -85,12 +80,12 @@ def test_per_topic_result_carries_scores_in_detail() -> None:
 
 def test_weighted_aggregate_favors_faithfulness() -> None:
     """The aggregate score gives faithfulness 2× weight."""
-    topic = _digest_topic(
+    topic = make_digest_topic(
         label="T",
         summary="S.",
-        sources=[_digest_source()],
+        sources=[make_digest_source()],
     )
-    digest = _digest(topics=[topic])
+    digest = make_digest(topics=[topic])
 
     results = eval_summary_quality(
         digest,
@@ -111,12 +106,12 @@ def test_weighted_aggregate_favors_faithfulness() -> None:
 
 def test_passed_is_false_when_faithfulness_below_0_5() -> None:
     """A topic fails when faithfulness drops below 0.5."""
-    topic = _digest_topic(
+    topic = make_digest_topic(
         label="Bad summary",
         summary="Invented facts.",
-        sources=[_digest_source()],
+        sources=[make_digest_source()],
     )
-    digest = _digest(topics=[topic])
+    digest = make_digest(topics=[topic])
 
     results = eval_summary_quality(
         digest,
@@ -131,10 +126,10 @@ def test_passed_is_false_when_faithfulness_below_0_5() -> None:
 def test_multiple_topics_averaged_in_aggregate() -> None:
     """The aggregate result averages across all topics."""
     topics = [
-        _digest_topic(label="A", summary="A.", sources=[_digest_source()]),
-        _digest_topic(label="B", summary="B.", sources=[_digest_source()]),
+        make_digest_topic(label="A", summary="A.", sources=[make_digest_source()]),
+        make_digest_topic(label="B", summary="B.", sources=[make_digest_source()]),
     ]
-    digest = _digest(topics=topics)
+    digest = make_digest(topics=topics)
 
     results = eval_summary_quality(
         digest,
@@ -151,8 +146,8 @@ def test_multiple_topics_averaged_in_aggregate() -> None:
 
 def test_empty_digest_returns_single_result() -> None:
     """No topics → one EvalResult with score 1.0."""
-    digest = _digest(topics=[])
-    results = eval_summary_quality(digest)
+    digest = make_digest(topics=[])
+    results = eval_summary_quality(digest, judge_client=FakeClient(model_reply("{}")))
     assert len(results) == 1
     assert results[0].name == "summary_quality"
     assert results[0].score == 1.0
@@ -311,25 +306,25 @@ def test_calibration_item_score_bounded_at_zero(tmp_path: Path) -> None:
 
 def test_judge_receives_source_text() -> None:
     """The judge prompt includes the source story text so it can verify claims."""
-    topic = _digest_topic(
+    topic = make_digest_topic(
         label="Test",
         summary="The summary.",
         sources=[
-            _digest_source(
+            make_digest_source(
                 subject="Newsletter A",
                 clean_text="A new GPU launched today with 2× performance.",
             ),
         ],
     )
-    digest = _digest(topics=[topic])
+    digest = make_digest(topics=[topic])
 
     judge = _judge_client()
     eval_summary_quality(digest, judge_client=judge)
 
     # The fake records what was sent to the model.
-    messages = judge.chat.completions.messages
+    messages = judge.messages
     # Cast through dict to avoid TypedDict union indexing issues — the same
-    # pattern used by schema_instruction() in tests/fakes.py.
+    # pattern used by make_schema_instruction() in tests/fakes.py.
     dicts = cast("list[dict[str, object]]", messages)
     user_msg = [m for m in dicts if m.get("role") == "user"][0]
     user_content = str(user_msg["content"])

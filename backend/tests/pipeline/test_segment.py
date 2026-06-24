@@ -13,6 +13,7 @@ from typing import cast
 
 from app.ingest.parser import parse
 from app.ingest.source import LocalEmlSource
+from app.llm.fake_client import FakeClient, model_reply
 from app.pipeline.segment import (
     DraftStory,
     Segmentation,
@@ -20,7 +21,7 @@ from app.pipeline.segment import (
     segment,
     segment_items,
 )
-from tests.fakes import FakeClient, _parsed_email, model_reply, schema_instruction
+from tests.fakes import make_parsed_email, make_schema_instruction
 
 SAMPLES_DIR = Path(__file__).resolve().parents[2] / "samples"
 
@@ -34,7 +35,7 @@ def test_single_story_item_yields_one_story() -> None:
     client = _fake_client(DraftStory(title="Only story", text="It happened."))
 
     stories = segment(
-        _parsed_email(clean_text="One thing happened today."), client=client
+        make_parsed_email(clean_text="One thing happened today."), client=client
     )
 
     assert stories == [
@@ -45,7 +46,7 @@ def test_single_story_item_yields_one_story() -> None:
             text="It happened.",
         )
     ]
-    assert client.chat.completions.call_count == 1
+    assert client.call_count == 1
 
 
 def test_multi_story_item_yields_several_stories() -> None:
@@ -56,7 +57,7 @@ def test_multi_story_item_yields_several_stories() -> None:
     )
 
     stories = segment(
-        _parsed_email(item_id="digest.eml", clean_text="Three things happened."),
+        make_parsed_email(item_id="digest.eml", clean_text="Three things happened."),
         client=client,
     )
 
@@ -66,7 +67,7 @@ def test_multi_story_item_yields_several_stories() -> None:
 
 
 def test_every_story_references_the_parent_item() -> None:
-    parent = _parsed_email(item_id="parent.eml", clean_text="Lots of news.")
+    parent = make_parsed_email(item_id="parent.eml", clean_text="Lots of news.")
     client = _fake_client(
         DraftStory(title="A", text="a"),
         DraftStory(title="B", text="b"),
@@ -82,20 +83,20 @@ def test_every_story_references_the_parent_item() -> None:
 def test_empty_clean_text_yields_no_stories_without_calling_the_model() -> None:
     client = _fake_client(DraftStory(title="ignored", text="ignored"))
 
-    stories = segment(_parsed_email(clean_text=""), client=client)
+    stories = segment(make_parsed_email(clean_text=""), client=client)
 
     assert stories == []
     # Nothing to split, so the model is never asked — no request, no cost.
-    assert client.chat.completions.call_count == 0
+    assert client.call_count == 0
 
 
 def test_whitespace_only_clean_text_yields_no_stories() -> None:
     client = _fake_client(DraftStory(title="ignored", text="ignored"))
 
-    stories = segment(_parsed_email(clean_text="   \n  \t "), client=client)
+    stories = segment(make_parsed_email(clean_text="   \n  \t "), client=client)
 
     assert stories == []
-    assert client.chat.completions.call_count == 0
+    assert client.call_count == 0
 
 
 def test_titles_and_text_are_trimmed() -> None:
@@ -103,7 +104,7 @@ def test_titles_and_text_are_trimmed() -> None:
         DraftStory(title="  Spacey title  ", text="\n  padded body  \n")
     )
 
-    [story] = segment(_parsed_email(), client=client)
+    [story] = segment(make_parsed_email(), client=client)
 
     assert story.title == "Spacey title"
     assert story.text == "padded body"
@@ -111,7 +112,7 @@ def test_titles_and_text_are_trimmed() -> None:
 
 def test_prompt_carries_the_subject_and_body() -> None:
     client = _fake_client(DraftStory(title="t", text="x"))
-    item = _parsed_email(
+    item = make_parsed_email(
         subject="Chips bounce", clean_text="Intel rose 10% on Monday."
     )
 
@@ -120,7 +121,7 @@ def test_prompt_carries_the_subject_and_body() -> None:
     # The OpenAI-compatible message type is a union of TypedDicts, so inspect the recorded
     # messages as the plain dicts they are at runtime: the user turn must carry both
     # the subject and the body so the model can split them.
-    messages = cast(list[dict[str, object]], client.chat.completions.messages)
+    messages = cast(list[dict[str, object]], client.messages)
     user_turns = [m for m in messages if m.get("role") == "user"]
     assert len(user_turns) == 1
     content = user_turns[0]["content"]
@@ -132,12 +133,11 @@ def test_prompt_carries_the_subject_and_body() -> None:
 def test_requests_loose_json_object_mode() -> None:
     client = _fake_client(DraftStory(title="t", text="x"))
 
-    segment(_parsed_email(), client=client)
+    segment(make_parsed_email(), client=client)
 
     # DeepSeek only supports loose JSON mode; the Segmentation shape lives in the
     # prepended schema-instruction system message, not an API-enforced schema.
-    assert client.chat.completions.response_format == {"type": "json_object"}
-    instruction = schema_instruction(client.chat.completions.messages)
+    instruction = make_schema_instruction(client.messages)
     assert "Segmentation" in instruction
 
 
@@ -149,8 +149,8 @@ def test_segment_items_flattens_stories_across_emails() -> None:
         DraftStory(title="B", text="b"),
     )
     items = [
-        _parsed_email(item_id="one.eml"),
-        _parsed_email(item_id="two.eml"),
+        make_parsed_email(item_id="one.eml"),
+        make_parsed_email(item_id="two.eml"),
     ]
 
     stories = segment_items(items, client=client)
@@ -162,7 +162,7 @@ def test_segment_items_flattens_stories_across_emails() -> None:
         "two.eml#1",
     ]
     assert {s.source_item_id for s in stories} == {"one.eml", "two.eml"}
-    assert client.chat.completions.call_count == 2
+    assert client.call_count == 2
 
 
 def test_over_a_real_sample_every_story_id_is_valid() -> None:

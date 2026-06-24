@@ -5,10 +5,11 @@ Conventions
 
 **Fakes over mocks.**  ``tests/fakes.py`` holds shared test doubles.  Every
 test that talks to the LLM should use ``QueuedFakeClient`` (or ``FakeClient``
-for a single reply).  Tests that need domain objects (a ``Digest``, a
-``ParsedEmail``, a ``DigestTopic``, etc.) should use the ``_digest``,
-``_parsed_email``, ``_digest_topic``, and similar factories from fakes rather
-than constructing models by hand.  This keeps tests short and consistent.
+for a single reply), both from ``app.llm.fake_client``.  Tests that need
+domain objects (a ``Digest``, a ``ParsedEmail``, a ``DigestTopic``, etc.)
+should use the ``make_digest``, ``make_parsed_email``, ``make_digest_topic``, and similar
+factories from ``tests.fakes`` rather than constructing models by hand.  This
+keeps tests short and consistent.
 
 **Dependency overrides for FastAPI routes.**  Route tests use
 ``app.dependency_overrides`` to swap in stubs for the store and the pipeline

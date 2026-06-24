@@ -29,7 +29,7 @@ from app.routes.digest_routes import (
     get_vector_store,
 )
 from app.storage.digest_store import DigestStore
-from tests.fakes import _digest, _digest_source, _digest_topic
+from tests.fakes import make_digest, make_digest_source, make_digest_topic
 from tests.rag.fakes import StubStore, stub_embed
 
 
@@ -71,7 +71,7 @@ def stubbed_deps() -> Iterator[dict[str, Any]]:
     ) -> Digest:
         state["pipeline_calls"].append((date, list(items)))
         sources = [
-            _digest_source(
+            make_digest_source(
                 source_id=item.id,
                 source=item.source,
                 subject=item.subject,
@@ -80,9 +80,9 @@ def stubbed_deps() -> Iterator[dict[str, Any]]:
             )
             for item in items
         ]
-        return _digest(
+        return make_digest(
             digest_date=date,
-            topics=[_digest_topic(label="Topic", summary="Sum.", sources=sources)],
+            topics=[make_digest_topic(label="Topic", summary="Sum.", sources=sources)],
         )
 
     app.dependency_overrides[get_store] = lambda: state["store"]

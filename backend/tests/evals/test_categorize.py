@@ -4,8 +4,9 @@ No real API calls: every test injects a `FakeClient` whose reply is a
 pre-built `Clustering` JSON so the cluster step runs deterministically.
 """
 
+from app.llm.fake_client import FakeClient, model_reply
 from evals.categorize import eval_topic_assignment
-from tests.fakes import FakeClient, _story, model_reply
+from tests.fakes import make_story
 
 # -- perfect grouping --------------------------------------------------------
 
@@ -15,9 +16,9 @@ def test_perfect_grouping_scores_1_0() -> None:
     from app.pipeline.cluster import Clustering, DraftTopic
 
     stories = [
-        _story("s1", title="AI chip launch", text="A new AI chip was launched."),
-        _story("s2", title="Another AI chip", text="Another chip vendor."),
-        _story("s3", title="Fed rate cut", text="The Fed cut rates."),
+        make_story("s1", title="AI chip launch", text="A new AI chip was launched."),
+        make_story("s2", title="Another AI chip", text="Another chip vendor."),
+        make_story("s3", title="Fed rate cut", text="The Fed cut rates."),
     ]
 
     # The model's clustering matches the human labels perfectly.
@@ -49,9 +50,9 @@ def test_shuffled_grouping_scores_below_1_0() -> None:
     from app.pipeline.cluster import Clustering, DraftTopic
 
     stories = [
-        _story("s1", title="AI chip", text="AI chip launched."),
-        _story("s2", title="Fed rates", text="Fed cut rates."),
-        _story("s3", title="M&A deal", text="Big merger announced."),
+        make_story("s1", title="AI chip", text="AI chip launched."),
+        make_story("s2", title="Fed rates", text="Fed cut rates."),
+        make_story("s3", title="M&A deal", text="Big merger announced."),
     ]
 
     # Human says three separate topics; cluster lumps everything into one.
@@ -81,10 +82,10 @@ def test_partial_grouping_scores_between_0_and_1() -> None:
     from app.pipeline.cluster import Clustering, DraftTopic
 
     stories = [
-        _story("s1", title="AI chip A", text="Chip A."),
-        _story("s2", title="AI chip B", text="Chip B."),
-        _story("s3", title="Fed rates", text="Fed."),
-        _story("s4", title="M&A", text="Merger."),
+        make_story("s1", title="AI chip A", text="Chip A."),
+        make_story("s2", title="AI chip B", text="Chip B."),
+        make_story("s3", title="Fed rates", text="Fed."),
+        make_story("s4", title="M&A", text="Merger."),
     ]
 
     # Human: s1,s2 = ai; s3 = finance; s4 = mergers (3 topics)
@@ -118,7 +119,7 @@ def test_partial_grouping_scores_between_0_and_1() -> None:
 
 def test_empty_stories_returns_score_1_0() -> None:
     """No stories → no pairs → score 1.0 (vacuously correct)."""
-    result = eval_topic_assignment([], labels={})
+    result = eval_topic_assignment([], labels={}, client=FakeClient(model_reply("{}")))
     assert len(result) == 1
     assert result[0].score == 1.0
     assert result[0].passed is True
@@ -128,7 +129,7 @@ def test_single_story_returns_score_1_0() -> None:
     """One story → no pairs to compare → score 1.0."""
     from app.pipeline.cluster import Clustering, DraftTopic
 
-    stories = [_story("s1", title="Solo", text="Only one.")]
+    stories = [make_story("s1", title="Solo", text="Only one.")]
     clustering = Clustering(topics=[DraftTopic(label="Solo", story_ids=["s1"])])
     client = FakeClient(model_reply(clustering.model_dump_json()))
 
@@ -146,8 +147,8 @@ def test_detail_reports_topic_counts() -> None:
     from app.pipeline.cluster import Clustering, DraftTopic
 
     stories = [
-        _story("s1", title="A", text="a"),
-        _story("s2", title="B", text="b"),
+        make_story("s1", title="A", text="a"),
+        make_story("s2", title="B", text="b"),
     ]
     clustering = Clustering(
         topics=[

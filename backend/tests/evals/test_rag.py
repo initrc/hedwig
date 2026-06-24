@@ -11,6 +11,7 @@ from typing import cast
 
 from openai.types.chat import ChatCompletionMessageParam
 
+from app.llm.fake_client import FakeClient, model_reply
 from app.rag.embed import EmbedFn
 from app.rag.store import IndexChunk
 from evals.dataset import GoldenQA
@@ -20,7 +21,6 @@ from evals.rag import (
     eval_retrieval_hit_rate,
 )
 from evals.summarize import RubricScore
-from tests.fakes import FakeClient, model_reply
 from tests.rag.fakes import StubStore
 
 # ---------------------------------------------------------------------------
@@ -324,7 +324,7 @@ def test_faithfulness_fails_pre_check_when_ask_refuses() -> None:
     assert results[0].score == 0.0
     assert "pre-check failed" in results[0].detail
     # The judge was never called.
-    assert judge.chat.completions.call_count == 0
+    assert judge.call_count == 0
 
 
 def test_faithfulness_judge_prompt_includes_retrieved_chunk_text() -> None:
@@ -357,7 +357,7 @@ def test_faithfulness_judge_prompt_includes_retrieved_chunk_text() -> None:
         judge_client=judge,
     )
 
-    user_content = _user_message(judge.chat.completions.messages)
+    user_content = _user_message(judge.messages)
     assert "A new open-source model called Lite-7 was released." in user_content
     assert "Alpha Signal" in user_content
 
@@ -369,6 +369,8 @@ def test_faithfulness_empty_questions_returns_single_result() -> None:
         [GoldenQA(question="x", expect_refusal=True)],
         vector_store=store,
         embed_fn=_fixed_embed([1.0, 0.0, 0.0]),
+        client=FakeClient(model_reply("{}")),
+        judge_client=FakeClient(model_reply("{}")),
     )
     assert len(results) == 1
     assert results[0].name == "answer_faithfulness"

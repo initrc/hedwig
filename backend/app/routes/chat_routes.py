@@ -15,7 +15,8 @@ from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends, Query
 
-from app.llm.client import LLMClient, get_client
+from app.llm.client import OpenAIClient
+from app.llm.protocol import LLMClient
 from app.rag.ask import AugmentedAnswer, ask
 from app.rag.chroma_store import ChromaStore
 from app.rag.embed import EmbedFn, embed
@@ -50,7 +51,7 @@ def get_rag_llm_client() -> LLMClient:
     this dependency in tests with a ``FakeClient`` to keep tests off the
     network.
     """
-    return get_client()
+    return OpenAIClient.get()
 
 
 @chat_router.post("/chat")

@@ -9,6 +9,7 @@ hand.
 
 from typing import cast
 
+from app.llm.fake_client import FakeClient, QueuedFakeClient, model_reply
 from app.pipeline.prompts import (
     DEFAULT_PROMPT_VERSION,
     SUMMARIZE_PROMPTS,
@@ -18,8 +19,7 @@ from app.pipeline.summarize import DraftSummary, summarize_topic
 from evals.prompt_comparison import eval_prompt_comparison
 from evals.summarize import RubricScore
 from evals.types import EvalResult
-from tests.fakes import QueuedFakeClient, model_reply
-from tests.fakes import _story as story
+from tests.fakes import make_story as story
 
 
 def _draft_json(summary: str, source_id: str) -> str:
@@ -138,7 +138,11 @@ def test_comparison_rejects_unknown_version() -> None:
     import pytest
 
     with pytest.raises(KeyError):
-        eval_prompt_comparison(stories, labels, versions=("v1", "nope"))
+        eval_prompt_comparison(
+            stories, labels, versions=("v1", "nope"),
+            client=FakeClient(model_reply("{}")),
+            judge_client=FakeClient(model_reply("{}")),
+        )
 
 
 def test_comparison_requires_exactly_two_versions() -> None:
@@ -147,7 +151,11 @@ def test_comparison_requires_exactly_two_versions() -> None:
     stories = [story("a#0", source_item_id="a.eml", title="A", text="A.")]
     labels = {"a#0": "Topic A"}
     with pytest.raises(ValueError):
-        eval_prompt_comparison(stories, labels, versions=("v1",))
+        eval_prompt_comparison(
+            stories, labels, versions=("v1",),
+            client=FakeClient(model_reply("{}")),
+            judge_client=FakeClient(model_reply("{}")),
+        )
 
 
 # -- prompt registry wiring in summarize_topic --------------------------------
@@ -156,16 +164,16 @@ def test_comparison_requires_exactly_two_versions() -> None:
 def test_summarize_topic_default_uses_v1_prompt() -> None:
     """Omitting prompt_version sends the v1 system prompt to the model."""
     topic_story = story("a#0", source_item_id="a.eml", title="A", text="A.")
-    from tests.fakes import FakeClient, _topic
+    from tests.fakes import make_topic
 
-    topic = _topic("Topic A", stories=[topic_story])
+    topic = make_topic("Topic A", stories=[topic_story])
     client = FakeClient(model_reply(_draft_json("s", "a.eml")))
 
     summarize_topic(topic, client=client)
 
     # parse_structured prepends its own schema-instruction system message, so the
     # summarization prompt is the *second* system message — find it by content.
-    messages = cast("list[dict[str, object]]", client.chat.completions.messages)
+    messages = cast("list[dict[str, object]]", client.messages)
     system_contents = [
         str(m["content"]) for m in messages if m.get("role") == "system"
     ]
@@ -175,14 +183,14 @@ def test_summarize_topic_default_uses_v1_prompt() -> None:
 def test_summarize_topic_v2_sends_v2_prompt() -> None:
     """prompt_version='v2' sends the v2 system prompt, which differs from v1."""
     topic_story = story("a#0", source_item_id="a.eml", title="A", text="A.")
-    from tests.fakes import FakeClient, _topic
+    from tests.fakes import make_topic
 
-    topic = _topic("Topic A", stories=[topic_story])
+    topic = make_topic("Topic A", stories=[topic_story])
     client = FakeClient(model_reply(_draft_json("s", "a.eml")))
 
     summarize_topic(topic, client=client, prompt_version="v2")
 
-    messages = cast("list[dict[str, object]]", client.chat.completions.messages)
+    messages = cast("list[dict[str, object]]", client.messages)
     system_contents = [
         str(m["content"]) for m in messages if m.get("role") == "system"
     ]

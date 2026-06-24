@@ -32,7 +32,7 @@ from openai.types.chat import ChatCompletionMessageParam
 from pydantic import BaseModel
 
 from app.ingest.parser import CandidateImage, ParsedEmail
-from app.llm.client import LLMClient, parse_structured
+from app.llm.protocol import LLMClient
 from app.pipeline.cluster import Topic
 
 
@@ -123,7 +123,7 @@ def select_image(
     topic: Topic,
     candidates: list[CandidateImage],
     *,
-    client: LLMClient | None = None,
+    client: LLMClient,
 ) -> CandidateImage | None:
     """Pick the candidate image that illustrates `topic`, or `None` for none.
 
@@ -146,8 +146,8 @@ def select_image(
     ]
     # Thinking is off: picking one index from a numbered list is a trivial choice,
     # not reasoning, and skipping the chain-of-thought keeps this per-topic call fast.
-    choice = parse_structured(
-        messages=messages, schema=ImageChoice, client=client, thinking=False
+    choice = client.ask(
+        messages=messages, schema=ImageChoice, thinking=False
     )
 
     index = choice.index

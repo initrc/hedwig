@@ -17,7 +17,7 @@ from fastapi import FastAPI
 
 from app.ingest.dump import DEFAULT_SAMPLES_DIR
 from app.ingest.source import get_email_source, list_local_source_ids
-from app.llm.client import get_client
+from app.llm.client import OpenAIClient
 from app.pipeline.digest import run_pipeline
 from app.rag.chroma_store import ChromaStore
 from app.rag.embed import embed
@@ -62,7 +62,7 @@ def startup_digest() -> None:
             "pipeline": run_pipeline,
             "vector_store": vector_store,
             "embed_fn": embed,
-            "client": get_client(),
+            "client": OpenAIClient.get(),
         },
         daemon=True,
         name="startup-digest",

@@ -27,7 +27,7 @@ or "artificial intelligence releases". It only checks that stories the human
 grouped together stay together and stories the human separated stay separate.
 """
 
-from app.llm.client import LLMClient
+from app.llm.protocol import LLMClient
 from app.pipeline.cluster import Topic, cluster
 from app.pipeline.segment import Story
 from evals.types import EvalResult
@@ -79,7 +79,7 @@ def eval_topic_assignment(
     stories: list[Story],
     labels: dict[str, str],
     *,
-    client: LLMClient | None = None,
+    client: LLMClient,
 ) -> list[EvalResult]:
     """Run `cluster()` on *stories* and score against hand-labeled expected topics.
 

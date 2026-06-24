@@ -27,7 +27,7 @@ from __future__ import annotations
 import re
 from datetime import date
 
-from app.llm.client import LLMClient
+from app.llm.protocol import LLMClient
 from app.pipeline.cluster import Topic
 from app.pipeline.digest import Digest, DigestSource, DigestTopic
 from app.pipeline.prompts import DEFAULT_PROMPT_VERSION, SUMMARIZE_PROMPTS
@@ -111,7 +111,7 @@ def _build_digest(
     topics: list[Topic],
     *,
     prompt_version: str,
-    client: LLMClient | None,
+    client: LLMClient,
 ) -> Digest:
     """Summarize every *topic* with *prompt_version* and assemble a `Digest`.
 
@@ -198,8 +198,8 @@ def eval_prompt_comparison(
     stories: list[Story],
     labels: dict[str, str],
     *,
-    client: LLMClient | None = None,
-    judge_client: LLMClient | None = None,
+    client: LLMClient,
+    judge_client: LLMClient,
     versions: tuple[str, ...] = PROMPT_VERSIONS,
 ) -> list[EvalResult]:
     """Run `eval_summary_quality` under two prompt versions and report the deltas.

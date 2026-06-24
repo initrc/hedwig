@@ -28,7 +28,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app.ingest.parser import parse  # noqa: E402
 from app.ingest.source import LocalEmlSource  # noqa: E402
-from app.llm.client import get_client  # noqa: E402
+from app.llm.client import OpenAIClient  # noqa: E402
 from app.pipeline.segment import segment  # noqa: E402
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent / "samples"
@@ -39,7 +39,7 @@ SKELETON_PATH = (
 
 def main() -> None:
     source = LocalEmlSource(SAMPLES_DIR)
-    client = get_client()
+    client = OpenAIClient.get()
 
     print(f"Reading samples from {SAMPLES_DIR}")
     entries: list[dict[str, str]] = []

@@ -12,12 +12,13 @@ from datetime import UTC, date, datetime
 
 import pytest
 
+from app.llm.fake_client import FakeClient, QueuedFakeClient, model_reply
 from app.pipeline.cluster import Clustering, DraftTopic
 from app.pipeline.digest import _SELECT_TOPIC_IMAGES, Digest, run_pipeline
 from app.pipeline.image import ImageChoice
 from app.pipeline.segment import DraftStory, Segmentation
 from app.pipeline.summarize import DraftSummary
-from tests.fakes import QueuedFakeClient, _image, _parsed_email, model_reply
+from tests.fakes import make_image, make_parsed_email
 
 
 def _segment_reply(*titles: str) -> Segmentation:
@@ -49,11 +50,11 @@ def _image_reply(index: int | None) -> ImageChoice:
 
 def test_run_pipeline_composes_all_stages_and_round_trips() -> None:
     items = [
-        _parsed_email(
+        make_parsed_email(
             item_id="alpha.eml",
             clean_text="Alpha news.",
         ),
-        _parsed_email(
+        make_parsed_email(
             item_id="beta.eml",
             clean_text="Beta news.",
         ),
@@ -86,7 +87,7 @@ def test_run_pipeline_composes_all_stages_and_round_trips() -> None:
 
     digest = run_pipeline(items, client=client)
 
-    assert client.chat.completions.call_count == 5
+    assert client.call_count == 5
 
     assert len(digest.topics) == 2
     assert digest.topics[0].label == "Chips"
@@ -107,10 +108,10 @@ def test_image_selection_is_skipped_by_default() -> None:
 
 def test_image_selection_runs_when_flag_enabled(monkeypatch: pytest.MonkeyPatch) -> None:
     """When the feature flag is on, the pipeline still calls `select_image`."""
-    image_a = _image("https://x/a.png")
+    image_a = make_image("https://x/a.png")
 
     items = [
-        _parsed_email(
+        make_parsed_email(
             item_id="alpha.eml",
             clean_text="Alpha news.",
             candidate_images=[image_a],
@@ -132,19 +133,19 @@ def test_image_selection_runs_when_flag_enabled(monkeypatch: pytest.MonkeyPatch)
 
     digest = run_pipeline(items, client=client)
 
-    assert client.chat.completions.call_count == 4
+    assert client.call_count == 4
     assert digest.topics[0].image is image_a
 
 
 def test_topic_sources_resolve_to_the_input_parsed_emails() -> None:
     items = [
-        _parsed_email(
+        make_parsed_email(
             item_id="alpha.eml",
             source="alpha@news.com",
             subject="Alpha News",
             clean_text="Alpha text.",
         ),
-        _parsed_email(
+        make_parsed_email(
             item_id="beta.eml",
             source="beta@news.com",
             subject="Beta News",
@@ -187,7 +188,7 @@ def test_topic_sources_resolve_to_the_input_parsed_emails() -> None:
 
 def test_fallback_when_original_url_is_none_is_preserved() -> None:
     items = [
-        _parsed_email(
+        make_parsed_email(
             item_id="alpha.eml",
             original_url=None,
             clean_text="Fallback text.",
@@ -210,20 +211,20 @@ def test_fallback_when_original_url_is_none_is_preserved() -> None:
 
 
 def test_date_defaults_to_today() -> None:
-    digest = run_pipeline([])
+    digest = run_pipeline([], client=FakeClient(model_reply("{}")))
 
     assert digest.date == datetime.now(UTC).date()
     assert digest.topics == []
 
 
 def test_date_override_is_honoured() -> None:
-    digest = run_pipeline([], date=date(2026, 1, 15))
+    digest = run_pipeline([], date=date(2026, 1, 15), client=FakeClient(model_reply("{}")))
 
     assert digest.date == date(2026, 1, 15)
     assert digest.topics == []
 
 
 def test_empty_input_yields_empty_digest() -> None:
-    digest = run_pipeline([])
+    digest = run_pipeline([], client=FakeClient(model_reply("{}")))
 
     assert digest.topics == []

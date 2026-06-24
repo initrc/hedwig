@@ -32,14 +32,8 @@ Three slices:
 
 from __future__ import annotations
 
-from typing import Any
-
-from openai.types.chat import ChatCompletion
-from openai.types.chat.chat_completion import Choice
-from openai.types.chat.chat_completion_message import ChatCompletionMessage
-from openai.types.chat.completion_create_params import ResponseFormat
-
-from app.llm.client import LLMClient, ReasoningEffort
+from app.llm.fake_client import FakeClient, model_reply
+from app.llm.protocol import LLMClient
 from app.pipeline.digest import DigestSource, DigestTopic
 from app.rag.ask import AugmentedAnswer, ask
 from app.rag.embed import EmbedFn
@@ -52,78 +46,15 @@ from evals.types import EvalResult
 # Refusal-path counting client
 # ---------------------------------------------------------------------------
 # `eval_refusal` needs to prove the guardrail short-circuited before the LLM
-# call. We pass `ask()` a client that records every `create` and returns a
+# call. We pass `ask()` a `FakeClient` that records every `ask()` and returns a
 # benign valid reply; the eval then reads `call_count`. The guardrail refusing
-# means the counter stays at zero — that is the assertion. When the guardrail
-# does not refuse (the threshold let a matching chunk through, or the golden
-# label is wrong), `ask()` calls the LLM, the counter moves, and the eval
-# records a failure — no exception needed, and no implication that the
-# guardrail mechanism itself broke.
+# means the counter stays at zero — that is the assertion.
 
 
-# A minimal valid `_LLMAnswer` reply (see `app.rag.ask`): enough for
-# `parse_structured` to validate against the schema and for `ask()` to build a
-# confident answer. The refusal eval never inspects this text — only
-# `confident` and `call_count`.
+# A minimal valid `_LLMAnswer` reply (see `app.rag.ask`): enough for `ask()` to
+# validate against the schema and build a confident answer. The refusal eval
+# never inspects this text — only `confident` and `call_count`.
 _NON_REFUSAL_REPLY = '{"answer": "stub", "sources": []}'
-
-
-def _completion(content: str) -> ChatCompletion:
-    """Build a minimal, well-formed reply for `parse_structured` to parse."""
-    return ChatCompletion(
-        id="refusal-eval",
-        created=0,
-        model="refusal-eval",
-        object="chat.completion",
-        choices=[
-            Choice(
-                finish_reason="stop",
-                index=0,
-                message=ChatCompletionMessage(role="assistant", content=content),
-            )
-        ],
-    )
-
-
-class _CountingCompletions:
-    """Records each `create` call and returns a fixed benign reply."""
-
-    def __init__(self) -> None:
-        self.call_count = 0
-
-    def create(
-        self,
-        *,
-        messages: Any,
-        model: str,
-        response_format: ResponseFormat,
-        reasoning_effort: ReasoningEffort,
-        max_tokens: int,
-        extra_body: dict[str, Any] | None = None,
-    ) -> ChatCompletion:
-        self.call_count += 1
-        return _completion(_NON_REFUSAL_REPLY)
-
-
-class _CountingChat:
-    def __init__(self) -> None:
-        self.completions = _CountingCompletions()
-
-
-class _CountingClient:
-    """An `LLMClient`-shaped recording stub for the refusal eval.
-
-    Its `call_count` is the "stays at zero" assertion: a clean refusal returns
-    `confident=False` without ever calling the LLM, so this counter must not
-    move.
-    """
-
-    def __init__(self) -> None:
-        self.chat = _CountingChat()
-
-    @property
-    def call_count(self) -> int:
-        return self.chat.completions.call_count
 
 
 # ---------------------------------------------------------------------------
@@ -242,8 +173,8 @@ def eval_answer_faithfulness(
     *,
     vector_store: VectorStore,
     embed_fn: EmbedFn,
-    client: LLMClient | None = None,
-    judge_client: LLMClient | None = None,
+    client: LLMClient,
+    judge_client: LLMClient,
 ) -> list[EvalResult]:
     """Score the full `ask()` answer's faithfulness to its retrieved sources.
 
@@ -371,7 +302,7 @@ def eval_refusal(
     clean_refusals = 0
 
     for i, q in enumerate(out_of_corpus):
-        client = _CountingClient()
+        client = FakeClient(model_reply(_NON_REFUSAL_REPLY))
         answer = ask(
             q.question,
             topic_label=q.topic_label,

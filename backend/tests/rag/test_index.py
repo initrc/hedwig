@@ -11,7 +11,7 @@ from datetime import date
 from app.rag.index import build_index, index_digest
 from app.rag.store import IndexChunk
 from app.storage.digest_store import DigestStore
-from tests.fakes import _digest, _digest_source, _digest_topic
+from tests.fakes import make_digest, make_digest_source, make_digest_topic
 from tests.rag.fakes import StubStore, stub_embed
 
 # -- build_index tests -------------------------------------------------------
@@ -21,11 +21,11 @@ def test_build_index_clears_store_before_indexing() -> None:
     """Re-running build_index calls delete_all before inserting new chunks."""
     digest_store = DigestStore(db_path=":memory:")
     digest_store.save(
-        _digest(
+        make_digest(
             topics=[
-                _digest_topic(
+                make_digest_topic(
                     sources=[
-                        _digest_source(clean_text="Some newsletter text.")
+                        make_digest_source(clean_text="Some newsletter text.")
                     ]
                 )
             ]
@@ -60,13 +60,13 @@ def test_build_index_stores_expected_metadata() -> None:
     source_subject, and chunk_index."""
     digest_store = DigestStore(db_path=":memory:")
     digest_store.save(
-        _digest(
+        make_digest(
             digest_date=date(2026, 6, 15),
             topics=[
-                _digest_topic(
+                make_digest_topic(
                     label="Rate Cuts",
                     sources=[
-                        _digest_source(
+                        make_digest_source(
                             source_id="finance.eml",
                             source="finance@news.com",
                             subject="Daily Finance Brief",
@@ -108,11 +108,11 @@ def test_build_index_chunks_long_text() -> None:
 
     digest_store = DigestStore(db_path=":memory:")
     digest_store.save(
-        _digest(
+        make_digest(
             topics=[
-                _digest_topic(
+                make_digest_topic(
                     label="Markets",
-                    sources=[_digest_source(clean_text=long_text)],
+                    sources=[make_digest_source(clean_text=long_text)],
                 )
             ]
         )
@@ -134,13 +134,13 @@ def test_build_index_skips_empty_source_text() -> None:
     """Sources with empty or whitespace-only clean_text produce no chunks."""
     digest_store = DigestStore(db_path=":memory:")
     digest_store.save(
-        _digest(
+        make_digest(
             topics=[
-                _digest_topic(
+                make_digest_topic(
                     label="Empty",
                     sources=[
-                        _digest_source(clean_text="   "),
-                        _digest_source(clean_text="Real content here."),
+                        make_digest_source(clean_text="   "),
+                        make_digest_source(clean_text="Real content here."),
                     ],
                 )
             ]
@@ -181,27 +181,27 @@ def test_build_index_indexes_multiple_digests_and_topics() -> None:
     """Chunks from different digests and topics all land in the store."""
     digest_store = DigestStore(db_path=":memory:")
     digest_store.save(
-        _digest(
+        make_digest(
             digest_date=date(2026, 6, 15),
             topics=[
-                _digest_topic(
+                make_digest_topic(
                     label="Topic A",
-                    sources=[_digest_source(source_id="a.eml", clean_text="Text A.")],
+                    sources=[make_digest_source(source_id="a.eml", clean_text="Text A.")],
                 ),
-                _digest_topic(
+                make_digest_topic(
                     label="Topic B",
-                    sources=[_digest_source(source_id="b.eml", clean_text="Text B.")],
+                    sources=[make_digest_source(source_id="b.eml", clean_text="Text B.")],
                 ),
             ],
         )
     )
     digest_store.save(
-        _digest(
+        make_digest(
             digest_date=date(2026, 6, 16),
             topics=[
-                _digest_topic(
+                make_digest_topic(
                     label="Topic C",
-                    sources=[_digest_source(source_id="c.eml", clean_text="Text C.")],
+                    sources=[make_digest_source(source_id="c.eml", clean_text="Text C.")],
                 )
             ],
         )
@@ -231,12 +231,12 @@ def test_index_digest_does_not_clear_store() -> None:
 
     # Index a first digest.
     index_digest(
-        _digest(
+        make_digest(
             digest_date=date(2026, 6, 15),
             topics=[
-                _digest_topic(
+                make_digest_topic(
                     label="Topic A",
-                    sources=[_digest_source(clean_text="First digest text.")],
+                    sources=[make_digest_source(clean_text="First digest text.")],
                 )
             ],
         ),
@@ -250,12 +250,12 @@ def test_index_digest_does_not_clear_store() -> None:
 
     # Index a second digest — should add without clearing.
     index_digest(
-        _digest(
+        make_digest(
             digest_date=date(2026, 6, 16),
             topics=[
-                _digest_topic(
+                make_digest_topic(
                     label="Topic B",
-                    sources=[_digest_source(clean_text="Second digest text.")],
+                    sources=[make_digest_source(clean_text="Second digest text.")],
                 )
             ],
         ),
@@ -274,13 +274,13 @@ def test_index_digest_stores_expected_metadata() -> None:
     fake_store = StubStore()
 
     index_digest(
-        _digest(
+        make_digest(
             digest_date=date(2026, 6, 15),
             topics=[
-                _digest_topic(
+                make_digest_topic(
                     label="Rate Cuts",
                     sources=[
-                        _digest_source(
+                        make_digest_source(
                             source_id="finance.eml",
                             source="finance@news.com",
                             subject="Daily Finance Brief",
@@ -312,13 +312,13 @@ def test_index_digest_skips_empty_source_text() -> None:
     fake_store = StubStore()
 
     count = index_digest(
-        _digest(
+        make_digest(
             topics=[
-                _digest_topic(
+                make_digest_topic(
                     label="Empty",
                     sources=[
-                        _digest_source(clean_text="   "),
-                        _digest_source(clean_text="Real content here."),
+                        make_digest_source(clean_text="   "),
+                        make_digest_source(clean_text="Real content here."),
                     ],
                 )
             ]
@@ -337,13 +337,13 @@ def test_index_digest_returns_zero_for_digest_with_no_text() -> None:
     fake_store = StubStore()
 
     count = index_digest(
-        _digest(
+        make_digest(
             topics=[
-                _digest_topic(
+                make_digest_topic(
                     label="All Empty",
                     sources=[
-                        _digest_source(clean_text="   "),
-                        _digest_source(clean_text=""),
+                        make_digest_source(clean_text="   "),
+                        make_digest_source(clean_text=""),
                     ],
                 )
             ]

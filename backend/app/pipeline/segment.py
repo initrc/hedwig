@@ -15,7 +15,7 @@ from openai.types.chat import ChatCompletionMessageParam
 from pydantic import BaseModel
 
 from app.ingest.parser import ParsedEmail
-from app.llm.client import LLMClient, parse_structured
+from app.llm.protocol import LLMClient
 
 
 class Story(BaseModel):
@@ -70,7 +70,7 @@ def _user_prompt(item: ParsedEmail) -> str:
     return f"Subject: {item.subject}\n\n{item.clean_text}"
 
 
-def segment(item: ParsedEmail, *, client: LLMClient | None = None) -> list[Story]:
+def segment(item: ParsedEmail, *, client: LLMClient) -> list[Story]:
     """Split one email into its stories.
 
     Empty or whitespace-only text yields no stories, with no model call. Pass
@@ -87,8 +87,8 @@ def segment(item: ParsedEmail, *, client: LLMClient | None = None) -> list[Story
     # email, so all the stories together never outrun it. Thinking is off: splitting
     # a newsletter into titled chunks is extraction, not reasoning, and skipping the
     # chain-of-thought keeps this per-email call fast (it runs once per email).
-    segmentation = parse_structured(
-        messages=messages, schema=Segmentation, client=client, thinking=False
+    segmentation = client.ask(
+        messages=messages, schema=Segmentation, thinking=False
     )
 
     # Number the drafts from 0 to build ids, so the first story of email "x.eml"
@@ -104,7 +104,7 @@ def segment(item: ParsedEmail, *, client: LLMClient | None = None) -> list[Story
     ]
 
 
-def segment_items(items: Iterable[ParsedEmail], *, client: LLMClient | None = None) -> list[Story]:
+def segment_items(items: Iterable[ParsedEmail], *, client: LLMClient) -> list[Story]:
     """Split many emails and return all their stories in one flat list."""
     stories: list[Story] = []
     for item in items:

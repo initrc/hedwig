@@ -23,7 +23,8 @@ from pydantic import BaseModel
 
 from app.ingest.dump import DEFAULT_SAMPLES_DIR
 from app.ingest.source import LocalEmlSource
-from app.llm.client import LLMClient, get_client
+from app.llm.client import OpenAIClient
+from app.llm.protocol import LLMClient
 from app.pipeline.digest import Digest, run_pipeline
 from app.rag.chroma_store import ChromaStore
 from app.rag.embed import EmbedFn, embed
@@ -90,7 +91,7 @@ def get_llm_client() -> LLMClient:
     straight to the implementation in one hop.  Override this dependency in
     tests to keep tests off the network.
     """
-    return get_client()
+    return OpenAIClient.get()
 
 
 @digest_router.get("/digests")

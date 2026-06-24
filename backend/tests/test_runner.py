@@ -20,11 +20,12 @@ from typing import Any
 import pytest
 
 from app.ingest.source import LocalEmlSource
+from app.llm.fake_client import FakeClient, model_reply
 from app.pipeline.digest import Digest
 from app.runner import run_digests, should_run_digest
 from app.status import DigestStatus
 from app.storage.digest_store import DigestStore
-from tests.fakes import _digest, _digest_source, _digest_topic
+from tests.fakes import make_digest, make_digest_source, make_digest_topic
 from tests.rag.fakes import StubStore, stub_embed
 
 
@@ -50,12 +51,12 @@ def _stub_pipeline(
 ) -> Digest:
     """A pipeline stub that records its calls via the store's ingested_sources."""
     sources = [
-        _digest_source(source_id=item.id, subject=item.subject, clean_text=item.clean_text)
+        make_digest_source(source_id=item.id, subject=item.subject, clean_text=item.clean_text)
         for item in items
     ]
-    return _digest(
+    return make_digest(
         digest_date=date,
-        topics=[_digest_topic(label="Topic", summary="Sum.", sources=sources)],
+        topics=[make_digest_topic(label="Topic", summary="Sum.", sources=sources)],
     )
 
 
@@ -112,7 +113,7 @@ def test_run_digests_sets_running_then_idle(deps: dict[str, Any], tmp_path: Path
         pipeline=_stub_pipeline,
         vector_store=deps["vector_store"],
         embed_fn=stub_embed,
-        client=None,
+        client=FakeClient(model_reply("{}")),
         status=status,
     )
 
@@ -143,7 +144,7 @@ def test_run_digests_counts_emails_across_days(deps: dict[str, Any], tmp_path: P
         pipeline=_stub_pipeline,
         vector_store=deps["vector_store"],
         embed_fn=stub_embed,
-        client=None,
+        client=FakeClient(model_reply("{}")),
         status=status,
     )
 
@@ -159,7 +160,7 @@ def test_run_digests_idle_when_no_emails(deps: dict[str, Any], tmp_path: Path) -
         pipeline=_stub_pipeline,
         vector_store=deps["vector_store"],
         embed_fn=stub_embed,
-        client=None,
+        client=FakeClient(model_reply("{}")),
         status=status,
     )
 
@@ -184,7 +185,7 @@ def test_run_digests_records_ingested_source_ids(deps: dict[str, Any], tmp_path:
         pipeline=_stub_pipeline,
         vector_store=deps["vector_store"],
         embed_fn=stub_embed,
-        client=None,
+        client=FakeClient(model_reply("{}")),
         status=deps["status"],
     )
 
@@ -202,7 +203,7 @@ def test_run_digests_makes_subsequent_run_skip(deps: dict[str, Any], tmp_path: P
         pipeline=_stub_pipeline,
         vector_store=deps["vector_store"],
         embed_fn=stub_embed,
-        client=None,
+        client=FakeClient(model_reply("{}")),
         status=deps["status"],
     )
 
@@ -211,7 +212,7 @@ def test_run_digests_makes_subsequent_run_skip(deps: dict[str, Any], tmp_path: P
     assert should_run_digest(list_local_source_ids(tmp_path), store) is False
 
 
-def test_new_file_triggers_run_after_prior_digest(deps: dict[str, Any], tmp_path: Path) -> None:
+def test_new_file_triggers_run_after_priormake_digest(deps: dict[str, Any], tmp_path: Path) -> None:
     """Adding a new .eml after a prior run makes `should_run_digest` true again."""
     (tmp_path / "2026-06-09-a.eml").write_text(_eml("A", "Tue, 09 Jun 2026 10:00:00 +0000"))
     store: DigestStore = deps["store"]
@@ -222,7 +223,7 @@ def test_new_file_triggers_run_after_prior_digest(deps: dict[str, Any], tmp_path
         pipeline=_stub_pipeline,
         vector_store=deps["vector_store"],
         embed_fn=stub_embed,
-        client=None,
+        client=FakeClient(model_reply("{}")),
         status=deps["status"],
     )
 
@@ -250,7 +251,7 @@ def test_run_digests_groups_by_day(deps: dict[str, Any], tmp_path: Path) -> None
         pipeline=_stub_pipeline,
         vector_store=deps["vector_store"],
         embed_fn=stub_embed,
-        client=None,
+        client=FakeClient(model_reply("{}")),
         status=deps["status"],
     )
 
@@ -270,7 +271,7 @@ def test_run_digests_date_filter_processes_one_day(deps: dict[str, Any], tmp_pat
         pipeline=_stub_pipeline,
         vector_store=deps["vector_store"],
         embed_fn=stub_embed,
-        client=None,
+        client=FakeClient(model_reply("{}")),
         date_filter=date(2026, 6, 9),
         status=deps["status"],
     )
@@ -307,7 +308,7 @@ def test_run_digests_skips_email_with_no_received_date(
             pipeline=_stub_pipeline,
             vector_store=deps["vector_store"],
             embed_fn=stub_embed,
-            client=None,
+            client=FakeClient(model_reply("{}")),
             status=deps["status"],
         )
 
@@ -318,7 +319,7 @@ def test_run_digests_skips_email_with_no_received_date(
     )
 
 
-def test_run_digests_indexes_each_digest(deps: dict[str, Any], tmp_path: Path) -> None:
+def test_run_digests_indexes_eachmake_digest(deps: dict[str, Any], tmp_path: Path) -> None:
     """Each produced digest is indexed once into the vector store."""
     (tmp_path / "2026-06-09-a.eml").write_text(_eml("A", "Tue, 09 Jun 2026 10:00:00 +0000"))
     (tmp_path / "2026-06-12-b.eml").write_text(_eml("B", "Fri, 12 Jun 2026 09:00:00 +0000"))
@@ -329,7 +330,7 @@ def test_run_digests_indexes_each_digest(deps: dict[str, Any], tmp_path: Path) -
         pipeline=_stub_pipeline,
         vector_store=deps["vector_store"],
         embed_fn=stub_embed,
-        client=None,
+        client=FakeClient(model_reply("{}")),
         status=deps["status"],
     )
 

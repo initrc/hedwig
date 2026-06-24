@@ -11,10 +11,10 @@ from typing import cast
 
 from openai.types.chat import ChatCompletionMessageParam
 
+from app.llm.fake_client import FakeClient, model_reply
 from app.rag.ask import AugmentedAnswer, ask
 from app.rag.embed import EmbedFn
 from app.rag.store import IndexChunk
-from tests.fakes import FakeClient, model_reply
 from tests.rag.fakes import StubStore
 
 # ---------------------------------------------------------------------------
@@ -166,7 +166,7 @@ def test_ask_returns_not_confident_when_best_score_below_threshold() -> None:
     assert result.sources == []
 
     # The LLM must not have been called.
-    assert fake_client.chat.completions.call_count == 0
+    assert fake_client.call_count == 0
 
 
 def test_ask_scoped_to_topic_only_returns_matching_chunks() -> None:
@@ -224,7 +224,7 @@ def test_ask_scoped_to_topic_only_returns_matching_chunks() -> None:
     assert result.sources[0].source_id == "finance.eml"
 
     # Also verify the prompt only includes the Finance chunk, not the Tech one.
-    user_content = _user_message(fake_client.chat.completions.messages)
+    user_content = _user_message(fake_client.messages)
     assert "Fed held rates steady" in user_content
     assert "Apple announced" not in user_content
 
@@ -268,7 +268,7 @@ def test_ask_prompt_includes_chunk_metadata_for_citations() -> None:
     )
 
     # Inspect the prompt that was sent to the LLM.
-    messages = fake_client.chat.completions.messages
+    messages = fake_client.messages
     system_msg = _task_system_message(messages)
     user_msg = _user_message(messages)
 
@@ -297,7 +297,7 @@ def test_ask_returns_not_confident_when_store_is_empty() -> None:
 
     assert result.confident is False
     assert result.sources == []
-    assert fake_client.chat.completions.call_count == 0
+    assert fake_client.call_count == 0
 
 
 def test_ask_drops_llm_sources_not_found_in_retrieved_chunks() -> None:

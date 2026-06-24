@@ -57,12 +57,13 @@ import json
 from collections.abc import Callable
 from typing import Any
 
-from openai.types.chat import ChatCompletion
+from openai.types.chat import ChatCompletion, ChatCompletionMessageParam
 from openai.types.chat.chat_completion import Choice
 from openai.types.chat.chat_completion_message import ChatCompletionMessage
-from openai.types.chat.completion_create_params import ResponseFormat
+from pydantic import BaseModel
 
-from app.llm.client import LLMClient, ReasoningEffort
+from app.llm.client import OpenAIClient
+from app.llm.protocol import LLMClient, _ClientBase
 from app.pipeline.cluster import _SYSTEM_PROMPT as _CLUSTER_PROMPT
 from app.pipeline.digest import Digest
 from app.pipeline.prompts import DEFAULT_PROMPT_VERSION, SUMMARIZE_PROMPTS
@@ -118,7 +119,7 @@ def _labeled_stories() -> tuple[list[Story], dict[str, str]]:
 
 
 def _eval_digest(
-    stories: list[Story], labels: dict[str, str], *, client: LLMClient | None
+    stories: list[Story], labels: dict[str, str], *, client: LLMClient
 ) -> Digest:
     """Build the `Digest` the summary eval judges, from the labeled stories.
 
@@ -156,15 +157,9 @@ def _eval_digest(
 # object (a new prompt, an interpolation, a concatenation) — a deliberate,
 # visible change that already needs new stub handling here.
 #
-# The LLM fake mirrors the three Protocols in `app/llm/client.py` that
-# `parse_structured` reaches through — `LLMClient` → `_Chat` → `_Completions`
-# — so the call path is `client.chat.completions.create(...)`. Protocols are
-# structural: these classes satisfy them by shape, with no `inheritance` to
-# follow. The same three-class shape already exists as the `FakeClient` /
-# `FakeChat` / `FakeCompletions` family in `tests/fakes.py` (one fixed reply);
-# we need our own because one fake must serve every stage, so it dispatches by
-# prompt instead of holding a single reply. The class names below echo that
-# family and name the Protocol each mirrors. The vector-store and embedding
+# `_StubLLMClient` subclasses `_ClientBase` (in `protocol.py`) and implements
+# `_complete()` to dispatch by stage prompt. The shared `ask()` logic — schema
+# prepend, guards, validation — is inherited. The vector-store and embedding
 # fakes are reused directly from the test package (`tests.rag.fakes`).
 
 # The known stage prompts the stub dispatches on. `SUMMARIZE_PROMPTS` is a
@@ -183,7 +178,7 @@ _STAGE_PROMPTS: tuple[str, ...] = (
 
 
 def _completion(content: str) -> ChatCompletion:
-    """Build a minimal well-formed `ChatCompletion` for `parse_structured` to parse."""
+    """Build a minimal well-formed `ChatCompletion` for the stub to return."""
     return ChatCompletion(
         id="eval-runner-stub",
         created=0,
@@ -265,54 +260,24 @@ def _chunk_header(user: str) -> dict[str, Any]:
     return fields
 
 
-class _StubCompletions:
-    """Mirrors the `_Completions` Protocol (app.llm.client): the `.create` layer.
+class _StubLLMClient(_ClientBase):
+    """A dispatching fake client: returns stage-appropriate replies by prompt identity.
 
-    The only method `parse_structured` ever calls is `create`, so this is the
-    only method here. Unlike `FakeCompletions` (one fixed reply), it dispatches
-    by stage prompt and returns a stage-appropriate well-formed reply.
+    Implements `_complete()` to find the stage prompt in the messages and return
+    a well-formed reply for that stage. The dispatch table (`_stub_reply`) is
+    eval-specific; the shared `ask()` logic is inherited from `_ClientBase`.
     """
 
-    def __init__(self) -> None:
-        self.call_count = 0
-
-    def create(
+    def _complete(
         self,
         *,
-        messages: Any,
-        model: str,
-        response_format: ResponseFormat,
-        reasoning_effort: ReasoningEffort,
-        max_tokens: int,
-        extra_body: dict[str, Any] | None = None,
+        messages: list[ChatCompletionMessageParam],
+        schema: type[BaseModel],
+        thinking: bool,
     ) -> ChatCompletion:
-        self.call_count += 1
-        msgs = list(messages)
-        system = _stage_system(msgs)
-        user = _first_user(msgs)
+        system = _stage_system(messages)
+        user = _first_user(messages)
         return _completion(_stub_reply(system, user))
-
-
-class _StubChat:
-    """Mirrors the `_Chat` Protocol: a thin holder so `client.chat.completions`
-    resolves. Equivalent to `FakeChat` in `tests/fakes.py`."""
-
-    def __init__(self, completions: _StubCompletions) -> None:
-        self.completions = completions
-
-
-class _StubLLMClient:
-    """Mirrors the `LLMClient` Protocol (app.llm.client) — the outermost `client`
-    `parse_structured` receives. Dispatching variant of `FakeClient`: one fake
-    covers every stage instead of holding a single fixed reply."""
-
-    def __init__(self) -> None:
-        self._completions = _StubCompletions()
-        self.chat = _StubChat(self._completions)
-
-    @property
-    def call_count(self) -> int:
-        return self._completions.call_count
 
 
 def _stub_reply(system: str, user: str) -> str:
@@ -400,9 +365,8 @@ def _injection_chunk_store() -> VectorStore:
 # ---------------------------------------------------------------------------
 # Live harness
 # ---------------------------------------------------------------------------
-# In live mode the eval functions use their real defaults: `client=None` means
-# the real DeepSeek connection (`get_client()`), `judge_client=None` the same,
-# and the RAG evals get the real embedding function and the on-disk Chroma
+# In live mode the eval functions get `OpenAIClient.get()` as their client and
+# judge, and the RAG evals get the real embedding function and the on-disk Chroma
 # store. Nothing here constructs a client eagerly — the eval functions do, on
 # their first call, so importing this module never touches the network.
 
@@ -459,13 +423,13 @@ def _build_evals(*, live: bool) -> list[tuple[str, _EvalThunk]]:
     golden_qa = load_golden_qa()
     injection_items = load_injection_items()
 
+    llm_client: LLMClient
+    judge_client: LLMClient
     if live:
         store = _live_store()
         embed_fn = _live_embed()
-        # `client=None` / `judge_client=None` tell the eval functions to use the
-        # real DeepSeek connection.
-        llm_client = None
-        judge_client = None
+        llm_client = OpenAIClient.get()
+        judge_client = llm_client
         # Live: the RAG injection probe retrieves against the real on-disk index,
         # the same store the rest of live mode uses.
         injection_store = store

@@ -14,7 +14,7 @@ from datetime import UTC, date, datetime
 from pydantic import BaseModel
 
 from app.ingest.parser import CandidateImage, ParsedEmail
-from app.llm.client import LLMClient
+from app.llm.protocol import LLMClient
 from app.pipeline.cluster import cluster
 from app.pipeline.image import gather_candidates, select_image
 from app.pipeline.segment import segment_items
@@ -93,7 +93,7 @@ def run_pipeline(
     items: list[ParsedEmail],
     *,
     date: date | None = None,
-    client: LLMClient | None = None,
+    client: LLMClient,
 ) -> Digest:
     """Run the full pipeline and return one validated `Digest`.
 

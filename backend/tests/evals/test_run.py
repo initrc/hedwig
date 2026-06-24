@@ -167,7 +167,7 @@ def test_run_all_stubbed_never_constructs_a_real_client(
     def _no_real(_msg: str = "real client constructed in stubbed mode") -> None:
         raise AssertionError(_msg)
 
-    monkeypatch.setattr("app.llm.client.get_client", _no_real)
+    monkeypatch.setattr("app.llm.client.OpenAIClient.get", _no_real)
     monkeypatch.setattr("app.rag.chroma_store.ChromaStore", _no_real)
     monkeypatch.setattr("app.rag.embed._get_client", _no_real)
 

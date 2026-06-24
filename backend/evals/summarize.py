@@ -28,7 +28,7 @@ from pathlib import Path
 from openai.types.chat import ChatCompletionMessageParam
 from pydantic import BaseModel, TypeAdapter
 
-from app.llm.client import LLMClient, parse_structured
+from app.llm.protocol import LLMClient
 from app.pipeline.digest import Digest, DigestSource, DigestTopic
 from evals.types import EvalResult
 
@@ -129,7 +129,7 @@ def _judge_user_prompt(topic: DigestTopic) -> str:
 def judge_topic(
     topic: DigestTopic,
     *,
-    judge_client: LLMClient | None = None,
+    judge_client: LLMClient,
 ) -> RubricScore:
     """Run the judge on one topic's summary and return its structured scores.
 
@@ -140,10 +140,9 @@ def judge_topic(
         {"role": "system", "content": _JUDGE_SYSTEM_PROMPT},
         {"role": "user", "content": _judge_user_prompt(topic)},
     ]
-    return parse_structured(
+    return judge_client.ask(
         messages=messages,
         schema=RubricScore,
-        client=judge_client,
     )
 
 
@@ -165,7 +164,7 @@ def _weighted_aggregate(faithfulness: float, conciseness: float, coherence: floa
 def eval_summary_quality(
     digest: Digest,
     *,
-    judge_client: LLMClient | None = None,
+    judge_client: LLMClient,
 ) -> list[EvalResult]:
     """Score every topic summary in *digest* via LLM-as-judge.
 
@@ -290,7 +289,7 @@ def _calibration_topic(item: CalibrationItem) -> DigestTopic:
 
 def eval_judge_calibration(
     *,
-    judge_client: LLMClient | None = None,
+    judge_client: LLMClient,
     calibration_path: Path | None = None,
 ) -> list[EvalResult]:
     """Run the judge on the hand-scored calibration summaries and report drift.

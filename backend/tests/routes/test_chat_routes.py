@@ -9,6 +9,7 @@ import json
 
 from fastapi.testclient import TestClient
 
+from app.llm.fake_client import FakeClient, model_reply
 from app.main import app
 from app.rag.ask import AugmentedAnswer
 from app.rag.store import IndexChunk
@@ -17,7 +18,6 @@ from app.routes.chat_routes import (
     get_rag_llm_client,
     get_rag_vector_store,
 )
-from tests.fakes import FakeClient, model_reply
 from tests.rag.fakes import StubStore, stub_embed
 
 # ---------------------------------------------------------------------------

@@ -48,8 +48,8 @@ dependencies:
   nesting plumbing lives once (in `app/llm/fake_client.py`), not twice. The
   runner still owns the dispatch-by-prompt behavior — that part is not moved.
 - `uv run pytest`, `uv run ruff check`, and `uv run mypy` all pass with no change
-  to test behavior (the stubbed `python evals/run.py` still produces the same
-  scorecard rows).
+  to test behavior (the stubbed `uv run python evals/run.py` still produces the
+  same scorecard rows).
 - No behavior change: the split is a structural refactor. The one documented
   exception is that `_StubLLMClient` now shares plumbing with the pure stubs,
   which is the point of the task.

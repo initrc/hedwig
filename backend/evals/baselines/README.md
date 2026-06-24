@@ -1,8 +1,8 @@
 # Eval scorecard baselines
 
-Frozen snapshots of `python evals/run.py` output, kept in the repo so PRs and
-follow-up work can point at a concrete "as of date X" number rather than a
-result on someone's laptop.
+Frozen snapshots of `uv run python evals/run.py` output, kept in the repo so
+PRs and follow-up work can point at a concrete "as of date X" number rather
+than a result on someone's laptop.
 
 Each file is one run of the runner, named `<date>-live.md` or
 `<date>-stubbed.md`:

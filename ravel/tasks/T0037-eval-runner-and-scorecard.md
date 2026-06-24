@@ -16,8 +16,8 @@ dependencies:
   prompt-version comparison (T0036) — and prints a markdown scorecard with the numbers.
 - Gate the evals that need real LLM/embedding calls behind a `--live` flag (or env var) so the
   harness runs in CI with stubs by default and produces real numbers only when explicitly asked.
-- This is the build-plan's "point to numbers, not vibes" moment: `python evals/run.py` prints a
-  scorecard; `python evals/run.py --live` prints one scored against the real models.
+- This is the build-plan's "point to numbers, not vibes" moment: `uv run python evals/run.py` prints
+  a scorecard; `uv run python evals/run.py --live` prints one scored against the real models.
 
 # Acceptance
 
@@ -25,12 +25,14 @@ dependencies:
   `Scorecard` (defined in T0032), and prints a markdown table to stdout. The table shows, per eval:
   name, pass rate (or mean score), and the `detail` note (e.g. "3/5 golden sources retrieved",
   "judge drift +0.1 vs human", "v2 −0.03 conciseness vs v1"). A summary line gives overall pass rate.
-- `python evals/run.py` (no flags) runs **without real API calls** — it uses stubbed LLM/embedding
-  fakes and exercises the wiring end to end. This is the CI path; it validates that every eval
-  function is callable and returns well-formed `EvalResult`s, and that the scorecard renders.
-- `python evals/run.py --live` (or `HEDWIG_EVAL_LIVE=1`) uses the real LLM and embedding clients and
-  the real vector store, producing the actual scorecard against the labeled set. A clear header in
-  the output marks a live run so a stubbed scorecard is never mistaken for real numbers.
+- `uv run python evals/run.py` (no flags) runs **without real API calls** — it uses stubbed
+  LLM/embedding fakes and exercises the wiring end to end. This is the CI path; it validates that
+  every eval function is callable and returns well-formed `EvalResult`s, and that the scorecard
+  renders.
+- `uv run python evals/run.py --live` (or `HEDWIG_EVAL_LIVE=1`) uses the real LLM and embedding
+  clients and the real vector store, producing the actual scorecard against the labeled set.
+  A clear header in the output marks a live run so a stubbed scorecard is never mistaken for real
+  numbers.
 - Optionally writes the scorecard to a file (e.g. `backend/evals/scorecard.md`) when `--out` is
   passed; the build-plan's "a tab in the dashboard" option is noted as a future extension and is not
   required for this task.
@@ -42,13 +44,13 @@ dependencies:
 # Implementation Notes
 
 - Build-plan reference: `ravel/docs/build-plan.md` Day 5 step 6 (line 213): "Output a simple results
-  table (markdown or a tab in the dashboard)." And the end-of-day bar (line 215): "python evals/run.py
+  table (markdown or a tab in the dashboard)." And the end-of-day bar (line 215): "uv run python evals/run.py
   prints a scorecard; you can point to numbers, not vibes."
 - **Run from `backend/`.** The project's cwd convention is the backend directory
   (`DEFAULT_DB_PATH = Path("db/hedwig.db")` is relative to cwd, `backend/app/storage/digest_store.py:28`,
   and tests run from `backend/`). So `evals/run.py` lives at `backend/evals/run.py` and is invoked as
-  `python evals/run.py` (or `uv run python evals/run.py`) from `backend/`, matching the build-plan
-  wording exactly. Import `app.*` modules the same way the tests do.
+  `uv run python evals/run.py` from `backend/`, matching the build-plan wording exactly.
+  Import `app.*` modules the same way the tests do.
 - **Aggregation:** each eval function (T0033–T0036) returns `list[EvalResult]`; the runner collects
   them all into one `Scorecard` (T0032) and renders. Keep the rendering dumb — a fixed table over
   `EvalResult.{name, passed, score, detail}` — so adding an eval later means only adding a call in

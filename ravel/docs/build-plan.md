@@ -212,7 +212,7 @@ backend startup and its status shows in the dashboard header.
    and show pass-rate deltas — prompts treated as versioned artifacts with regression testing.
 6. Output a simple results table (markdown or a tab in the dashboard).
 
-**End of day:** `python evals/run.py` prints a scorecard; you can point to numbers, not vibes.
+**End of day:** `uv run python evals/run.py` prints a scorecard; you can point to numbers, not vibes.
 
 ---
 

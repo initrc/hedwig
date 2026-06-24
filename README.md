@@ -63,15 +63,15 @@ The store also tracks which `source_id`s have been ingested into which digest da
 
 The chat system (`backend/app/rag/`) is a full retrieval-augmented generation pipeline:
 
-1. **Chunking** (`chunk.py`) — Newsletter text is split into overlapping chunks (~2048 characters with 256-character overlap), respecting paragraph and sentence boundaries.
+1. **Chunking** (`chunk.py`) — Stories are split into overlapping chunks (512 characters with 128-character overlap), respecting sentence boundaries. At this size each chunk covers roughly two or three sentences, narrow enough that a focused question lands on a highly relevant chunk instead of a dilute blend of unrelated passages.
 
 2. **Embedding** (`embed.py`) — Chunks are embedded with OpenAI text-embedding-3-small (1536-dimensional vectors).
 
 3. **Vector store** (`chroma_store.py`) — ChromaDB stores the vectors on disk at `backend/db/chroma/`, using cosine distance for similarity search. Metadata filtering supports scoped queries by topic label.
 
-4. **Indexing** (`index.py`) — After each new digest is produced, its source texts are chunked, embedded, and inserted into the vector store incrementally.
+4. **Indexing** (`index.py`) — Stories are chunked and embedded per-story, so a source that contributes to multiple topics only indexes each story once. After each new digest, new chunks are embedded and inserted incrementally.
 
-5. **Query** (`ask.py`) — On a user question, the backend embeds the query, retrieves the top-k most similar chunks, and passes them to the LLM with a prompt that requires citing sources. A guardrail checks retrieval confidence: if the highest similarity score is below 0.5, the system refuses to answer rather than hallucinating.
+5. **Query** (`ask.py`) — On a user question, the backend embeds the query, retrieves the top-15 most similar chunks, and passes them to the LLM with a system prompt that enforces strict anti-hallucination rules (no invented numbers or dates, mandatory citations even for negative claims, no publisher-name inference from internal identifiers). A guardrail checks retrieval confidence: if the highest cosine similarity score is below 0.35, the system refuses to answer rather than hallucinating. The threshold is calibrated to the embedding model. Real matches on this corpus score 0.45–0.60, while off-topic questions peak at ~0.24.
 
 Scoped chat (`POST /chat?topic_label=...`) restricts retrieval to chunks from a single topic, powering the per-topic chat in the frontend's detail panel.
 
@@ -81,14 +81,38 @@ On startup, the backend checks whether any sample emails have not yet been proce
 
 ### LLM client
 
-All LLM calls go through a single function, `parse_structured()` (`backend/app/llm/client.py`). The client is an `OpenAI` SDK instance pointed at `https://api.deepseek.com` (DeepSeek's API is OpenAI-compatible). Every call requests JSON output, validates the response against a Pydantic schema, and logs timing and token usage. The model used is DeepSeek-v4-Flash.
+All LLM calls go through the `LLMClient` Protocol (`backend/app/llm/protocol.py`). The real implementation is `OpenAIClient` (`backend/app/llm/client.py`), which wraps the OpenAI SDK pointed at `https://api.deepseek.com` (DeepSeek's API is OpenAI-compatible). Fake implementations (`backend/app/llm/fake_client.py`) let tests and evals run without network calls.
+
+The Protocol defines a single `ask()` method — callers describe what they want (a structured Pydantic output from a prompt), and each implementation decides how to produce it. The shared `_ClientBase` template handles schema instruction prepending, reply guards, and Pydantic validation, so fake and real clients get the same validation for free.
 
 DeepSeek is used for every LLM step in the project:
 
 - The three pipeline stages (segment, cluster, summarize)
 - The RAG answer generation (answering user questions from retrieved context)
+- The eval judge (scoring summary and answer quality on a faithfulness/conciseness/coherence rubric)
 
 Embedding is the only step that uses a different provider — OpenAI text-embedding-3-small, via a separate `OpenAI` client instantiated in `backend/app/rag/embed.py`.
+
+### Evals
+
+The eval suite (`backend/evals/`) measures the RAG pipeline stages — indexing (chunking + embedding), retrieval, and faithfulness — plus the digest pipeline's clustering and summarization. Every eval produces a pass/fail result with a 0–1 score and a human-readable detail; the markdown scorecard is the single source of truth for quality regressions.
+
+**How it runs.** `uv run python evals/run.py` (stubbed, no API keys, CI-safe) proves harness wiring and catches logic errors before live runs. `uv run python evals/run.py --live` scores against the real DeepSeek LLM, OpenAI embeddings, and the on-disk Chroma store. Live runs are written to `evals/baselines/` as dated snapshots for regression tracking. Run from `backend/`.
+
+**What it measures:**
+
+| Eval | What it validates | Latest (live) |
+|------|-------------------|--------------|
+| Retrieval hit rate (`rag.py`) | Indexing & retrieval: do the top-15 chunks for a golden question include the expected source? | 1.000 |
+| Refusal guardrail (`rag.py`) | Retrieval: does the confidence threshold correctly refuse off-topic questions without an LLM call? | 1.000 |
+| Answer faithfulness (`rag.py`) | Faithfulness: LLM-as-judge scores RAG answers against their retrieved context on a 3-dimension rubric | 1.000 |
+| Summary quality (`summarize.py`) | Faithfulness: same judge rubric applied to each topic summary against its source stories | 0.975 |
+| Judge calibration (`summarize.py`) | Faithfulness: delta between LLM judge scores and hand scores on the same summaries | 0.900 |
+| Topic assignment (`categorize.py`) | Pipeline: pairwise co-membership accuracy — do the LLM's clusters agree with hand-labeled groupings? | 0.993 |
+
+Additional evals cover pipeline injection probing and prompt-version comparison.
+
+**Design.** All eval functions accept their clients and stores as parameters, so the same function runs identically in stubbed and live mode — only the injected dependencies differ. Fixtures are typed JSON files (`topic_labels.json` for clustering, `golden_qa.json` for retrieval and faithfulness) loaded through Pydantic models. Adding a new eval requires only writing the function and appending it to the runner's eval list — the scorecard renderer is deliberately generic.
 
 ## Frontend
 

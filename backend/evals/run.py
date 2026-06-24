@@ -3,29 +3,29 @@
 Two modes
 ---------
 
-**Stubbed (default).** ``python evals/run.py`` wires fake LLM/embedding/store
+**Stubbed (default).** `uv run python evals/run.py` wires fake LLM/embedding/store
 doubles through every eval function and prints a scorecard. The
 numbers a stubbed run produces are **not real measurements** — they only prove
 the harness is wired end to end and every eval function returns well-formed
-``EvalResult`` objects. A stubbed scorecard is never a signal that the system works; a
+`EvalResult` objects. A stubbed scorecard is never a signal that the system works; a
 clear header in the output marks it as stubbed so it is never mistaken for real
 numbers. This is the CI path: it runs without API keys and without the on-disk
 vector index.
 
-**Live.** ``python evals/run.py --live`` (or ``HEDWIG_EVAL_LIVE=1``) swaps in the
-real DeepSeek LLM, the real OpenAI embedding function, and the on-disk Chroma
+**Live.** `uv run python evals/run.py --live` (or `HEDWIG_EVAL_LIVE=1`) swaps in
+the real DeepSeek LLM, the real OpenAI embedding function, and the on-disk Chroma
 store, producing the actual scorecard against the labeled set. A live run is a
 deliberate, billable act — that is why it is opt-in.
 
-Both modes share one renderer and one ``Scorecard``, so the only
-difference is which clients the eval functions receive. Run from ``backend/``
-(the project's cwd convention): ``python evals/run.py``.
+Both modes share one renderer and one `Scorecard`, so the only
+difference is which clients the eval functions receive. Run from `backend/`
+(the project's cwd convention): `uv run python evals/run.py`.
 
 Failure isolation
 -----------------
 
 One eval raising must not kill the run. Each eval call is wrapped so an exception
-becomes a failing ``EvalResult`` (the error in its ``detail``) and the next eval
+becomes a failing `EvalResult` (the error in its `detail`) and the next eval
 still runs, so the scorecard always shows the full picture rather than a
 half-printed table that hides the rest.
 """
@@ -34,7 +34,7 @@ from __future__ import annotations
 
 # ruff: noqa: E402 -- the sys.path shim below must run before the imports it fixes.
 # --- sys.path shim -----------------------------------------------------------
-# When run as `python evals/run.py`, Python puts this script's directory
+# When run as `uv run python evals/run.py`, Python puts this script's directory
 # (`backend/evals/`) at the front of sys.path. That directory holds our own
 # `types.py`, which then shadows the standard library `types` module and breaks
 # `import argparse` (argparse -> re -> enum -> types). Repoint sys.path at the
@@ -200,7 +200,7 @@ def _stage_system(messages: list[Any]) -> str:
     one that is one of the known stage prompts (`_STAGE_PROMPTS`) by object
     identity — robust to prompt text edits and to changes in the schema
     instruction's wording, since it never looks at that message's text. When the
-    caller is a genuinely new stage the stub does not know, this returns ``""``
+    caller is a genuinely new stage the stub does not know, this returns `""`
     and the stub falls back to its benign empty default.
     """
     for message in messages:
@@ -283,7 +283,7 @@ def _stub_reply(system: str, user: str) -> str:
 
     Dispatch is by object identity against the imported stage prompts, so a text
     edit to any prompt cannot silently break the stub: the same object is on both
-    sides of the comparison. ``_stub_reply`` receives the stage prompt found by
+    sides of the comparison. `_stub_reply` receives the stage prompt found by
     `_stage_system`; when no known stage prompt is present it returns a benign
     empty default so the stub never crashes an eval.
     """

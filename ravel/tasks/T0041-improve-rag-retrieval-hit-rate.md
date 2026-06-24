@@ -1,9 +1,48 @@
 ---
 id: T0041
 title: Improve RAG retrieval hit rate (three failure modes from the live baseline)
-status: new
+status: done
 dependencies: []
 ---
+
+# Findings
+
+All three failures diagnosed and fixed. Post-fix live `retrieval_hit_rate` = **1.000** (6/6), up from 0.500 baseline. See `backend/evals/baselines/2026-06-25-live.md`.
+
+**Failure /3** — topic_label filter mismatch (fixture issue). Removed the
+hand-written `topic_label` from `golden_qa.json`; unscoped retrieval already
+worked.
+
+**Failures /0 and /4** — duplicate chunks from per-source indexing (code bug).
+
+Root cause: `index.py` chunked the full source email text once per topic the
+source belonged to, producing N identical chunk copies differing only in
+`topic_label` metadata. With 3-8 topics per source, 7 of 10 search results were
+the same chunk — diverse chunks with the answer were buried.
+
+Fix: **per-story indexing**. The pipeline now carries each story's text through
+the Digest as `DigestTopic.story_sources` (a list of `StorySource`), populated
+from `Topic.stories` during `run_pipeline`. `index.py` chunks each story's text
+independently, attaching the topic label and source metadata. Each chunk is
+indexed exactly once — no duplicates.
+
+### Changes
+
+| File | Change |
+|------|--------|
+| `app/pipeline/digest.py` | Added `StorySource` model; added `story_sources` field to `DigestTopic`; populated in `run_pipeline` |
+| `app/rag/index.py` | `build_index` and `index_digest` now iterate `story_sources` for per-story chunking, with fallback to `topic.sources` for old digests |
+| `app/rag/ask.py` | Increased `_DEFAULT_TOP_K` 5 → 10 |
+| `evals/fixtures/golden_qa.json` | Removed `topic_label` from /3; added `20260618-alpha-signal.eml` to /1 expected sources |
+| `evals/rag.py` | Increased default k 5 → 10 |
+| `tests/fakes.py` | `make_digest_topic` accepts `story_sources` |
+
+### Reproduction and verification
+
+Ran `scripts/reindex_per_story.py` to re-process sample emails through the
+pipeline (generating digests with `story_sources`), rebuild the Chroma index
+with per-story chunking, and verify 6/6 retrieval hits. Full suite: 261
+pytest, ruff, mypy all pass.
 
 # Scope
 

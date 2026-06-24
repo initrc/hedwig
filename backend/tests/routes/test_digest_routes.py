@@ -29,7 +29,7 @@ from app.routes.digest_routes import (
     get_vector_store,
 )
 from app.storage.digest_store import DigestStore
-from tests.fakes import make_digest, make_digest_source, make_digest_topic
+from tests.fakes import make_digest, make_digest_source, make_digest_topic, make_story_source
 from tests.rag.fakes import StubStore, stub_embed
 
 
@@ -80,9 +80,18 @@ def stubbed_deps() -> Iterator[dict[str, Any]]:
             )
             for item in items
         ]
+        story_sources = [
+            make_story_source(text=item.clean_text, source_item_id=item.id)
+            for item in items
+        ]
         return make_digest(
             digest_date=date,
-            topics=[make_digest_topic(label="Topic", summary="Sum.", sources=sources)],
+            topics=[
+                make_digest_topic(
+                    label="Topic", summary="Sum.",
+                    sources=sources, story_sources=story_sources,
+                )
+            ],
         )
 
     app.dependency_overrides[get_store] = lambda: state["store"]

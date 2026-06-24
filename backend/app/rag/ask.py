@@ -47,7 +47,7 @@ _logger = logging.getLogger(__name__)
 _CONFIDENCE_THRESHOLD: float = 0.35
 
 # How many chunks to retrieve from the vector store per query by default.
-_DEFAULT_TOP_K: int = 5
+_DEFAULT_TOP_K: int = 10
 
 
 # ---------------------------------------------------------------------------

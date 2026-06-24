@@ -96,8 +96,9 @@ def build_index(
     for digest in digests:
         digest_date = digest.date.isoformat()
         for topic in digest.topics:
-            for _i, source in enumerate(topic.sources):
-                text = source.clean_text.strip()
+            source_subjects = {s.id: s.subject for s in topic.sources}
+            for story_src in topic.story_sources:
+                text = story_src.text.strip()
                 if not text:
                     continue
                 for chunk_idx, chunk in enumerate(chunk_text(text)):
@@ -105,8 +106,10 @@ def build_index(
                     metadatas.append({
                         "digest_date": digest_date,
                         "topic_label": topic.label,
-                        "source_id": source.id,
-                        "source_subject": source.subject,
+                        "source_id": story_src.source_item_id,
+                        "source_subject": source_subjects.get(
+                            story_src.source_item_id, ""
+                        ),
                         "chunk_index": chunk_idx,
                     })
 
@@ -140,8 +143,9 @@ def index_digest(
 
     digest_date = digest.date.isoformat()
     for topic in digest.topics:
-        for source in topic.sources:
-            text = source.clean_text.strip()
+        source_subjects = {s.id: s.subject for s in topic.sources}
+        for story_src in topic.story_sources:
+            text = story_src.text.strip()
             if not text:
                 continue
             for chunk_idx, chunk in enumerate(chunk_text(text)):
@@ -149,8 +153,10 @@ def index_digest(
                 metadatas.append({
                     "digest_date": digest_date,
                     "topic_label": topic.label,
-                    "source_id": source.id,
-                    "source_subject": source.subject,
+                    "source_id": story_src.source_item_id,
+                    "source_subject": source_subjects.get(
+                        story_src.source_item_id, ""
+                    ),
                     "chunk_index": chunk_idx,
                 })
 

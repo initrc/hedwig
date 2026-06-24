@@ -12,7 +12,7 @@ from openai.types.chat import ChatCompletionMessageParam
 
 from app.ingest.parser import CandidateImage, ParsedEmail
 from app.pipeline.cluster import Topic as ClusterTopic
-from app.pipeline.digest import Digest, DigestSource, DigestTopic
+from app.pipeline.digest import Digest, DigestSource, DigestTopic, StorySource
 from app.pipeline.segment import Story
 
 
@@ -70,6 +70,7 @@ def make_digest_topic(
     label: str = "Test Topic",
     summary: str = "A test summary.",
     sources: list[DigestSource] | None = None,
+    story_sources: list[StorySource] | None = None,
     image: CandidateImage | None = None,
 ) -> DigestTopic:
     """A minimal digest topic (one row in the digest card)."""
@@ -77,8 +78,17 @@ def make_digest_topic(
         label=label,
         summary=summary,
         sources=sources or [],
+        story_sources=story_sources or [],
         image=image,
     )
+
+
+def make_story_source(
+    *,
+    text: str = "Body.",
+    source_item_id: str = "test.eml",
+) -> StorySource:
+    return StorySource(text=text, source_item_id=source_item_id)
 
 
 def make_digest(

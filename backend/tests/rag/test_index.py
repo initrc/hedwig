@@ -1,4 +1,4 @@
-"""Tests for `app.rag.index` — the `build_index` function.
+"""Tests for `app.rag.index` — the `build_index` and `index_digest` functions.
 
 Every test uses fakes from ``tests.rag.fakes`` so no real embedding API or
 Chroma database is touched.
@@ -11,7 +11,7 @@ from datetime import date
 from app.rag.index import build_index, index_digest
 from app.rag.store import IndexChunk
 from app.storage.digest_store import DigestStore
-from tests.fakes import make_digest, make_digest_source, make_digest_topic
+from tests.fakes import make_digest, make_digest_source, make_digest_topic, make_story_source
 from tests.rag.fakes import StubStore, stub_embed
 
 # -- build_index tests -------------------------------------------------------
@@ -24,9 +24,8 @@ def test_build_index_clears_store_before_indexing() -> None:
         make_digest(
             topics=[
                 make_digest_topic(
-                    sources=[
-                        make_digest_source(clean_text="Some newsletter text.")
-                    ]
+                    sources=[make_digest_source()],
+                    story_sources=[make_story_source(text="Some newsletter text.")],
                 )
             ]
         )
@@ -68,13 +67,17 @@ def test_build_index_stores_expected_metadata() -> None:
                     sources=[
                         make_digest_source(
                             source_id="finance.eml",
-                            source="finance@news.com",
                             subject="Daily Finance Brief",
-                            clean_text=(
+                        )
+                    ],
+                    story_sources=[
+                        make_story_source(
+                            text=(
                                 "The Fed signaled potential rate cuts in the "
                                 "upcoming September meeting, citing slowing "
                                 "inflation and a cooling labor market."
                             ),
+                            source_item_id="finance.eml",
                         )
                     ],
                 )
@@ -100,9 +103,8 @@ def test_build_index_stores_expected_metadata() -> None:
 
 
 def test_build_index_chunks_long_text() -> None:
-    """A source with text longer than CHUNK_SIZE produces multiple chunks with
+    """A story with text longer than CHUNK_SIZE produces multiple chunks with
     sequential chunk_index values."""
-    # Build text that's clearly longer than one chunk.
     sentence = "Market update number {n}: conditions are stable. "
     long_text = "".join(sentence.format(n=i) for i in range(200))
 
@@ -112,7 +114,8 @@ def test_build_index_chunks_long_text() -> None:
             topics=[
                 make_digest_topic(
                     label="Markets",
-                    sources=[make_digest_source(clean_text=long_text)],
+                    sources=[make_digest_source()],
+                    story_sources=[make_story_source(text=long_text)],
                 )
             ]
         )
@@ -130,17 +133,18 @@ def test_build_index_chunks_long_text() -> None:
     assert indices == list(range(len(indices)))
 
 
-def test_build_index_skips_empty_source_text() -> None:
-    """Sources with empty or whitespace-only clean_text produce no chunks."""
+def test_build_index_skips_empty_story_text() -> None:
+    """Stories with empty or whitespace-only text produce no chunks."""
     digest_store = DigestStore(db_path=":memory:")
     digest_store.save(
         make_digest(
             topics=[
                 make_digest_topic(
                     label="Empty",
-                    sources=[
-                        make_digest_source(clean_text="   "),
-                        make_digest_source(clean_text="Real content here."),
+                    sources=[make_digest_source()],
+                    story_sources=[
+                        make_story_source(text="   "),
+                        make_story_source(text="Real content here."),
                     ],
                 )
             ]
@@ -154,7 +158,7 @@ def test_build_index_skips_empty_source_text() -> None:
         embed_fn=stub_embed,
     )
 
-    # Only the non-empty source should produce chunks.
+    # Only the non-empty story should produce chunks.
     assert count == 1
     assert fake_store.chunk_count == 1
     assert "Real content" in fake_store.chunks[0].text
@@ -173,7 +177,6 @@ def test_build_index_returns_zero_for_empty_store() -> None:
 
     assert count == 0
     assert fake_store.chunk_count == 0
-    # delete_all should still have been called (idempotent).
     assert fake_store.delete_all_calls == 1
 
 
@@ -186,11 +189,13 @@ def test_build_index_indexes_multiple_digests_and_topics() -> None:
             topics=[
                 make_digest_topic(
                     label="Topic A",
-                    sources=[make_digest_source(source_id="a.eml", clean_text="Text A.")],
+                    sources=[make_digest_source(source_id="a.eml")],
+                    story_sources=[make_story_source(text="Text A.", source_item_id="a.eml")],
                 ),
                 make_digest_topic(
                     label="Topic B",
-                    sources=[make_digest_source(source_id="b.eml", clean_text="Text B.")],
+                    sources=[make_digest_source(source_id="b.eml")],
+                    story_sources=[make_story_source(text="Text B.", source_item_id="b.eml")],
                 ),
             ],
         )
@@ -201,7 +206,8 @@ def test_build_index_indexes_multiple_digests_and_topics() -> None:
             topics=[
                 make_digest_topic(
                     label="Topic C",
-                    sources=[make_digest_source(source_id="c.eml", clean_text="Text C.")],
+                    sources=[make_digest_source(source_id="c.eml")],
+                    story_sources=[make_story_source(text="Text C.", source_item_id="c.eml")],
                 )
             ],
         )
@@ -225,18 +231,17 @@ def test_build_index_indexes_multiple_digests_and_topics() -> None:
 
 
 def test_index_digest_does_not_clear_store() -> None:
-    """index_digest adds chunks without calling delete_all, so existing
-    chunks from earlier digests remain in the store."""
+    """index_digest adds chunks without calling delete_all."""
     fake_store = StubStore()
 
-    # Index a first digest.
     index_digest(
         make_digest(
             digest_date=date(2026, 6, 15),
             topics=[
                 make_digest_topic(
                     label="Topic A",
-                    sources=[make_digest_source(clean_text="First digest text.")],
+                    sources=[make_digest_source()],
+                    story_sources=[make_story_source(text="First digest text.")],
                 )
             ],
         ),
@@ -255,7 +260,8 @@ def test_index_digest_does_not_clear_store() -> None:
             topics=[
                 make_digest_topic(
                     label="Topic B",
-                    sources=[make_digest_source(clean_text="Second digest text.")],
+                    sources=[make_digest_source()],
+                    story_sources=[make_story_source(text="Second digest text.")],
                 )
             ],
         ),
@@ -263,14 +269,13 @@ def test_index_digest_does_not_clear_store() -> None:
         embed_fn=stub_embed,
     )
 
-    # Store was never cleared, and now has both digests' chunks.
     assert fake_store.delete_all_calls == 0
     assert fake_store.chunk_count == 2
 
 
 def test_index_digest_stores_expected_metadata() -> None:
-    """Each chunk from index_digest carries the same metadata fields as
-    build_index."""
+    """Each chunk from index_digest carries digest_date, topic_label,
+    source_id, source_subject, and chunk_index."""
     fake_store = StubStore()
 
     index_digest(
@@ -282,12 +287,16 @@ def test_index_digest_stores_expected_metadata() -> None:
                     sources=[
                         make_digest_source(
                             source_id="finance.eml",
-                            source="finance@news.com",
                             subject="Daily Finance Brief",
-                            clean_text=(
+                        )
+                    ],
+                    story_sources=[
+                        make_story_source(
+                            text=(
                                 "The Fed signaled potential rate cuts in the "
                                 "upcoming September meeting."
                             ),
+                            source_item_id="finance.eml",
                         )
                     ],
                 )
@@ -307,8 +316,8 @@ def test_index_digest_stores_expected_metadata() -> None:
     assert "Fed signaled" in chunk.text
 
 
-def test_index_digest_skips_empty_source_text() -> None:
-    """Sources with whitespace-only clean_text produce no chunks."""
+def test_index_digest_skips_empty_story_text() -> None:
+    """Stories with whitespace-only text produce no chunks."""
     fake_store = StubStore()
 
     count = index_digest(
@@ -316,9 +325,10 @@ def test_index_digest_skips_empty_source_text() -> None:
             topics=[
                 make_digest_topic(
                     label="Empty",
-                    sources=[
-                        make_digest_source(clean_text="   "),
-                        make_digest_source(clean_text="Real content here."),
+                    sources=[make_digest_source()],
+                    story_sources=[
+                        make_story_source(text="   "),
+                        make_story_source(text="Real content here."),
                     ],
                 )
             ]
@@ -333,7 +343,7 @@ def test_index_digest_skips_empty_source_text() -> None:
 
 
 def test_index_digest_returns_zero_for_digest_with_no_text() -> None:
-    """A digest whose sources all have empty text returns 0."""
+    """A digest whose stories all have empty text returns 0."""
     fake_store = StubStore()
 
     count = index_digest(
@@ -341,9 +351,10 @@ def test_index_digest_returns_zero_for_digest_with_no_text() -> None:
             topics=[
                 make_digest_topic(
                     label="All Empty",
-                    sources=[
-                        make_digest_source(clean_text="   "),
-                        make_digest_source(clean_text=""),
+                    sources=[make_digest_source()],
+                    story_sources=[
+                        make_story_source(text="   "),
+                        make_story_source(text=""),
                     ],
                 )
             ]
@@ -375,7 +386,6 @@ def test_search_returns_chunks_ordered_by_similarity() -> None:
         ),
     ])
 
-    # Query vector close to the second chunk.
     results = store.search([0.1, 0.9, 0.0], k=2)
     assert len(results) == 2
     assert results[0].text == "Fed holds rates steady."
@@ -392,7 +402,7 @@ def test_search_filters_by_metadata_when_where_is_given() -> None:
         ),
         IndexChunk(
             text="Fed news.",
-            embedding=[1.0, 0.0, 0.0],  # same vector
+            embedding=[1.0, 0.0, 0.0],
             metadata={"topic": "finance"},
         ),
     ])

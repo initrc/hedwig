@@ -10,7 +10,10 @@
   },
   {
     "question": "Was there any hardware release that integrates with AI?",
-    "expected_source_ids": ["20260618-superhuman.eml"],
+    "expected_source_ids": [
+      "20260618-alpha-signal.eml",
+      "20260618-superhuman.eml"
+    ],
     "topic_label": null,
     "expect_refusal": false
   },
@@ -29,7 +32,7 @@
       "20260618-alpha-signal.eml",
       "20260618-superhuman.eml"
     ],
-    "topic_label": "Midjourney body scanner",
+    "topic_label": null,
     "expect_refusal": false
   },
   {

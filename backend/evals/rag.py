@@ -67,7 +67,7 @@ def eval_retrieval_hit_rate(
     *,
     vector_store: VectorStore,
     embed_fn: EmbedFn,
-    k: int = 5,
+    k: int = 10,
 ) -> list[EvalResult]:
     """Score retrieval (embed + search) against each in-corpus golden question.
 

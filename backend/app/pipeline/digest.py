@@ -40,17 +40,35 @@ class DigestSource(BaseModel):
     clean_text: str
 
 
+class StorySource(BaseModel):
+    """Per-story text chunked independently for indexing.
+
+    Unlike `DigestSource.clean_text` — which bundles every story from a source
+    email into one blob — this carries a single story's text so the index can
+    chunk it in isolation.  Per-story chunking gives the vector store clean,
+    focused chunks whose embeddings carry a strong signal for that story's
+    subject, avoiding the duplicate-copy problem that came from indexing the
+    same full-source text under every topic label.
+    """
+
+    text: str
+    source_item_id: str
+
+
 class DigestTopic(BaseModel):
     """One topic in the digest: its label, summary, sources, and selected image.
 
     `label` comes from clustering, `summary` and `sources` from summarization,
     and `image` from image selection (``None`` when no candidate illustrates the
-    story).
+    story).  `story_sources` carries the per-story text for the index step so
+    each story is chunked independently instead of chunking the full source
+    email once per topic.
     """
 
     label: str
     summary: str
     sources: list[DigestSource]
+    story_sources: list[StorySource] = []
     image: CandidateImage | None = None
 
 
@@ -121,11 +139,20 @@ def run_pipeline(
             image = None
         sources = _resolve_digest_sources(summary.sources, emails_by_id)
 
+        story_sources = [
+            StorySource(
+                text=story.text,
+                source_item_id=story.source_item_id,
+            )
+            for story in topic.stories
+        ]
+
         result_topics.append(
             DigestTopic(
                 label=summary.label,
                 summary=summary.summary,
                 sources=sources,
+                story_sources=story_sources,
                 image=image,
             )
         )

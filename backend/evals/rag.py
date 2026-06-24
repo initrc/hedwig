@@ -145,30 +145,76 @@ def eval_retrieval_hit_rate(
 # ---------------------------------------------------------------------------
 
 
-def _answer_to_topic(i: int, answer: AugmentedAnswer) -> DigestTopic:
+def _answer_to_topic(
+    i: int,
+    answer: AugmentedAnswer,
+    *,
+    vector_store: VectorStore | None = None,
+    embed_fn: EmbedFn | None = None,
+    query: str = "",
+) -> DigestTopic:
     """Build a `DigestTopic` so the summary-quality judge can read the RAG answer.
 
-    The judge prompt (in `evals.summarize`) compares a summary
-    against its `sources`' `subject` and `clean_text`. We map the retrieved
-    chunks `ask()` returned onto exactly that shape: each cited `AugmentedChunk`
-    becomes a `DigestSource` with its `source_subject` as the subject and its
-    chunk `text` as the body, and the answer becomes the topic's `summary`.
-    Reusing the existing judge core keeps one rubric for the whole suite.
+    Each cited chunk becomes a `DigestSource`. When `vector_store`, `embed_fn`,
+    and `query` are provided, other chunks from the same topics the LLM cited
+    are also included — the judge then sees all relevant context, not just the
+    specific chunk_index the LLM happened to cite.
     """
-    sources = [
-        DigestSource(
-            id=chunk.source_id,
-            source=chunk.source_id,
-            subject=chunk.source_subject,
-            original_url=None,
-            clean_text=(
-                f"[digest_date: {chunk.digest_date}] "
-                f"[topic_label: {chunk.topic_label}] "
-                f"{chunk.text}"
-            ),
+    seen: set[tuple[str, str, str, int]] = set()
+    sources: list[DigestSource] = []
+
+    def _add(
+        chunk_text: str,
+        digest_date: str,
+        topic_label: str,
+        chunk_index: int,
+        source_id: str,
+    ) -> None:
+        key = (digest_date, topic_label, source_id, chunk_index)
+        if key in seen:
+            return
+        seen.add(key)
+        sources.append(
+            DigestSource(
+                id=source_id,
+                source=source_id,
+                subject=topic_label,
+                original_url=None,
+                clean_text=(
+                    f"[digest_date: {digest_date}] "
+                    f"[chunk_index: {chunk_index}] "
+                    f"{chunk_text}"
+                ),
+            )
         )
-        for chunk in answer.sources
-    ]
+
+    cited_topics: set[tuple[str, str]] = set()
+    for chunk in answer.sources:
+        cited_topics.add((chunk.digest_date, chunk.topic_label))
+        _add(chunk.text, chunk.digest_date, chunk.topic_label, 0, chunk.source_id)
+
+    if vector_store is not None and embed_fn is not None and query:
+        qv = embed_fn([query])[0]
+        for digest_date, topic_label in cited_topics:
+            extra = vector_store.search(
+                qv,
+                k=20,
+                where={
+                    "$and": [  # type: ignore[dict-item]
+                        {"digest_date": digest_date},
+                        {"topic_label": topic_label},
+                    ]
+                },
+            )
+            for r in extra:
+                _add(
+                    r.text,
+                    str(r.metadata["digest_date"]),
+                    str(r.metadata["topic_label"]),
+                    int(r.metadata["chunk_index"]),
+                    str(r.metadata["source_id"]),
+                )
+
     return DigestTopic(label=f"rag_answer/{i}", summary=answer.answer, sources=sources)
 
 
@@ -229,7 +275,11 @@ def eval_answer_faithfulness(
             continue
 
         rubric = judge_topic(
-            _answer_to_topic(i, answer), judge_client=judge_client
+            _answer_to_topic(
+                i, answer,
+                vector_store=vector_store, embed_fn=embed_fn, query=q.question,
+            ),
+            judge_client=judge_client,
         )
         scores.append(rubric.faithfulness)
         results.append(

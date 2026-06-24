@@ -141,7 +141,6 @@ class InjectionQuestion(BaseModel):
     injection_phrases: list[str]
     chunk_text: str
     chunk_source_id: str
-    chunk_source_subject: str
     chunk_topic_label: str
 
 

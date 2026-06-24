@@ -96,7 +96,6 @@ def build_index(
     for digest in digests:
         digest_date = digest.date.isoformat()
         for topic in digest.topics:
-            source_subjects = {s.id: s.subject for s in topic.sources}
             for story_src in topic.story_sources:
                 text = story_src.text.strip()
                 if not text:
@@ -107,9 +106,6 @@ def build_index(
                         "digest_date": digest_date,
                         "topic_label": topic.label,
                         "source_id": story_src.source_item_id,
-                        "source_subject": source_subjects.get(
-                            story_src.source_item_id, ""
-                        ),
                         "chunk_index": chunk_idx,
                     })
 
@@ -143,7 +139,6 @@ def index_digest(
 
     digest_date = digest.date.isoformat()
     for topic in digest.topics:
-        source_subjects = {s.id: s.subject for s in topic.sources}
         for story_src in topic.story_sources:
             text = story_src.text.strip()
             if not text:
@@ -154,9 +149,6 @@ def index_digest(
                     "digest_date": digest_date,
                     "topic_label": topic.label,
                     "source_id": story_src.source_item_id,
-                    "source_subject": source_subjects.get(
-                        story_src.source_item_id, ""
-                    ),
                     "chunk_index": chunk_idx,
                 })
 

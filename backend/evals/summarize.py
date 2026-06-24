@@ -101,9 +101,18 @@ _JUDGE_SYSTEM_PROMPT = (
     "means it flows naturally from start to finish. A score of 0.0 means it "
     "reads like unrelated bullet points glued together.\n\n"
     "Be strict. Most summaries should score in the 0.5–0.9 range. Reserve 1.0 "
-    "for nearly perfect output. In your rationale, point to specific claims that "
-    "raised or lowered the faithfulness score, and quote the source text that "
-    "supports or contradicts them."
+    "for nearly perfect output.\n\n"
+    "Precision rules:\n"
+    "- Only penalize claims that actually appear in the summary text. Do not "
+    "fabricate or assume claims the summary does not make.\n"
+    "- When the source text states a fact, do not claim it only \"labels\" "
+    "or \"implies\" it. If the source says \"announced X\", the source "
+    "announced X.\n"
+    "- Verify each criticism by reading the full source text, not just the "
+    "subject line or headers.\n\n"
+    "In your rationale, quote the exact summary text you are evaluating "
+    "alongside the source text that supports or contradicts it. Point to "
+    "specific claims that raised or lowered the faithfulness score."
 )
 
 

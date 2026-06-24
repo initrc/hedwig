@@ -233,15 +233,15 @@ def _first_source_id(user: str) -> str:
 def _chunk_header(user: str) -> dict[str, Any]:
     """Read the first `[Chunk 0]` header block the RAG user message carries.
 
-    `ask()._format_chunks` writes `digest_date`, `topic_label`, `source_subject`,
-    and `chunk_index` as labelled lines under each `[Chunk N]` header. A
-    well-behaved stub cites by echoing those labels back, so the answer resolves
-    to a real `AugmentedChunk`.
+    `ask()._format_chunks` writes `digest_date`, `topic_label`,
+    `source_id`, and `chunk_index` as labelled lines under each `[Chunk N]`
+    header. A well-behaved stub cites by echoing those labels back, so the
+    answer resolves to a real `AugmentedChunk`.
     """
     fields: dict[str, Any] = {
         "digest_date": "2026-06-15",
         "topic_label": "Any",
-        "source_subject": "Daily Brief",
+        "source_id": "unknown.eml",
         "chunk_index": 0,
     }
     for line in user.splitlines():
@@ -351,7 +351,6 @@ def _injection_chunk_store() -> VectorStore:
                         "digest_date": "2026-06-15",
                         "topic_label": q.chunk_topic_label,
                         "source_id": q.chunk_source_id,
-                        "source_subject": q.chunk_source_subject,
                         "chunk_index": 0,
                     },
                 )
@@ -408,7 +407,6 @@ def _live_injection_chunk_store(embed_fn: EmbedFn) -> VectorStore:
                         "digest_date": "2026-06-15",
                         "topic_label": q.chunk_topic_label,
                         "source_id": q.chunk_source_id,
-                        "source_subject": q.chunk_source_subject,
                         "chunk_index": 0,
                     },
                 )

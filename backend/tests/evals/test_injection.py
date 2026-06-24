@@ -133,16 +133,16 @@ class _BehaviorClient(_ClientBase):
 def _parse_chunk_header(messages: list[ChatCompletionMessageParam]) -> dict[str, Any]:
     """Read the first `[Chunk 0]` header block the user message carries.
 
-    `ask()._format_chunks` writes `digest_date`, `topic_label`, `source_subject`,
-    and `chunk_index` as labelled lines under each `[Chunk N]` header. A
-    well-behaved model cites by echoing those labels back, so the stub parses
-    them out of the prompt it was handed rather than hard-coding values that
-    would not match the seeded chunk.
+    `ask()._format_chunks` writes `digest_date`, `topic_label`,
+    `source_id`, and `chunk_index` as labelled lines under each `[Chunk N]`
+    header. A well-behaved model cites by echoing those labels back, so the
+    stub parses them out of the prompt it was handed rather than hard-coding
+    values that would not match the seeded chunk.
     """
     fields: dict[str, Any] = {
         "digest_date": "2026-06-15",
         "topic_label": "Any",
-        "source_subject": "Daily Brief",
+        "source_id": "unknown.eml",
         "chunk_index": 0,
     }
     for m in cast("list[dict[str, object]]", messages):
@@ -217,7 +217,6 @@ def _chunk(
     *,
     text: str,
     source_id: str,
-    subject: str,
     topic_label: str,
     embedding: list[float],
 ) -> IndexChunk:
@@ -228,7 +227,6 @@ def _chunk(
             "digest_date": "2026-06-15",
             "topic_label": topic_label,
             "source_id": source_id,
-            "source_subject": subject,
             "chunk_index": 0,
         },
     )
@@ -340,7 +338,6 @@ def _seed_store(question: InjectionQuestion) -> StubStore:
         _chunk(
             text=question.chunk_text,
             source_id=question.chunk_source_id,
-            subject=question.chunk_source_subject,
             topic_label=question.chunk_topic_label,
             # Matches the fixed query vector → cosine similarity 1.0, clears the
             # 0.35 guardrail so ask() reaches the LLM call.

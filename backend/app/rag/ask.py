@@ -47,7 +47,7 @@ _logger = logging.getLogger(__name__)
 _CONFIDENCE_THRESHOLD: float = 0.35
 
 # How many chunks to retrieve from the vector store per query by default.
-_DEFAULT_TOP_K: int = 10
+_DEFAULT_TOP_K: int = 15
 
 
 # ---------------------------------------------------------------------------
@@ -64,7 +64,7 @@ class _LLMChunk(BaseModel):
 
     digest_date: str
     topic_label: str
-    source_subject: str
+    source_id: str
     chunk_index: int
 
 
@@ -85,7 +85,6 @@ class AugmentedChunk(BaseModel):
     digest_date: str
     topic_label: str
     source_id: str
-    source_subject: str
     text: str
     score: float
 
@@ -209,11 +208,39 @@ _SYSTEM_PROMPT: str = (
     "chunks.  If the context does not contain enough information to answer "
     "the question, say so honestly rather than guessing or using outside "
     "knowledge.\n\n"
-    "In the `sources` list, include every chunk you drew on to produce your "
-    "answer.  For each one, copy the `digest_date`, `topic_label`, "
-    "`source_subject`, and `chunk_index` exactly as they appear in the chunk "
-    "header.  Only list chunks you actually used — do not list every chunk "
-    "just because it was provided.\n\n"
+    "Critical rules to avoid hallucination:\n"
+    "- Never invent specific numbers, scores, benchmarks, licenses, or dates "
+    "that are not stated verbatim in the context chunks.\n"
+    "- If the context mentions a benchmark or evaluation without giving a "
+    "score, do not fabricate one. Say that the score is not specified.\n"
+    "- If the context omits a detail the question asks for (a license name, "
+    "a capability, a feature), state that it is not mentioned rather than "
+    "guessing.\n"
+    "- Never claim something is the \"only\", \"first\", or \"all\" of "
+    "something unless the context explicitly states it. If the context "
+    "mentions one model but does not say it was the only release, do not "
+    "characterize it as the only one.\n"
+    "- Do not infer publisher names, newsletter titles, or other metadata "
+    "from the `source_id` field. The `source_id` is an internal file "
+    "identifier, not source text. Only state facts that appear in the "
+    "chunk's Text field.\n"
+    "- Avoid attribution phrases like \"According to the newsletter from...\" "
+    "unless the chunk's Text field actually names the newsletter. "
+    "State the facts directly without inventing where they came from.\n\n"
+    "In the `sources` list, include **every** chunk you drew on to produce "
+    "your answer — including chunks you examined to conclude the context "
+    "contains nothing relevant.  An answer that says \"the context does not "
+    "mention X\" is still a factual claim: cite the chunks you scanned to "
+    "reach that conclusion.  An answer with no cited sources is invalid "
+    "— if you cannot even determine whether the context is relevant, say "
+    "\"I don't have enough information\" instead.\n"
+    "For each source, copy the `digest_date`, `topic_label`, "
+    "`source_id`, and `chunk_index` exactly as they appear in the "
+    "chunk header.  Before citing a chunk, verify that the text of "
+    "that specific chunk actually contains the claim you are "
+    "making — do not cite chunk 0 when the relevant fact is in "
+    "chunk 1 from the same topic.  Only list chunks you actually "
+    "used — do not list every chunk just because it was provided.\n\n"
     "Write your answer in clear, plain English.  Mention the source "
     "newsletter and date naturally in the answer text when it helps the "
     "reader, for example: \"According to the Daily Markets Update from "
@@ -236,7 +263,7 @@ def _resolve_sources(
         key = (
             str(r.metadata["digest_date"]),
             str(r.metadata["topic_label"]),
-            str(r.metadata["source_subject"]),
+            str(r.metadata["source_id"]),
             int(r.metadata["chunk_index"]),
         )
         if key not in lookup:
@@ -247,7 +274,7 @@ def _resolve_sources(
         key = (
             llm_chunk.digest_date,
             llm_chunk.topic_label,
-            llm_chunk.source_subject,
+            llm_chunk.source_id,
             llm_chunk.chunk_index,
         )
         chunk = lookup.get(key)
@@ -257,7 +284,6 @@ def _resolve_sources(
                     digest_date=str(chunk.metadata["digest_date"]),
                     topic_label=str(chunk.metadata["topic_label"]),
                     source_id=str(chunk.metadata["source_id"]),
-                    source_subject=str(chunk.metadata["source_subject"]),
                     text=chunk.text,
                     score=chunk.score,
                 )
@@ -266,6 +292,16 @@ def _resolve_sources(
             _logger.warning(
                 "LLM cited a chunk not found in the retrieved results: %s", key
             )
+
+    if llm_chunks and not resolved:
+        available = sorted(lookup.keys())
+        _logger.error(
+            "All %d LLM-cited sources were dropped. LLM cited: %s; "
+            "available lookup keys: %s",
+            len(llm_chunks),
+            [(c.digest_date, c.topic_label, c.source_id, c.chunk_index) for c in llm_chunks],
+            available,
+        )
 
     return resolved
 
@@ -279,7 +315,7 @@ def _format_chunks(results: list[ChunkResult]) -> str:
             f"[Chunk {i}]\n"
             f"digest_date: {meta['digest_date']}\n"
             f"topic_label: {meta['topic_label']}\n"
-            f"source_subject: {meta['source_subject']}\n"
+            f"source_id: {meta['source_id']}\n"
             f"chunk_index: {meta['chunk_index']}\n"
             f"Text: {chunk.text}"
         )

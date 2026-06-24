@@ -122,7 +122,6 @@ class ChromaStore:
                 "digest_date": "2026-06-15",
                 "topic_label": "Fed rate decision",
                 "source_id": "20260615-tikr.eml",
-                "source_subject": "Daily Markets Update",
                 "chunk_index": 0,
             }
 

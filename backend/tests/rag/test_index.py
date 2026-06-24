@@ -56,7 +56,7 @@ def test_build_index_clears_store_before_indexing() -> None:
 
 def test_build_index_stores_expected_metadata() -> None:
     """Each indexed chunk carries digest_date, topic_label, source_id,
-    source_subject, and chunk_index."""
+    and chunk_index."""
     digest_store = DigestStore(db_path=":memory:")
     digest_store.save(
         make_digest(
@@ -97,7 +97,6 @@ def test_build_index_stores_expected_metadata() -> None:
     assert chunk.metadata["digest_date"] == "2026-06-15"
     assert chunk.metadata["topic_label"] == "Rate Cuts"
     assert chunk.metadata["source_id"] == "finance.eml"
-    assert chunk.metadata["source_subject"] == "Daily Finance Brief"
     assert chunk.metadata["chunk_index"] == 0
     assert "Fed signaled potential rate cuts" in chunk.text
 
@@ -275,7 +274,7 @@ def test_index_digest_does_not_clear_store() -> None:
 
 def test_index_digest_stores_expected_metadata() -> None:
     """Each chunk from index_digest carries digest_date, topic_label,
-    source_id, source_subject, and chunk_index."""
+    source_id, and chunk_index."""
     fake_store = StubStore()
 
     index_digest(
@@ -311,7 +310,6 @@ def test_index_digest_stores_expected_metadata() -> None:
     assert chunk.metadata["digest_date"] == "2026-06-15"
     assert chunk.metadata["topic_label"] == "Rate Cuts"
     assert chunk.metadata["source_id"] == "finance.eml"
-    assert chunk.metadata["source_subject"] == "Daily Finance Brief"
     assert chunk.metadata["chunk_index"] == 0
     assert "Fed signaled" in chunk.text
 

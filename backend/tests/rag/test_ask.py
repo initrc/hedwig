@@ -87,7 +87,6 @@ def test_ask_returns_confident_answer_with_sources_for_strong_match() -> None:
                 "digest_date": "2026-06-15",
                 "topic_label": "Rate Cuts",
                 "source_id": "finance.eml",
-                "source_subject": "Daily Finance Brief",
                 "chunk_index": 0,
             },
         )
@@ -102,7 +101,7 @@ def test_ask_returns_confident_answer_with_sources_for_strong_match() -> None:
             {
                 "digest_date": "2026-06-15",
                 "topic_label": "Rate Cuts",
-                "source_subject": "Daily Finance Brief",
+                "source_id": "finance.eml",
                 "chunk_index": 0,
             }
         ],
@@ -124,7 +123,6 @@ def test_ask_returns_confident_answer_with_sources_for_strong_match() -> None:
     assert result.sources[0].digest_date == "2026-06-15"
     assert result.sources[0].topic_label == "Rate Cuts"
     assert result.sources[0].source_id == "finance.eml"
-    assert result.sources[0].source_subject == "Daily Finance Brief"
     assert result.sources[0].text == (
         "The Fed cut interest rates by 25 basis points on June 15."
     )
@@ -143,7 +141,6 @@ def test_ask_returns_not_confident_when_best_score_below_threshold() -> None:
                 "digest_date": "2026-06-15",
                 "topic_label": "Rate Cuts",
                 "source_id": "finance.eml",
-                "source_subject": "Daily Finance Brief",
                 "chunk_index": 0,
             },
         )
@@ -181,7 +178,6 @@ def test_ask_scoped_to_topic_only_returns_matching_chunks() -> None:
                 "digest_date": "2026-06-15",
                 "topic_label": "Tech",
                 "source_id": "tech.eml",
-                "source_subject": "Tech Daily",
                 "chunk_index": 0,
             },
         ),
@@ -192,7 +188,6 @@ def test_ask_scoped_to_topic_only_returns_matching_chunks() -> None:
                 "digest_date": "2026-06-15",
                 "topic_label": "Finance",
                 "source_id": "finance.eml",
-                "source_subject": "Daily Finance Brief",
                 "chunk_index": 0,
             },
         ),
@@ -204,7 +199,7 @@ def test_ask_scoped_to_topic_only_returns_matching_chunks() -> None:
             {
                 "digest_date": "2026-06-15",
                 "topic_label": "Finance",
-                "source_subject": "Daily Finance Brief",
+                "source_id": "finance.eml",
                 "chunk_index": 0,
             }
         ],
@@ -242,7 +237,6 @@ def test_ask_prompt_includes_chunk_metadata_for_citations() -> None:
                 "digest_date": "2026-06-14",
                 "topic_label": "Commodities",
                 "source_id": "markets.eml",
-                "source_subject": "Daily Markets Update",
                 "chunk_index": 0,
             },
         )
@@ -254,7 +248,7 @@ def test_ask_prompt_includes_chunk_metadata_for_citations() -> None:
             {
                 "digest_date": "2026-06-14",
                 "topic_label": "Commodities",
-                "source_subject": "Daily Markets Update",
+                "source_id": "markets.eml",
                 "chunk_index": 0,
             }
         ],
@@ -277,7 +271,6 @@ def test_ask_prompt_includes_chunk_metadata_for_citations() -> None:
     assert "only" in system_msg.lower()
 
     # User prompt includes chunk metadata.
-    assert "Daily Markets Update" in user_msg
     assert "2026-06-14" in user_msg
     assert "Commodities" in user_msg
     assert "Oil prices rose 3%" in user_msg
@@ -312,7 +305,6 @@ def test_ask_drops_llm_sources_not_found_in_retrieved_chunks() -> None:
                 "digest_date": "2026-06-15",
                 "topic_label": "Rate Cuts",
                 "source_id": "finance.eml",
-                "source_subject": "Daily Finance Brief",
                 "chunk_index": 0,
             },
         )
@@ -324,13 +316,13 @@ def test_ask_drops_llm_sources_not_found_in_retrieved_chunks() -> None:
             {
                 "digest_date": "2026-06-15",
                 "topic_label": "Rate Cuts",
-                "source_subject": "Daily Finance Brief",
+                "source_id": "finance.eml",
                 "chunk_index": 0,
             },
             {
                 "digest_date": "2099-01-01",
                 "topic_label": "Future News",
-                "source_subject": "Time Machine Weekly",
+                "source_id": "future.eml",
                 "chunk_index": 0,
             },
         ],
@@ -346,7 +338,7 @@ def test_ask_drops_llm_sources_not_found_in_retrieved_chunks() -> None:
     assert result.confident is True
     # Only the real source is kept; the invented one is dropped.
     assert len(result.sources) == 1
-    assert result.sources[0].source_subject == "Daily Finance Brief"
+    assert result.sources[0].source_id == "finance.eml"
 
 
 def test_ask_returns_empty_sources_when_llm_cites_none() -> None:
@@ -360,7 +352,6 @@ def test_ask_returns_empty_sources_when_llm_cites_none() -> None:
                 "digest_date": "2026-06-15",
                 "topic_label": "Markets",
                 "source_id": "markets.eml",
-                "source_subject": "Daily Markets Update",
                 "chunk_index": 0,
             },
         )

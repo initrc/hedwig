@@ -43,7 +43,6 @@ def _chunk(
     source_id: str,
     embedding: list[float],
     topic_label: str = "Any",
-    source_subject: str = "Daily Brief",
     digest_date: str = "2026-06-15",
     chunk_index: int = 0,
 ) -> IndexChunk:
@@ -54,13 +53,12 @@ def _chunk(
             "digest_date": digest_date,
             "topic_label": topic_label,
             "source_id": source_id,
-            "source_subject": source_subject,
             "chunk_index": chunk_index,
         },
     )
 
 
-def _ask_reply(*, answer: str, source_id: str, subject: str = "Daily Brief") -> FakeClient:
+def _ask_reply(*, answer: str, source_id: str) -> FakeClient:
     """A fake `ask()` LLM that answers and cites the given source chunk."""
     return FakeClient(
         model_reply(
@@ -71,7 +69,7 @@ def _ask_reply(*, answer: str, source_id: str, subject: str = "Daily Brief") -> 
                         {
                             "digest_date": "2026-06-15",
                             "topic_label": "Any",
-                            "source_subject": subject,
+                            "source_id": source_id,
                             "chunk_index": 0,
                         }
                     ],
@@ -336,7 +334,6 @@ def test_faithfulness_judge_prompt_includes_retrieved_chunk_text() -> None:
             text="A new open-source model called Lite-7 was released.",
             source_id="alpha-signal.eml",
             embedding=[1.0, 0.0, 0.0],
-            source_subject="Alpha Signal",
             digest_date="2026-06-15",  # matches _ask_reply default
         )
     ])
@@ -354,20 +351,20 @@ def test_faithfulness_judge_prompt_includes_retrieved_chunk_text() -> None:
         client=_ask_reply(
             answer="According to the 2026-06-15 Alpha Signal, Lite-7 was released.",
             source_id="alpha-signal.eml",
-            subject="Alpha Signal",
         ),
         judge_client=judge,
     )
 
     user_content = _user_message(judge.messages)
     assert "A new open-source model called Lite-7 was released." in user_content
-    assert "Alpha Signal" in user_content
-    # The header metadata (digest_date, topic_label) must be visible to the judge
-    # so it doesn't penalize the answer for faithfully restating header fields
-    # that don't appear in the chunk body text.
+    # The topic_label is shown as the source subject so the judge has context
+    # about what topic the chunk belongs to.
+    assert "Any" in user_content
+    # The header metadata (digest_date) must be visible to the judge so it
+    # doesn't penalize the answer for faithfully restating the date from a
+    # header field that doesn't appear in the chunk body text.
     assert "digest_date" in user_content
     assert "2026-06-15" in user_content
-    assert "topic_label" in user_content
 
 
 def test_faithfulness_empty_questions_returns_single_result() -> None:

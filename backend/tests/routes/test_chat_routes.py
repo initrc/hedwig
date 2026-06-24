@@ -41,7 +41,6 @@ _CHUNK_ALPHA = IndexChunk(
         "digest_date": "2026-06-15",
         "topic_label": "Alpha",
         "source_id": "alpha.eml",
-        "source_subject": "Alpha Newsletter",
         "chunk_index": 0,
     },
 )
@@ -53,13 +52,12 @@ _CHUNK_BETA = IndexChunk(
         "digest_date": "2026-06-15",
         "topic_label": "Beta",
         "source_id": "beta.eml",
-        "source_subject": "Beta Newsletter",
         "chunk_index": 0,
     },
 )
 
 # A valid _LLMAnswer JSON that the FakeClient returns.  The LLM is asked to
-# cite chunks by digest_date, topic_label, source_subject, and chunk_index,
+# cite chunks by digest_date, topic_label, source_id, and chunk_index,
 # so our fake reply cites ALPHA's chunk.
 _LLM_JSON = json.dumps({
     "answer": "The Fed held rates steady, citing inflation progress.",
@@ -67,7 +65,7 @@ _LLM_JSON = json.dumps({
         {
             "digest_date": "2026-06-15",
             "topic_label": "Alpha",
-            "source_subject": "Alpha Newsletter",
+            "source_id": "alpha.eml",
             "chunk_index": 0,
         }
     ],
@@ -119,7 +117,6 @@ def test_chat_global_returns_answer_with_sources() -> None:
         assert source["digest_date"] == "2026-06-15"
         assert source["topic_label"] == "Alpha"
         assert source["source_id"] == "alpha.eml"
-        assert source["source_subject"] == "Alpha Newsletter"
         assert source["text"] == _SHARED_TEXT
 
         # Round-trip through the response model.

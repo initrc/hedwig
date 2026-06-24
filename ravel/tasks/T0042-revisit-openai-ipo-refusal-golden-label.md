@@ -1,7 +1,7 @@
 ---
 id: T0042
 title: Revisit the refusal golden label for the OpenAI IPO question
-status: new
+status: done
 dependencies: []
 ---
 
@@ -66,3 +66,26 @@ dependencies: []
 - Out of scope: redesigning the guardrail, re-calibrating the 0.35 threshold
   globally, or removing the refusal eval. Just decide this one question's
   label and act on it.
+
+# Findings
+
+Decision: **Fixture fix (option a)** — the question is in-corpus, not out-of-corpus.
+
+The `20260617-superhuman.eml` story explicitly reports that OpenAI "filed
+confidentially to go public." The model retrieved that story from the archive
+and answered faithfully: "The provided context does not mention a specific
+rumored IPO date. It only notes that OpenAI filed confidentially to go public."
+That is an accurate, helpful answer — the guardrail and LLM both did the right
+thing for the user. The prior `expect_refusal=True` label was wrong because the
+archive genuinely contains the answer (which is, honestly, "no date given").
+
+Changes:
+- `backend/evals/fixtures/golden_qa.json`: Flipped `expect_refusal` to `false`,
+  set `expected_source_ids` to `["20260617-superhuman.eml"]`.
+- `backend/evals/baselines/2026-06-24-live.md`: Updated refusal section (1
+  out-of-corpus question, 1.0 aggregate) and final summary line (54/57).
+
+Not done: no guardrail or threshold changes. The 0.35 gate did its job
+correctly — it found the relevant story. The LLM did its job correctly — it
+answered honestly from context. The label was the only thing that needed
+fixing.

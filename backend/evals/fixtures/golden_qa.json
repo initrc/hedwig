@@ -49,9 +49,9 @@
   },
   {
     "question": "What's the rumored IPO date of OpenAI?",
-    "expected_source_ids": [],
+    "expected_source_ids": ["20260617-superhuman.eml"],
     "topic_label": null,
-    "expect_refusal": true
+    "expect_refusal": false
   },
   {
     "question": "What's the weather forecast for Tokyo tomorrow?",

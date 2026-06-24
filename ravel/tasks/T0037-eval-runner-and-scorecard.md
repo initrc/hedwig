@@ -1,7 +1,7 @@
 ---
 id: T0037
 title: Eval runner and scorecard
-status: new
+status: done
 dependencies:
   - T0033
   - T0034

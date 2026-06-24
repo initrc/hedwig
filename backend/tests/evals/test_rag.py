@@ -328,7 +328,8 @@ def test_faithfulness_fails_pre_check_when_ask_refuses() -> None:
 
 
 def test_faithfulness_judge_prompt_includes_retrieved_chunk_text() -> None:
-    """The judge prompt must carry the retrieved chunk text so it can verify the answer."""
+    """The judge prompt must carry the retrieved chunk text and header metadata
+    so the judge sees the same context the answerer saw."""
     store = StubStore()
     store.insert([
         _chunk(
@@ -336,6 +337,7 @@ def test_faithfulness_judge_prompt_includes_retrieved_chunk_text() -> None:
             source_id="alpha-signal.eml",
             embedding=[1.0, 0.0, 0.0],
             source_subject="Alpha Signal",
+            digest_date="2026-06-15",  # matches _ask_reply default
         )
     ])
 
@@ -350,7 +352,7 @@ def test_faithfulness_judge_prompt_includes_retrieved_chunk_text() -> None:
         vector_store=store,
         embed_fn=_fixed_embed([1.0, 0.0, 0.0]),
         client=_ask_reply(
-            answer="Lite-7 was released.",
+            answer="According to the 2026-06-15 Alpha Signal, Lite-7 was released.",
             source_id="alpha-signal.eml",
             subject="Alpha Signal",
         ),
@@ -360,6 +362,12 @@ def test_faithfulness_judge_prompt_includes_retrieved_chunk_text() -> None:
     user_content = _user_message(judge.messages)
     assert "A new open-source model called Lite-7 was released." in user_content
     assert "Alpha Signal" in user_content
+    # The header metadata (digest_date, topic_label) must be visible to the judge
+    # so it doesn't penalize the answer for faithfully restating header fields
+    # that don't appear in the chunk body text.
+    assert "digest_date" in user_content
+    assert "2026-06-15" in user_content
+    assert "topic_label" in user_content
 
 
 def test_faithfulness_empty_questions_returns_single_result() -> None:

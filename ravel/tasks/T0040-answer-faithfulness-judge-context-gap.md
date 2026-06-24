@@ -1,7 +1,7 @@
 ---
 id: T0040
 title: Give the answer-faithfulness judge the same context the answerer had
-status: new
+status: done
 dependencies: []
 ---
 

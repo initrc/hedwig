@@ -161,7 +161,11 @@ def _answer_to_topic(i: int, answer: AugmentedAnswer) -> DigestTopic:
             source=chunk.source_id,
             subject=chunk.source_subject,
             original_url=None,
-            clean_text=chunk.text,
+            clean_text=(
+                f"[digest_date: {chunk.digest_date}] "
+                f"[topic_label: {chunk.topic_label}] "
+                f"{chunk.text}"
+            ),
         )
         for chunk in answer.sources
     ]
